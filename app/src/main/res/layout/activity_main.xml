@@ -20,13 +20,16 @@
 
     <TextView
         android:id="@+id/app_bar_text"
-        android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Naviable"
-        android:textSize="50dp"
+        android:textColor="@color/black"
+        android:textSize="39sp"
         app:layout_constraintLeft_toLeftOf="@id/app_bar"
-        app:layout_constraintTop_toTopOf="@id/app_bar" />
+        app:layout_constraintTop_toTopOf="@id/app_bar"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/alef"/>
 
     <EditText
         android:hint="where are you going?"
@@ -41,6 +44,7 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:background="@drawable/rounded_rectangle_view"
+        android:fontFamily="@font/alef"
         />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
