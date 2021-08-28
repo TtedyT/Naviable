@@ -28,6 +28,15 @@
         app:layout_constraintLeft_toLeftOf="@id/app_bar"
         app:layout_constraintTop_toTopOf="@id/app_bar" />
 
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_bar"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar"
+        tools:context=".MapsActivity" />
+
     <EditText
         android:id="@+id/search_bar"
         android:hint="where are you going?"
@@ -38,19 +47,11 @@
         app:layout_constraintTop_toBottomOf="@id/app_bar"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
+        android:layout_marginTop="15dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:background="@drawable/rounded_rectangle_view"
         />
-
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_bar"
-        app:layout_constraintTop_toBottomOf="@+id/search_bar"
-        tools:context=".MapsActivity" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_bar"
