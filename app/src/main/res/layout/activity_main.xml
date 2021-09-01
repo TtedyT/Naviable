@@ -41,6 +41,7 @@
         tools:context=".MapsActivity" />
 
     <ImageButton
+        android:id="@+id/settings_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/app_bar"

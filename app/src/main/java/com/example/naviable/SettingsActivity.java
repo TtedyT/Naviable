@@ -18,6 +18,9 @@ public class SettingsActivity extends AppCompatActivity {
                 R.array.campuses_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        DB db = NaviableApplication.getInstance().getDB();
+
     }
 
 }
