@@ -19,9 +19,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private EditText searchBarEditText;
     RecyclerView recyclerViewSearchSuggestions;
+    private MyAdapter.RecyclerViewClickListener clickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchBarEditText = (EditText) findViewById(R.id.search_bar_edit_text);
         recyclerViewSearchSuggestions = (RecyclerView) findViewById(R.id.search_suggestions_recycler_view);
 
+        this.clickListener = new MyAdapter.RecyclerViewClickListener() {
+            @Override
+            public void onClick(View v, int position) {
+                System.out.println("clicked position is: " + position);
+            }
+        };
+
         ArrayList<String> temporaryNamesForDebug = new ArrayList<>();
         temporaryNamesForDebug.add("Canada");
         temporaryNamesForDebug.add("Auditorium");
@@ -62,9 +72,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         temporaryNamesForDebug.add("Levi");
         temporaryNamesForDebug.add("Shprintzak");
 
-        MyAdapter myAdapter = new MyAdapter(this, temporaryNamesForDebug);
+        MyAdapter myAdapter = new MyAdapter(this, temporaryNamesForDebug, this.clickListener);
         recyclerViewSearchSuggestions.setAdapter(myAdapter);
         recyclerViewSearchSuggestions.setLayoutManager(new LinearLayoutManager(this));
+
+        searchBarEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                myAdapter.getFilter().filter(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
     }
 
     /**
