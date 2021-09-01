@@ -60,7 +60,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_suggestions_recycler_view"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="200dp"
         android:background="@drawable/rounded_rectangle_view"
         app:layout_constraintTop_toBottomOf="@+id/search_bar_edit_text"
         app:layout_constraintLeft_toLeftOf="parent"
