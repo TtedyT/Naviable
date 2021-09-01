@@ -8,7 +8,7 @@
     android:background="@color/black"
     >
 
-<!--    todo: move appbar and his content to a new view and import it inside each sceren (or fragment)-->
+<!--    todo: move appbar and his content to a new view and import it inside each screen (or fragment)-->
     <View
         android:id="@+id/app_bar"
         android:background="@color/white"
@@ -39,6 +39,18 @@
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_bar"
         app:layout_constraintTop_toBottomOf="@+id/app_bar"
         tools:context=".MapsActivity" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/app_bar"
+        app:layout_constraintEnd_toEndOf="@id/app_bar"
+        app:layout_constraintTop_toTopOf="@id/app_bar"
+        app:layout_constraintBottom_toBottomOf="@id/app_bar"
+        app:layout_constraintHorizontal_bias="0.95"
+        android:src="@drawable/ic_baseline_settings_36"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        />
 
     <EditText
         android:id="@+id/search_bar"

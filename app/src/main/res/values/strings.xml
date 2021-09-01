@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Naviable</string>
+    <string name="choose_campus_text">Campus:</string>
+    <string-array name="campuses_array">
+        <item>Mount Scopus</item>
+        <item>Givat Ram</item>
+        <item>Ein Kerem</item>
+        <item>Rehovot</item>
+    </string-array>
 </resources>
