@@ -16,8 +16,14 @@ package com.example.naviable;
 //}
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,9 +32,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private EditText searchBarEditText;
+    RecyclerView recyclerViewSearchSuggestions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +48,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        searchBarEditText = (EditText) findViewById(R.id.search_bar_edit_text);
+        recyclerViewSearchSuggestions = (RecyclerView) findViewById(R.id.search_suggestions_recycler_view);
+
+        ArrayList<String> temporaryNamesForDebug = new ArrayList<>();
+        temporaryNamesForDebug.add("Canada");
+        temporaryNamesForDebug.add("Auditorium");
+        temporaryNamesForDebug.add("Silberman");
+        temporaryNamesForDebug.add("Feldman");
+        temporaryNamesForDebug.add("Levi");
+        temporaryNamesForDebug.add("Shprintzak");
+
+        MyAdapter myAdapter = new MyAdapter(this, temporaryNamesForDebug);
+        recyclerViewSearchSuggestions.setAdapter(myAdapter);
+        recyclerViewSearchSuggestions.setLayoutManager(new LinearLayoutManager(this));
     }
 
     /**
