@@ -17,6 +17,7 @@ package com.example.naviable;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -38,12 +39,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
         ImageButton settingsButton = findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(view -> {
-
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         });
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
     }
 
     /**

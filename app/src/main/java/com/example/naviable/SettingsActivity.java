@@ -2,6 +2,7 @@ package com.example.naviable;
 
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import androidx.annotation.Nullable;
@@ -14,12 +15,16 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         Spinner spinner = findViewById(R.id.campus_spinner);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.campuses_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        DB db = NaviableApplication.getInstance().getDB();
+        ImageButton backbutton = findViewById(R.id.back_button);
+        backbutton.setOnClickListener(view -> {
+            finish();
+        });
 
     }
 
