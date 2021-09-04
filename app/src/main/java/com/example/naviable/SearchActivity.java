@@ -19,6 +19,7 @@ public class SearchActivity extends AppCompatActivity {
     RecyclerView recyclerViewSearchSuggestions;
     private MyAdapter.RecyclerViewClickListener clickListener;
     private EditText searchBarEditText;
+    private NaviableApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +28,12 @@ public class SearchActivity extends AppCompatActivity {
 
         // todo: use this to get the search type (source) or destination
         Intent intent = getIntent();
+        // default value never used
+        boolean searchTypeIsDestinationSearch = intent.getBooleanExtra("searchTypeIsDestinationSearch", false);
 
         searchBarEditText = (EditText) findViewById(R.id.search_bar_edit_text);
         recyclerViewSearchSuggestions = (RecyclerView) findViewById(R.id.search_suggestions_recycler_view);
-
+        app = NaviableApplication.getInstance();
 //        searchBarEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //            @Override
 //            public void onFocusChange(View view, boolean b) {
@@ -49,17 +52,24 @@ public class SearchActivity extends AppCompatActivity {
         temporaryNamesForDebug.add("Levi");
         temporaryNamesForDebug.add("Shprintzak");
 
-        MyAdapter myAdapter = new MyAdapter(this, temporaryNamesForDebug, this.clickListener);
-        recyclerViewSearchSuggestions.setAdapter(myAdapter);
-        recyclerViewSearchSuggestions.setLayoutManager(new LinearLayoutManager(this));
-
         this.clickListener = new MyAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
                 System.out.println("clicked position is: " + position);
+                // todo: pass to main the chosen location and if its "source" or "destination"
+                if(searchTypeIsDestinationSearch){
+                    app.setSearchDestination("bla bla destination");
+                }
+                else{
+                    app.setSearchSource("bla bla source");
+                }
                 finish();
             }
         };
+
+        MyAdapter myAdapter = new MyAdapter(this, temporaryNamesForDebug, this.clickListener);
+        recyclerViewSearchSuggestions.setAdapter(myAdapter);
+        recyclerViewSearchSuggestions.setLayoutManager(new LinearLayoutManager(this));
 
         searchBarEditText.addTextChangedListener(new TextWatcher() {
             @Override

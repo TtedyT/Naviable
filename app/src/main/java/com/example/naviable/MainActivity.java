@@ -16,6 +16,7 @@ package com.example.naviable;
 //}
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,32 +45,62 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private TextView searchBarTextView;
+    private TextView searchBarDestTextView;
+    private TextView searchBarSourceTextView;
+    private NaviableApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ImageButton settingsButton = findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(view -> {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         });
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        searchBarTextView = (TextView) findViewById(R.id.search_bar_text_view);
+        app = NaviableApplication.getInstance();
 
-        searchBarTextView.setOnClickListener(new View.OnClickListener() {
+        searchBarDestTextView = (TextView) findViewById(R.id.search_bar_dest_text_view);
+        searchBarSourceTextView = (TextView) findViewById(R.id.search_bar_source_text_view);
+        // todo: use "if" to check if dest is set - if so, show the source search
+//        searchBarDestTextView.setVisibility(View.GONE);
+
+        searchBarDestTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                // todo: pass to the search activity "source"/"dest" key
-                //       so the search activity will pass back answer of the form
-                //       source is "abc" or of the form dest is "abc"
-                startActivity(intent);
+                moveToSearchActivity(NaviableApplication.SEARCH_TYPE.DESTINATION);
+            }
+        });
+
+        app.getChosenDestinationLiveDataPublic().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String observedDestination) {
+                if(!observedDestination.isEmpty()){
+                    searchBarDestTextView.setText(observedDestination);
+                }
+            }
+        });
+
+        searchBarSourceTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                moveToSearchActivity(NaviableApplication.SEARCH_TYPE.SOURCE);
+            }
+        });
+
+        app.getChosenSourceLiveDataPublic().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String observedSource) {
+                if(!observedSource.isEmpty()){
+                    searchBarSourceTextView.setText(observedSource);
+                }
             }
         });
     }
@@ -94,5 +125,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .position(sydney)
                 .title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    private void moveToSearchActivity(NaviableApplication.SEARCH_TYPE type){
+        Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+        boolean searchTypeIsDestinationSearch = type.equals(NaviableApplication.SEARCH_TYPE.DESTINATION);
+        intent.putExtra("searchTypeIsDestinationSearch", searchTypeIsDestinationSearch);
+        startActivity(intent);
     }
 }

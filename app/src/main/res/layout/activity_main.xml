@@ -53,10 +53,12 @@
         tools:context=".MapsActivity" />
 
     <TextView
-        android:id="@+id/search_bar_text_view"
+        android:id="@+id/search_bar_dest_text_view"
         android:hint="where are you going?"
         android:layout_width="0dp"
         android:layout_height="50dp"
+        android:background="@drawable/rounded_rectangle_view"
+        android:fontFamily="@font/alef"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/app_bar"
@@ -65,8 +67,21 @@
         android:layout_marginTop="15dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
+        />
+
+    <TextView
+        android:id="@+id/search_bar_source_text_view"
+        android:hint="Search your location"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
         android:background="@drawable/rounded_rectangle_view"
         android:fontFamily="@font/alef"
+        app:layout_constraintEnd_toEndOf="@+id/search_bar_dest_text_view"
+        app:layout_constraintStart_toStartOf="@+id/search_bar_dest_text_view"
+        app:layout_constraintTop_toBottomOf="@id/search_bar_dest_text_view"
+        android:layout_marginTop="15dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
