@@ -28,6 +28,7 @@ import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -41,9 +42,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private EditText searchBarEditText;
-    RecyclerView recyclerViewSearchSuggestions;
-    private MyAdapter.RecyclerViewClickListener clickListener;
+    private TextView searchBarTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,39 +53,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        searchBarEditText = (EditText) findViewById(R.id.search_bar_edit_text);
-        recyclerViewSearchSuggestions = (RecyclerView) findViewById(R.id.search_suggestions_recycler_view);
+        searchBarTextView = (TextView) findViewById(R.id.search_bar_text_view);
 
-        this.clickListener = new MyAdapter.RecyclerViewClickListener() {
+        searchBarTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v, int position) {
-                System.out.println("clicked position is: " + position);
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                // todo: pass to the search activity "source"/"dest" key
+                //       so the search activity will pass back answer of the form
+                //       source is "abc" or of the form dest is "abc"
+                startActivity(intent);
             }
-        };
-
-        ArrayList<String> temporaryNamesForDebug = new ArrayList<>();
-        temporaryNamesForDebug.add("Canada");
-        temporaryNamesForDebug.add("Auditorium");
-        temporaryNamesForDebug.add("Silberman");
-        temporaryNamesForDebug.add("Feldman");
-        temporaryNamesForDebug.add("Levi");
-        temporaryNamesForDebug.add("Shprintzak");
-
-        MyAdapter myAdapter = new MyAdapter(this, temporaryNamesForDebug, this.clickListener);
-        recyclerViewSearchSuggestions.setAdapter(myAdapter);
-        recyclerViewSearchSuggestions.setLayoutManager(new LinearLayoutManager(this));
-
-        searchBarEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                myAdapter.getFilter().filter(charSequence);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {}
         });
     }
 

@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="#e0debf"
-    >
+    tools:context=".SearchActivity"
+    android:background="#e0debf">
 
-<!--    todo: move appbar and his content to a new view and import it inside each sceren (or fragment)-->
+    <!--    todo: move appbar and his content to a new view and import it inside each sceren (or fragment)-->
     <View
         android:id="@+id/app_bar"
         android:background="@color/white"
@@ -31,17 +30,8 @@
         android:layout_marginTop="8dp"
         android:fontFamily="@font/alef"/>
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_bar"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar"
-        tools:context=".MapsActivity" />
-
-    <TextView
-        android:id="@+id/search_bar_text_view"
+    <EditText
+        android:id="@+id/search_bar_edit_text"
         android:hint="where are you going?"
         android:layout_width="0dp"
         android:layout_height="50dp"
@@ -57,16 +47,19 @@
         android:fontFamily="@font/alef"
         />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation_bar"
-        android:background="@color/white"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_suggestions_recycler_view"
         android:layout_width="0dp"
-        android:layout_height="60dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:itemIconTint="@color/black"
-        app:menu="@menu/bottom_navigation_bar_menu"
+        android:layout_height="200dp"
+        android:background="@drawable/rounded_rectangle_view"
+        app:layout_constraintTop_toBottomOf="@+id/search_bar_edit_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
