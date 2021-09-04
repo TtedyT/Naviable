@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="#b6d5e3"
+    android:background="#e0debf"
     >
 
 <!--    todo: move appbar and his content to a new view and import it inside each screen (or fragment)-->
@@ -52,11 +52,9 @@
         app:layout_constraintTop_toBottomOf="@+id/app_bar"
         tools:context=".MapsActivity" />
 
-
-
-    <EditText
-        android:id="@+id/search_bar"
-        android:hint="@string/search_bar_text"
+    <TextView
+        android:id="@+id/search_bar_text_view"
+        android:hint="where are you going?"
         android:layout_width="0dp"
         android:layout_height="50dp"
         app:layout_constraintStart_toStartOf="parent"
