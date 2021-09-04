@@ -1,7 +1,9 @@
 package com.example.naviable;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 
@@ -21,11 +23,19 @@ public class SettingsActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        ImageButton backbutton = findViewById(R.id.back_button);
-        backbutton.setOnClickListener(view -> {
+        ImageButton backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(view -> {
             finish();
         });
 
+        Button saveSettingsButton = findViewById(R.id.save_setting_btn);
+        saveSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // todo: change to correct selection instead this hard coded
+                NaviableApplication.getInstance().getDB().setCampus("bla bla");
+            }
+        });
     }
 
 }

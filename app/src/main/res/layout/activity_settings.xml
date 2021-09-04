@@ -3,15 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#b6d5e3"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <View
-        android:id="@+id/app_bar"
-        android:background="#EEEEEE"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/settings_title"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="80dp"
+        android:background="@drawable/ellipse_59"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/settings_text_view"
+            android:text="Settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageButton
         android:id="@+id/back_button"
@@ -19,31 +35,23 @@
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:src="@drawable/ic_baseline_arrow_back_48"
-        app:layout_constraintBottom_toBottomOf="@id/app_bar"
-        app:layout_constraintEnd_toEndOf="@id/app_bar"
+        app:layout_constraintBottom_toBottomOf="@id/settings_title"
+        app:layout_constraintEnd_toEndOf="@id/settings_title"
         app:layout_constraintHorizontal_bias="0.044"
-        app:layout_constraintStart_toStartOf="@id/app_bar"
-        app:layout_constraintTop_toTopOf="@id/app_bar"
+        app:layout_constraintStart_toStartOf="@id/settings_title"
+        app:layout_constraintTop_toTopOf="@id/settings_title"
         />
-
-    <View
-        android:id="@+id/campus_bar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@drawable/background_settings_view"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_bar" />
 
     <TextView
         android:id="@+id/choose_campus_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/campus_bar"
-        app:layout_constraintBottom_toBottomOf="@id/campus_bar"
-        app:layout_constraintLeft_toLeftOf="@id/campus_bar"
-        app:layout_constraintRight_toRightOf="@id/campus_bar"
         android:text="@string/choose_campus_text"
         android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/settings_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintHorizontal_bias="0.03"
         />
 
@@ -51,20 +59,21 @@
         android:id="@+id/campus_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/campus_bar"
-        app:layout_constraintEnd_toEndOf="@id/campus_bar"
-        app:layout_constraintStart_toEndOf="@id/choose_campus_text"
-        app:layout_constraintTop_toTopOf="@id/campus_bar"
-        app:layout_constraintHorizontal_bias="0" />
+        app:layout_constraintBottom_toBottomOf="@+id/choose_campus_text"
+        app:layout_constraintStart_toEndOf="@+id/choose_campus_text"
+        app:layout_constraintTop_toTopOf="@+id/choose_campus_text"
+        android:layout_marginStart="10dp"
+        />
 
-    <ImageView
+    <Button
+        android:id="@+id/save_setting_btn"
+        android:text="Save settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_arrow_drop_down_24"
-        app:layout_constraintBottom_toBottomOf="@+id/campus_bar"
-        app:layout_constraintEnd_toEndOf="@+id/campus_bar"
-        app:layout_constraintStart_toEndOf="@+id/campus_spinner"
-        app:layout_constraintTop_toTopOf="@+id/campus_bar"
-        app:layout_constraintHorizontal_bias="0"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="20dp"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
