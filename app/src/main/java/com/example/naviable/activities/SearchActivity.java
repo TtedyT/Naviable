@@ -1,4 +1,4 @@
-package com.example.naviable;
+package com.example.naviable.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,6 +11,10 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.naviable.MyAdapter;
+import com.example.naviable.NaviableApplication;
+import com.example.naviable.R;
 
 import java.util.ArrayList;
 
