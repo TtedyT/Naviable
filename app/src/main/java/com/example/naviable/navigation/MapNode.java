@@ -1,20 +1,26 @@
 package com.example.naviable.navigation;
 
 public class MapNode {
-    private int x,y;
+    private String name;
+    private double x,y;
     private boolean mappable;
 
-    public MapNode(int x, int y, boolean mappable){
+    public MapNode(String name, double x, double y, boolean mappable){
+        this.name = name;
         this.x = x;
         this.y = y;
         this.mappable = mappable;
     }
 
-    public int getX() {
+    public String getName() {
+        return  name;
+    }
+
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
