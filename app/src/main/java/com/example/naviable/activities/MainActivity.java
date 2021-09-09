@@ -36,7 +36,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
 
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -63,40 +62,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         });
-
-        //todo: delete
-        MapNode node1 = new MapNode("Harman", 31.77654, 35.19621, false);
-        MapNode node2 = new MapNode("Popik", 31.77735, 35.19608, false);
-        Direction dir = new Direction("do something", "RIGHT");
-        ArrayList<Direction> directions = new ArrayList<>();
-        directions.add(dir);
-        Edge edge = new Edge(node1, node2, directions);
-
-        ArrayList<Edge> edges = new ArrayList<Edge>();
-        ArrayList<MapNode> nodes = new ArrayList<MapNode>();
-        edges.add(edge);
-        nodes.add(node1);
-        nodes.add(node2);
-        Graph g = new Graph(nodes, edges);
-
-        Gson gson = new Gson();
-        String data = gson.toJson(g);
-        String resourceName = "com/example/naviable/activities/graph.txt";
-        InputStream path = MainActivity.class.getResourceAsStream(resourceName);
-
-        resourceName = "graph.txt";
-        FileOutputStream fos;
-        try {
-//            BufferedWriter writer = new BufferedWriter(new FileWriter(resourceName));
-            fos = new FileOutputStream(resourceName, true);
-            FileWriter writer = new FileWriter(fos.getFD());
-            writer.write(data);
-            writer.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
