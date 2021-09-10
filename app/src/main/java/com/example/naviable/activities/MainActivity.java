@@ -18,6 +18,7 @@ package com.example.naviable.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -36,13 +37,22 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.appdistribution.models.App;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -56,47 +66,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         ImageButton settingsButton = findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(view -> {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         });
 
-        //todo: delete
-        MapNode node1 = new MapNode("Harman", 31.77654, 35.19621, false);
-        MapNode node2 = new MapNode("Popik", 31.77735, 35.19608, false);
-        Direction dir = new Direction("do something", "RIGHT");
-        ArrayList<Direction> directions = new ArrayList<>();
-        directions.add(dir);
-        Edge edge = new Edge(node1, node2, directions);
-
-        ArrayList<Edge> edges = new ArrayList<Edge>();
-        ArrayList<MapNode> nodes = new ArrayList<MapNode>();
-        edges.add(edge);
-        nodes.add(node1);
-        nodes.add(node2);
-        Graph g = new Graph(nodes, edges);
-
-        Gson gson = new Gson();
-        String data = gson.toJson(g);
-        String resourceName = "com/example/naviable/activities/graph.txt";
-        InputStream path = MainActivity.class.getResourceAsStream(resourceName);
-
-        resourceName = "graph.txt";
-        FileOutputStream fos;
         try {
-//            BufferedWriter writer = new BufferedWriter(new FileWriter(resourceName));
-            fos = new FileOutputStream(resourceName, true);
-            FileWriter writer = new FileWriter(fos.getFD());
-            writer.write(data);
-            writer.close();
+            Gson gson = new Gson();
+            InputStream edgesInput = this.getAssets().open("edges.json");
+            InputStream nodesInput = this.getAssets().open("nodes.json");
+            Reader edgesReader = new BufferedReader(new InputStreamReader(edgesInput, "UTF-8"));
+            Reader nodesReader = new BufferedReader(new InputStreamReader(nodesInput, "UTF-8"));
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            Type edgeMapType = new TypeToken<Map<String, Edge>>() {}.getType();
+            Type nodesMapType = new TypeToken<Map<String, MapNode>>() {}.getType();
+            Map<String, Edge> nameEdgeMap = gson.fromJson(edgesReader, edgeMapType);
+            Map<String, MapNode> nameNodesMap = gson.fromJson(nodesReader, nodesMapType);
+            ArrayList<Edge> edges = new ArrayList<Edge>(nameEdgeMap.values());
+            ArrayList<MapNode> nodes = new ArrayList<MapNode>(nameNodesMap.values());
+
+            Graph g = new Graph(nodes, edges);
+            // print edges
+            edges.forEach(System.out::println);
+            nodes.forEach(System.out::println);
+
+            // close reader
+            edgesReader.close();
+            nodesReader.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

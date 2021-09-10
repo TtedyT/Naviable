@@ -1,6 +1,7 @@
 package com.example.naviable.navigation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Graph {
     private ArrayList<MapNode> nodes;
