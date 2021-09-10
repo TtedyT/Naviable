@@ -146,10 +146,12 @@ class GraphJsonShell(cmd.Cmd):
         print("Adding directions...")
         directions = []
         while True:
-            direction = input("Add next direction or type 'end': ")
-            if direction == 'end':
+            description = input("Add next direction description or type 'end': ")
+            if description == 'end':
                 break
             else:
+                type = input("Is the direction LEFT, RIGHT, or STRAIGHT? ")
+                direction = {"description" : description, "type" : type}
                 directions.append(direction)
 
         edge = {"first" : node1, "second" : node2, "directions" : directions}
