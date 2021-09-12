@@ -58,10 +58,10 @@ public class SearchActivity extends AppCompatActivity {
                 System.out.println("clicked position is: " + position);
                 // todo: pass to main the chosen location and if its "source" or "destination"
                 if(searchTypeIsDestinationSearch){
-                    app.setSearchDestination("bla bla destination");
+                    app.setSearchDestination(temporaryNamesForDebug.get(position));
                 }
                 else{
-                    app.setSearchSource("bla bla source");
+                    app.setSearchSource(temporaryNamesForDebug.get(position));
                 }
                 finish();
             }

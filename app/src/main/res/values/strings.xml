@@ -3,9 +3,9 @@
     <string name="choose_campus_text">Campus:</string>
     <string name="search_bar_text">Where are you going?</string>
     <string-array name="campuses_array">
-        <item>Mount Scopus</item>
-        <item>Givat Ram</item>
-        <item>Ein Kerem</item>
-        <item>Rehovot</item>
+        <item>Givat Ram Campus</item>
+        <item>Mount Scopus Campus</item>
+        <item>Ein Kerem Campus</item>
+        <item>Rehovot Campus</item>
     </string-array>
 </resources>

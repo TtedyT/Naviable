@@ -27,6 +27,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -47,7 +48,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private TextView searchBarDestTextView;
     private TextView searchBarSourceTextView;
+    private Button goButton;
     private NaviableApplication app;
+    private final int ZOOM_OUT_FACTOR=5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         searchBarDestTextView = (TextView) findViewById(R.id.search_bar_dest_text_view);
         searchBarSourceTextView = (TextView) findViewById(R.id.search_bar_source_text_view);
+        searchBarSourceTextView.setVisibility(View.GONE);
+        goButton = (Button) findViewById(R.id.go_button);
+        goButton.setVisibility(View.GONE);
+
         // todo: use "if" to check if dest is set - if so, show the source search
 //        searchBarDestTextView.setVisibility(View.GONE);
 
@@ -84,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onChanged(String observedDestination) {
                 if(!observedDestination.isEmpty()){
                     searchBarDestTextView.setText(observedDestination);
+                    searchBarSourceTextView.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -100,7 +108,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onChanged(String observedSource) {
                 if(!observedSource.isEmpty()){
                     searchBarSourceTextView.setText(observedSource);
+                    goButton.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+        app.getCampusChosenLiveDataPublic().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                updateMapLocation();
             }
         });
     }
@@ -118,13 +134,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions()
-                .position(sydney)
-                .title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        updateMapLocation();
     }
 
     private void moveToSearchActivity(NaviableApplication.SEARCH_TYPE type){
@@ -132,5 +142,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         boolean searchTypeIsDestinationSearch = type.equals(NaviableApplication.SEARCH_TYPE.DESTINATION);
         intent.putExtra("searchTypeIsDestinationSearch", searchTypeIsDestinationSearch);
         startActivity(intent);
+    }
+
+    // changes which campus we focus on in the map
+    public void updateMapLocation(){
+        LatLng  campus = app.getDB().getCampus();
+//        mMap.addMarker(new MarkerOptions()
+//                .position(campus));
+        // todo - *note*: zoom level is between 2.0 and 21.0
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(campus, 18.5f));
     }
 }
