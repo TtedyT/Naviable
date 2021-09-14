@@ -18,7 +18,6 @@ package com.example.naviable.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -27,8 +26,7 @@ import android.widget.ImageButton;
 
 import com.example.naviable.NaviableApplication;
 import com.example.naviable.R;
-import com.example.naviable.navigation.Direction;
-import com.example.naviable.navigation.Edge;
+import com.example.naviable.navigation.EdgeInfo;
 import com.example.naviable.navigation.Graph;
 import com.example.naviable.navigation.MapNode;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,16 +39,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -64,41 +57,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
         ImageButton settingsButton = findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(view -> {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         });
 
-        try {
-            Gson gson = new Gson();
-            InputStream edgesInput = this.getAssets().open("edges.json");
-            InputStream nodesInput = this.getAssets().open("nodes.json");
-            Reader edgesReader = new BufferedReader(new InputStreamReader(edgesInput, "UTF-8"));
-            Reader nodesReader = new BufferedReader(new InputStreamReader(nodesInput, "UTF-8"));
-
-            Type edgeMapType = new TypeToken<Map<String, Edge>>() {}.getType();
-            Type nodesMapType = new TypeToken<Map<String, MapNode>>() {}.getType();
-            Map<String, Edge> nameEdgeMap = gson.fromJson(edgesReader, edgeMapType);
-            Map<String, MapNode> nameNodesMap = gson.fromJson(nodesReader, nodesMapType);
-            ArrayList<Edge> edges = new ArrayList<Edge>(nameEdgeMap.values());
-            ArrayList<MapNode> nodes = new ArrayList<MapNode>(nameNodesMap.values());
-
-            Graph g = new Graph(nodes, edges);
-            // print edges
-            edges.forEach(System.out::println);
-            nodes.forEach(System.out::println);
-
-            // close reader
-            edgesReader.close();
-            nodesReader.close();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

@@ -13,7 +13,8 @@ public class Navigator {
         this.graph = graph;
     }
 
-    private void findPath(MapNode src){
+    private void findPath(String srcId){
+        MapNode src = graph.getNode(srcId);
         src.setMinDistance(0);
         PriorityQueue<MapNode> queue = new PriorityQueue<>();
         queue.add(src);
@@ -21,8 +22,8 @@ public class Navigator {
         while(!queue.isEmpty()){
             MapNode u = queue.poll();
 
-            for (Edge e : graph.getAdjacent(u)){
-                MapNode v = e.getSecond();
+            for (EdgeInfo e : src.getAdjacencies()){
+                MapNode v = graph.getNode(e.getDestId());
                 double weight = e.getDistance();
                 assert u != null;
                 double distanceThroughU = u.getMinDistance() + weight;
@@ -36,28 +37,28 @@ public class Navigator {
         }
     }
 
-    private static List<MapNode> getShortestPathTo(MapNode dest){
+    private List<MapNode> getShortestPathTo(String destId){
         List<MapNode> path = new ArrayList<>();
-        for(MapNode node  = dest; dest != null; dest = dest.getPrev()){
+        MapNode dest = graph.getNode(destId);
+        for(MapNode node  = dest; node != null; node = node.getPrev()){
             path.add(node);
         }
         Collections.reverse(path);
         return path;
     }
 
-    public List<Direction> getDirections(MapNode src, MapNode dest){
-        findPath(src);
-        List<MapNode> path = getShortestPathTo(dest);
+    public List<Direction> getDirections(String srcId, String destId){
+        findPath(srcId);
+        List<MapNode> path = getShortestPathTo(destId);
         List<Direction> directions = new ArrayList<>();
-
-        for(int i = 0; i < path.size() - 1 ; i++){
-            for (Edge e: graph.getEdges()) {
-                if(e.getFirst() == path.get(i) && e.getSecond() == path.get(i+1)){
-                    directions.addAll(e.getDirections());
+        for (int i = 0; i < path.size()-1; i++) {
+            List<EdgeInfo> adjacencies = path.get(i).getAdjacencies();
+            for (EdgeInfo currEdge : adjacencies) {
+                if(currEdge.getDestId().equals(path.get(i + 1).getName())){
+                    directions.addAll(currEdge.getDirections());
                 }
             }
         }
         return directions;
-
     }
 }
