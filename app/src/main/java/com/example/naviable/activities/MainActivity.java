@@ -29,6 +29,7 @@ import com.example.naviable.R;
 import com.example.naviable.navigation.EdgeInfo;
 import com.example.naviable.navigation.Graph;
 import com.example.naviable.navigation.MapNode;
+import com.example.naviable.navigation.Navigator;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,6 +40,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -63,6 +65,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             startActivity(intent);
         });
 
+        // Get the navigator for the map to use
+        try {
+            InputStream nodesInput = getAssets().open("nodes.json");
+            Graph graph = new Graph(nodesInput);
+            Navigator navigator = new Navigator(graph);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

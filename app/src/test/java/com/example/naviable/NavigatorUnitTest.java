@@ -26,24 +26,10 @@ import java.util.Map;
  */
 public class NavigatorUnitTest {
     private Graph makeGraphFromJson(String filename) {
-        try {
-            Gson gson = new Gson();
-            InputStream nodesInput = this.getClass().getClassLoader().getResourceAsStream(filename);
-            Reader nodesReader = new BufferedReader(new InputStreamReader(nodesInput));
+        InputStream nodesInput = this.getClass().getClassLoader().getResourceAsStream(filename);
+        Graph g = new Graph(nodesInput);
 
-            Type nodesMapType = new TypeToken<Map<String, MapNode>>() {}.getType();
-            Map<String, MapNode> nameNodesMap = gson.fromJson(nodesReader, nodesMapType);
-
-            Graph g = new Graph(nameNodesMap);
-
-            // close reader
-            nodesReader.close();
-            return g;
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
+        return g;
     }
 
 
