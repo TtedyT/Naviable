@@ -1,8 +1,7 @@
 import cmd, sys
 import json
+from math import sqrt
 from pathlib import Path
-
-import shortuuid
 
 ADD_EDGE = 'E'
 ADD_NODE = 'N'
@@ -13,17 +12,12 @@ class GraphJsonShell(cmd.Cmd):
     intro = 'Welcome to the GraphJson shell. Type help or ? to list commands.\n'
     prompt = '(graph) '
     file = None
-    nodes = {}
-    edges = {}
+    nodes = {}  # id -> {"name" : str, "x" : float, "y" : float, "mappable" : boolean, "adjacency" : set}
 
     # --- shell commands ----
     def do_nodes(self, arg):
         'Print the existing nodes'
         print(self.nodes)
-
-    def do_edges(self, arg):
-        'Print the existing edges'
-        print(self.edges)
 
     def do_add(self, arg):
         'Add an edge or node to the graph'
@@ -37,17 +31,18 @@ class GraphJsonShell(cmd.Cmd):
                 print("Sorry, I didn't understand that.")
 
         if to_add == ADD_EDGE:
-            new_edge = self.add_edge()
-            new_node1 = new_edge["first"]
-            new_node2 = new_edge["second"]
+            new_node1, new_node2 = self.add_edge()
 
-            self.edges[shortuuid.uuid()] = new_edge
             self.nodes[new_node1["name"]] = new_node1
             self.nodes[new_node2["name"]] = new_node2
 
         elif to_add == ADD_NODE:
             new_node = self.add_node()
             self.nodes[new_node["name"]] = new_node
+
+    @staticmethod
+    def filter_edge_with_name(edge, name):
+        return edge["dest_id"] != name
 
     def do_delete(self, arg):
         'Delete an edge or node from the graph'
@@ -77,26 +72,28 @@ class GraphJsonShell(cmd.Cmd):
                 else:
                     print("Sorry, that name does not exist.")
 
-            for id, edge in list(self.edges.items()):
-                if edge["first"] == node1 and edge["second"] == node2:
-                    del self.edges[id]
+            # Remove the edge from the src node's adjacency set
+            adjacency_list = self.nodes[node1_name]["adjacency"]
+            adjacency_list = list(filter(lambda item: self.filter_edge_with_name(item, node2_name), adjacency_list))
+            self.nodes[node1_name]["adjacency"] = adjacency_list
 
-            delete_nodes = input("Do you want to delete the nodes too? (Y/N): ")
-            if delete_nodes == YES:
-                del self.nodes[node1_name]
-                del self.nodes[node2_name]
+            # delete_nodes = input("Do you want to delete the nodes too? (Y/N): ")
+            # if delete_nodes == YES:
+            #     del self.nodes[node1_name]
+            #     del self.nodes[node2_name]
 
         elif to_delete == ADD_NODE:
             while True:
                 node_name = input("Name of the node: ")
                 try:
                     del self.nodes[node_name]
+                    # TODO: go over all the nodes and remove from adjacency list
                     break
                 except KeyError:
                     print("Sorry, that name does not exist.")
 
     def do_save(self, arg):
-        'Save the current edges and nodes'
+        'Save the current nodes'
         self.write_json_files()
 
     def do_quit(self, arg):
@@ -134,14 +131,28 @@ class GraphJsonShell(cmd.Cmd):
             else:
                 print("Sorry, please enter 'Y' or 'N'.")
 
-        node = {"name" : name, "x" : float(x_coord), "y" : float(y_coord), "mappable" : mappable}
+        node = {"name": name, "x": float(x_coord), "y": float(y_coord), "mappable": mappable, "adjacency": []}
         return node
 
     def add_edge(self):
         print("Adding the 1st node...")
-        node1 = self.add_node()
+        src = self.add_node()
         print("Adding the 2nd node...")
-        node2 = self.add_node()
+        dest = self.add_node()
+
+        while True:
+            distance_type = input("Enter E for Euclidean distance or your own: ")
+            if distance_type == 'E':
+                x_dist = src["x"] - dest["x"]
+                y_dist = src["y"] - dest["y"]
+                distance = sqrt(x_dist ** 2 + y_dist ** 2)
+                break
+            else:
+                try:
+                    distance = float(distance_type)
+                    break
+                except ValueError:
+                    print("Please enter a number or E")
 
         print("Adding directions...")
         directions = []
@@ -150,36 +161,26 @@ class GraphJsonShell(cmd.Cmd):
             if description == 'end':
                 break
             else:
-                type = input("Is the direction LEFT, RIGHT, or STRAIGHT? ")
-                direction = {"description" : description, "type" : type}
+                type = input("What is the type? ")
+                direction = {"description": description, "type": type}
                 directions.append(direction)
 
-        edge = {"first" : node1, "second" : node2, "directions" : directions}
-        return edge
+        edge = {"destId": dest["name"], "directions": directions, "distance": distance}
+        src["adjacency"].append(edge)
+        return src, dest
 
     def read_json_files(self):
         nodes_file = Path('nodes.json')
-        edges_file = Path('edges.json')
 
         if nodes_file.exists():
             f_nodes = open(nodes_file, )
             self.nodes = json.load(f_nodes)
             f_nodes.close()
 
-        if edges_file.exists():
-            f_edges = open(edges_file, )
-            self.edges = json.load(f_edges)
-            f_edges.close()
-
     def write_json_files(self):
-        nodes_json = json.dumps(self.nodes)
-        with open("nodes.json", "w") as outfile:
+        nodes_json = json.dumps(self.nodes, indent=4, sort_keys=True)
+        with open("../../test/resources/nodes.json", "w") as outfile:
             outfile.write(nodes_json)
-
-        edges_json = json.dumps(self.edges)
-        with open("edges.json", "w") as outfile:
-            outfile.write(edges_json)
-
 
     # ----- record and playback -----
     def preloop(self):
