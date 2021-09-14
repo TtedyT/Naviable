@@ -1,0 +1,101 @@
+{
+    "a": {
+        "adjacency": [
+            {
+                "destId": "b",
+                "directions": [
+                    {
+                        "description": "getting closer",
+                        "type": "s"
+                    }
+                ],
+                "distance": 1.0
+            },
+            {
+                "destId": "dest",
+                "directions": [
+                    {
+                        "description": "very wrong",
+                        "type": "s"
+                    }
+                ],
+                "distance": 7.0
+            }
+        ],
+        "mappable": true,
+        "name": "a",
+        "x": 0.0,
+        "y": 0.0
+    },
+    "b": {
+        "adjacency": [
+            {
+                "destId": "c",
+                "directions": [
+                    {
+                        "description": "even closer",
+                        "type": "s"
+                    }
+                ],
+                "distance": 1.0
+            }
+        ],
+        "mappable": true,
+        "name": "b",
+        "x": 0.0,
+        "y": 0.0
+    },
+    "c": {
+        "adjacency": [
+            {
+                "destId": "dest",
+                "directions": [
+                    {
+                        "description": "this is it",
+                        "type": "s"
+                    }
+                ],
+                "distance": 4.0
+            }
+        ],
+        "mappable": true,
+        "name": "c",
+        "x": 0.0,
+        "y": 0.0
+    },
+    "dest": {
+        "adjacency": [],
+        "mappable": true,
+        "name": "dest",
+        "x": 0.0,
+        "y": 0.0
+    },
+    "src": {
+        "adjacency": [
+            {
+                "destId": "a",
+                "directions": [
+                    {
+                        "description": "walk",
+                        "type": "s"
+                    }
+                ],
+                "distance": 2.0
+            },
+            {
+                "destId": "c",
+                "directions": [
+                    {
+                        "description": "wrong way",
+                        "type": "s"
+                    }
+                ],
+                "distance": 5.0
+            }
+        ],
+        "mappable": true,
+        "name": "src",
+        "x": 0.0,
+        "y": 0.0
+    }
+}

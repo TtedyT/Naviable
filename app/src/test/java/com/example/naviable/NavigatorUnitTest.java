@@ -5,7 +5,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import com.example.naviable.navigation.Direction;
-import com.example.naviable.navigation.EdgeInfo;
 import com.example.naviable.navigation.Graph;
 import com.example.naviable.navigation.MapNode;
 import com.example.naviable.navigation.Navigator;
@@ -17,8 +16,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -58,35 +55,72 @@ public class NavigatorUnitTest {
         Navigator navigator = new Navigator(g);
         String n1 = "a";
         String n2 = "b";
+        String expectedDir = "Go Straight";
 
         // Run test
         List<Direction> dirs = navigator.getDirections(n1,n2);
 
         // Check results
         assertEquals(1, dirs.size());
-        assertEquals("do a backflip", dirs.get(0).getDescription());
-
-//        MapNode n1 = new MapNode("0", 0,0,true);
-//        MapNode n2 = new MapNode("1", 0,1,true);
-//        Direction d1 = new Direction("do a backflip", "LEFT");
-//        EdgeInfo e = new EdgeInfo(n1, n2, new ArrayList<>(Arrays.asList(d1)), 1.0);
-//        List<MapNode> nodes = new ArrayList<>(Arrays.asList(n1,n2));
-//        List<EdgeInfo> edges = new ArrayList<>(Arrays.asList(e));
-//        Graph g = new Graph(nodes,edges);
-//        List<Direction> dirs = navigator.getDirections(n1,n2);
-//        assertEquals(1, dirs.size());
-//        assertEquals("do a backflip", dirs.get(0).getDescription());
+        assertEquals(expectedDir, dirs.get(0).getDescription());
     }
 
     @Test
     public void triangleTest(){
-        Graph g = makeGraphFromJson();
-        assertNotNull(g);
+        // Prepare test
+        String filename = "triangleTest.json";
+        Graph g = makeGraphFromJson(filename);
         Navigator navigator = new Navigator(g);
-        List<Direction> dirs = navigator.getDirections(g.getNodes().get(0), g.getNodes().get(1));
-        assertEquals(dirs.size(), 1);
-        assertEquals(dirs.get(0).getDescription() , "go the right way");
-        assertEquals(dirs.get(0).getType() , "end");
+        String n1 = "src";
+        String n2 = "dest";
+        String expectedDir = "Go the correct path!";
 
+        // Run test
+        List<Direction> dirs = navigator.getDirections(n1,n2);
+
+        // Check results
+        assertEquals(1, dirs.size());
+        assertEquals(expectedDir, dirs.get(0).getDescription());
+    }
+
+    @Test
+    public void sinkTest1(){
+        // Prepare test
+        String filename = "sinkTest1.json";
+        Graph g = makeGraphFromJson(filename);
+        Navigator navigator = new Navigator(g);
+        String n1 = "src";
+        String n2 = "dest";
+
+        // Run test
+        List<Direction> dirs = navigator.getDirections(n1,n2);
+
+        // Check results
+        assertEquals(4, dirs.size());
+        assertEquals("walk", dirs.get(0).getDescription());
+        assertEquals("getting closer", dirs.get(1).getDescription());
+        assertEquals("even closer", dirs.get(2).getDescription());
+        assertEquals("this is it", dirs.get(3).getDescription());
+    }
+
+    @Test
+    public void sinkTest2(){
+        // Prepare test
+        String filename = "sinkTest2.json";
+        Graph g = makeGraphFromJson(filename);
+        Navigator navigator = new Navigator(g);
+        String n1 = "s";
+        String n2 = "e";
+
+        // Run test
+        List<Direction> dirs = navigator.getDirections(n1,n2);
+
+        // Check results
+        assertEquals(3, dirs.size());
+        assertEquals("go from s to a", dirs.get(0).getDescription());
+        assertTrue(dirs.get(1).getDescription().equals("go from a to d")
+                || dirs.get(1).getDescription().equals("go from a to c"));
+        assertTrue(dirs.get(2).getDescription().equals("go from c to e")
+                || dirs.get(2).getDescription().equals("go from d to e"));
     }
 }

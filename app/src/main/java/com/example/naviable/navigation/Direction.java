@@ -4,10 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Direction {
-
     private String description;
     private String type;
-    private Map<String, String> path_map = new HashMap<>();
+    private static Map<String, String> path_map = new HashMap<>();
 
     public Direction(String description, String type){
         this.description = description;
@@ -16,7 +15,11 @@ public class Direction {
 
     }
 
-    public String getPath(String type){
+    public String getDescription() {
+        return description;
+    }
+
+    public static String getPath(String type){
         return path_map.get(type);
     }
 

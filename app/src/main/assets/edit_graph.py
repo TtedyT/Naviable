@@ -74,7 +74,7 @@ class GraphJsonShell(cmd.Cmd):
 
             # Remove the edge from the src node's adjacency set
             adjacency_list = self.nodes[node1_name]["adjacency"]
-            adjacency_list = list(filter(lambda item: filter_edge_with_name(item, node2_name), adjacency_list))
+            adjacency_list = list(filter(lambda item: self.filter_edge_with_name(item, node2_name), adjacency_list))
             self.nodes[node1_name]["adjacency"] = adjacency_list
 
             # delete_nodes = input("Do you want to delete the nodes too? (Y/N): ")
@@ -165,7 +165,7 @@ class GraphJsonShell(cmd.Cmd):
                 direction = {"description": description, "type": type}
                 directions.append(direction)
 
-        edge = {"dest_id": dest["name"], "directions": directions, "distance": distance}
+        edge = {"destId": dest["name"], "directions": directions, "distance": distance}
         src["adjacency"].append(edge)
         return src, dest
 
@@ -179,7 +179,7 @@ class GraphJsonShell(cmd.Cmd):
 
     def write_json_files(self):
         nodes_json = json.dumps(self.nodes, indent=4, sort_keys=True)
-        with open("nodes.json", "w") as outfile:
+        with open("../../test/resources/nodes.json", "w") as outfile:
             outfile.write(nodes_json)
 
     # ----- record and playback -----

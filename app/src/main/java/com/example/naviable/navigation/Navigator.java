@@ -1,6 +1,7 @@
 package com.example.naviable.navigation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +23,10 @@ public class Navigator {
         while(!queue.isEmpty()){
             MapNode u = queue.poll();
 
-            for (EdgeInfo e : src.getAdjacencies()){
+            assert u != null;
+            for (EdgeInfo e : u.getAdjacencies()){
                 MapNode v = graph.getNode(e.getDestId());
                 double weight = e.getDistance();
-                assert u != null;
                 double distanceThroughU = u.getMinDistance() + weight;
                 if(distanceThroughU < v.getMinDistance()){
                     queue.remove(v);
