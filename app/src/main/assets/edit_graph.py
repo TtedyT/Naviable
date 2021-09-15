@@ -1,206 +1,409 @@
-import cmd, sys
+# -*- coding: utf-8 -*-
+from __future__ import print_function, unicode_literals
+
+import math
+import copy
+import regex
 import json
-from math import sqrt
 from pathlib import Path
+from pprint import pprint
 
-ADD_EDGE = 'E'
-ADD_NODE = 'N'
-YES = 'Y'
-NO = 'N'
+from PyInquirer import prompt, Separator
+from prompt_toolkit.validation import Validator, ValidationError
+from examples import custom_style_2
 
-class GraphJsonShell(cmd.Cmd):
-    intro = 'Welcome to the GraphJson shell. Type help or ? to list commands.\n'
-    prompt = '(graph) '
-    file = None
-    nodes = {}  # id -> {"name" : str, "x" : float, "y" : float, "mappable" : boolean, "adjacency" : set}
+ADD_TYPE = 0
+DEL_TYPE = 1
+# ---- Main Options ----
+ADD_EDGE = 'Add an edge'
+ADD_NODE = 'Add a single node'
+DELETE_EDGE = 'Delete an edge'
+DELETE_NODE = 'Delete a node'
+SAVE = 'Save changes'
+UNDO = 'Undo last change'
+REVERT = 'Revert to last save'
+QUIT = 'Quit'
+# ---- MapNode Fields ----
+NODE_ID = 'name'
+X_COORD = 'x'
+Y_COORD = 'y'
+MAPPABLE = 'mappable'
+ADJACENCY_LIST = 'adjacency'
+# ---- EdgeInfo Fields ----
+DEST_ID = 'destId'
+DIRECTIONS = 'directions'
+DISTANCE = 'distance'
+# ---- Direction Fields ----
+DIRECTION_DESC = 'description'
+DIRECTION_TYPE = 'type'
 
-    # --- shell commands ----
-    def do_nodes(self, arg):
-        'Print the existing nodes'
-        print(self.nodes)
+class CoordinatesValidator(Validator):
+    def validate(self, document):
+        ok = regex.match('^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)\s*,\s*[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$', document.text)
+        if not ok:
+            raise ValidationError(
+                message='Please enter a two valid numbers separated by a comma',
+                cursor_position=len(document.text))  # Move cursor to end
 
-    def do_add(self, arg):
-        'Add an edge or node to the graph'
-        to_add = None
-        while True:
-            print("Would you like to add an edge (and its nodes) or a single node?")
-            to_add = input("Edge (%s) / Node (%s): " % (ADD_EDGE, ADD_NODE))
-            if to_add == ADD_EDGE or to_add == ADD_NODE:
-                break
-            else:
-                print("Sorry, I didn't understand that.")
 
-        if to_add == ADD_EDGE:
-            new_node1, new_node2 = self.add_edge()
+class DistanceValidator(Validator):
+    def validate(self, document):
+        ok = regex.match('^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$', document.text)
+        if not ok:
+            raise ValidationError(
+                message='Please enter a valid number',
+                cursor_position=len(document.text))  # Move cursor to end
 
-            self.nodes[new_node1["name"]] = new_node1
-            self.nodes[new_node2["name"]] = new_node2
 
-        elif to_add == ADD_NODE:
+
+class GraphJsonShell():
+    last_saved_nodes = {}
+    current_nodes = {}
+    last_change_type = None
+    last_change_src = None
+    last_change_dest = None
+
+    def main_prompt(self):
+        # Read in old json
+        self.read_json_files()
+
+        actions = {
+            'type': 'list',
+            'name': 'current_action',
+            'message': 'What do you want to do?',
+            'choices': [
+                ADD_EDGE,
+                ADD_NODE,
+                DELETE_EDGE,
+                DELETE_NODE,
+                SAVE,
+                {
+                    'name': UNDO,
+                    'disabled': 'Unavailable at this time'
+                },
+                REVERT,
+                QUIT
+            ]
+        }
+
+        answers = prompt(actions, style=custom_style_2)
+        while answers['current_action'] != QUIT:
+            self.do_action(answers['current_action'])
+            answers = prompt(actions, style=custom_style_2)
+
+        save_before_quit = prompt({
+            'type': 'confirm',
+            'message': 'Do you want to save before exiting?',
+            'name': 'save',
+            'default': True,
+        }, style=custom_style_2)
+
+        if save_before_quit['save']:
+            self.save()
+
+    def do_action(self, action):
+        if action == ADD_EDGE:
+            new_src, new_dest = self.add_edge()
+            if new_src is None or new_dest is None:
+                return
+            print("Edge added")
+            self.last_change_type = ADD_TYPE
+            self.last_change_src = new_src[NODE_ID]
+            self.last_change_dest = new_dest[NODE_ID]
+            self.current_nodes[self.last_change_src] = new_src
+            self.current_nodes[self.last_change_dest] = new_dest
+        elif action == ADD_NODE:
             new_node = self.add_node()
-            self.nodes[new_node["name"]] = new_node
-
-    @staticmethod
-    def filter_edge_with_name(edge, name):
-        return edge["dest_id"] != name
-
-    def do_delete(self, arg):
-        'Delete an edge or node from the graph'
-        to_delete = None
-        while True:
-            print("Would you like to delete an edge or a node?")
-            to_delete = input("Edge (%s) / Node (%s): " % (ADD_EDGE, ADD_NODE))
-            if to_delete == ADD_EDGE or to_delete == ADD_NODE:
-                break
-            else:
-                print("Sorry, I didn't understand that.")
-
-        if to_delete == ADD_EDGE:
-            while True:
-                node1_name = input("Name of the edge's 1st node: ")
-                node1 = self.nodes.get(node1_name)
-                if node1:
-                    break
-                else:
-                    print("Sorry, that name does not exist.")
-
-            while True:
-                node2_name = input("Name of the edge's 2nd node: ")
-                node2 = self.nodes.get(node2_name)
-                if node2:
-                    break
-                else:
-                    print("Sorry, that name does not exist.")
-
-            # Remove the edge from the src node's adjacency set
-            adjacency_list = self.nodes[node1_name]["adjacency"]
-            adjacency_list = list(filter(lambda item: self.filter_edge_with_name(item, node2_name), adjacency_list))
-            self.nodes[node1_name]["adjacency"] = adjacency_list
-
-            # delete_nodes = input("Do you want to delete the nodes too? (Y/N): ")
-            # if delete_nodes == YES:
-            #     del self.nodes[node1_name]
-            #     del self.nodes[node2_name]
-
-        elif to_delete == ADD_NODE:
-            while True:
-                node_name = input("Name of the node: ")
-                try:
-                    del self.nodes[node_name]
-                    # TODO: go over all the nodes and remove from adjacency list
-                    break
-                except KeyError:
-                    print("Sorry, that name does not exist.")
-
-    def do_save(self, arg):
-        'Save the current nodes'
-        self.write_json_files()
-
-    def do_quit(self, arg):
-        'Exit the shell'
-        print('Thank you for using the GraphJson shell')
-        self.close()
-        return True
-
-    # --- data management methods ----
-    def add_node(self):
-        name = input("Location name: ")
-        existing_node = self.nodes.get(name)
-        if existing_node:
-            print(existing_node)
-            edit = input("The node already exists. Do you want to overwrite? (Y/N): ")
-            if edit == NO:
-                return existing_node
-
-        while True:
-            try:
-                coords = input("Coordinates (x, y): ")
-                x_coord, y_coord = coords.split(',')
-                break
-            except ValueError:
-                print("Sorry, please enter coordinates separated by a comma.")
-
-        while True:
-            response = input("Is it mappable? (Y/N): ")
-            if response == YES:
-                mappable = True
-                break
-            elif response == NO:
-                mappable = False
-                break
-            else:
-                print("Sorry, please enter 'Y' or 'N'.")
-
-        node = {"name": name, "x": float(x_coord), "y": float(y_coord), "mappable": mappable, "adjacency": []}
-        return node
+            if new_node is None:
+                return
+            print("Node added")
+            self.last_change_type = ADD_TYPE
+            self.last_change_src = new_node[NODE_ID]
+            self.last_change_dest = None
+            self.current_nodes[self.last_change_src] = new_node
+        elif action == DELETE_EDGE:
+            self.last_change_type = DEL_TYPE
+            self.delete_edge()
+        elif action == DELETE_NODE:
+            self.last_change_type = DEL_TYPE
+            success = self.delete_node()
+            print("Node %s deleted" % success)
+        elif action == SAVE:
+            self.save()
+        elif action == UNDO:
+            self.undo()
+        elif action == REVERT:
+            self.revert_changes()
 
     def add_edge(self):
         print("Adding the 1st node...")
         src = self.add_node()
+        if src is None:
+            return None, None
+        print()
         print("Adding the 2nd node...")
         dest = self.add_node()
+        if dest is None:
+            return None, None
+        print()
 
-        while True:
-            distance_type = input("Enter E for Euclidean distance or your own: ")
-            if distance_type == 'E':
-                x_dist = src["x"] - dest["x"]
-                y_dist = src["y"] - dest["y"]
-                distance = sqrt(x_dist ** 2 + y_dist ** 2)
-                break
-            else:
-                try:
-                    distance = float(distance_type)
-                    break
-                except ValueError:
-                    print("Please enter a number or E")
+        edge_questions = [
+            {
+                'type': 'rawlist',
+                'name': 'distance_type',
+                'message': 'Do you want Euclidean distance or to enter one?',
+                'choices': [
+                    'Euclidean distance',
+                    'Enter a distance',
+                ]
+            },
+            {
+                'type': 'input',
+                'message': 'Distance: ',
+                'name': DISTANCE,
+                'when': lambda answers: answers['distance_type'] == 'Enter a distance',
+                'validate': DistanceValidator,
+                'filter': lambda val : float(val)
+            },
+            {
+                'type': 'confirm',
+                'message': 'Do you want to add this edge in the other direction?',
+                'name': "bi_directional"
+            }
+        ]
 
-        print("Adding directions...")
+        edge_answers = prompt(edge_questions, style=custom_style_2)
+        print()
+        if edge_answers['distance_type'] == 'Euclidean distance':
+            x_dist = src["x"] - dest["x"]
+            y_dist = src["y"] - dest["y"]
+            distance = math.sqrt(x_dist ** 2 + y_dist ** 2)
+        else:
+            distance = edge_answers[DISTANCE]
+
+        print("Adding directions from %s to %s..." % (src[NODE_ID], dest[NODE_ID]))
+        directions = self.get_directions()
+        edge = {DEST_ID: dest[NODE_ID], DIRECTIONS: directions, DISTANCE: distance}
+        src["adjacency"].append(edge)
+
+        if edge_answers['bi_directional']:
+            print("Adding directions from %s to %s..." % (dest[NODE_ID], src[NODE_ID]))
+            directions = self.get_directions()
+            edge = {DEST_ID: src[NODE_ID], DIRECTIONS: directions, DISTANCE: distance}
+            dest["adjacency"].append(edge)
+
+        return src, dest
+
+    def get_directions(self):
         directions = []
         while True:
-            description = input("Add next direction description or type 'end': ")
-            if description == 'end':
-                break
-            else:
-                type = input("What is the type? ")
-                direction = {"description": description, "type": type}
-                directions.append(direction)
+            direction_questions = [
+                {
+                    'type': 'input',
+                    'name': DIRECTION_DESC,
+                    'message': 'Description: ',
+                    'filter': lambda val: val.strip()
+                },
+                {
+                    'type': 'rawlist',
+                    'name': DIRECTION_TYPE,
+                    'message': 'Type: ',
+                    'choices': [
+                        'STRAIGHT',
+                        'RIGHT',
+                        'LEFT',
+                    ],
+                    'filter': lambda val: val.lower()
+                },
+                {
+                    'type': 'confirm',
+                    'message': 'Would you like to add another direction?',
+                    'name': 'add_another',
+                }
+            ]
+            direction_answers = prompt(direction_questions, style=custom_style_2)
 
-        edge = {"destId": dest["name"], "directions": directions, "distance": distance}
-        src["adjacency"].append(edge)
-        return src, dest
+            direction = {DIRECTION_DESC: direction_answers[DIRECTION_DESC],
+                         DIRECTION_TYPE: direction_answers[DIRECTION_TYPE]}
+            directions.append(direction)
+            if not direction_answers['add_another']:
+                break
+
+        return directions
+
+    def add_node(self):
+        node_questions = [
+            {
+                'type': 'input',
+                'name': NODE_ID,
+                'message': 'Location name: ',
+                'filter': lambda val: val.strip()
+            },
+            {
+                'type': 'confirm',
+                'message': 'The node already exists. Do you want to use it?',
+                'name': 'use_existing_node',
+                'default': False,
+                'when': lambda answers: answers[NODE_ID] in self.current_nodes
+            },
+            {
+                'type': 'confirm',
+                'message': 'Do you want to add a different node?',
+                'name': 'get_new_input',
+                'when': lambda answers: answers[NODE_ID] in self.current_nodes and not answers['use_existing_node']
+            },
+            {
+                'type': 'input',
+                'name': 'coords',
+                'message': 'Coordinates (x, y): ',
+                'validate': CoordinatesValidator,
+                'when': lambda answers: answers[NODE_ID] not in self.current_nodes
+            },
+            {
+                'type': 'confirm',
+                'name': MAPPABLE,
+                'message': 'Is it mappable? ',
+                'when': lambda answers: answers[NODE_ID] not in self.current_nodes
+            },
+            ]
+
+        while True:
+            node_answers = prompt(node_questions, style=custom_style_2)
+            existing_node = self.current_nodes.get(node_answers[NODE_ID])
+            if existing_node:
+                if node_answers['use_existing_node']:
+                    return existing_node
+                elif node_answers['get_new_input']:
+                    continue
+                elif not node_answers['get_new_input']:
+                    return None
+            else:
+                break
+
+        x_coord, y_coord = node_answers['coords'].split(',')
+        node = {NODE_ID: node_answers[NODE_ID],
+                X_COORD: float(x_coord), Y_COORD: float(y_coord), MAPPABLE: node_answers[MAPPABLE], ADJACENCY_LIST: []}
+        return node
+
+    def delete_edge(self):
+        delete_questions = [
+            {
+                'type': 'input',
+                'name': 'src',
+                'message': 'What is the name of the src node? ',
+                'validate': lambda val: 'That name does not exist ' if val.strip() not in self.current_nodes else True,
+                'filter': lambda val: val.strip()
+            },
+            {
+                'type': 'input',
+                'name': 'dest',
+                'message': 'What is the name of the dest node? ',
+                'validate': lambda val: 'That name does not exist ' if val.strip() not in self.current_nodes else True,
+                'filter': lambda val: val.strip()
+            },
+            {
+                'type': 'expand',
+                'message': 'Do you want to delete any of the nodes?',
+                'name': 'nodes',
+                'default': 'n',
+                'choices': [
+                    {
+                        'key': 'n',
+                        'name': 'none of the nodes',
+                        'value': 'none'
+                    },
+                    {
+                        'key': 's',
+                        'name': 'src node',
+                        'value': 'src'
+                    },
+                    {
+                        'key': 'd',
+                        'name': 'dest node',
+                        'value': 'dest'
+                    },
+                    {
+                        'key': 'b',
+                        'name': 'both nodes',
+                        'value': 'both'
+                    }
+                ]
+            }
+            ]
+
+
+        delete_answers = prompt(delete_questions, style=custom_style_2)
+        src_id = delete_answers['src']
+        dest_id = delete_answers['dest']
+
+        # Remove edge
+        adjacency_list = self.current_nodes[src_id][ADJACENCY_LIST]
+        adjacency_list[:] = [edge for edge in adjacency_list if edge[DEST_ID] == dest_id]
+
+        # Remove nodes
+        if delete_answers['nodes'] != 'none':
+            if delete_answers['nodes'] != 'src':
+                self.delete_node(src_id)
+            elif delete_answers['nodes'] != 'dest':
+                self.delete_node(dest_id)
+            elif delete_answers['nodes'] != 'both':
+                self.delete_node(src_id)
+                self.delete_node(dest_id)
+
+
+    def delete_node(self, node_id=None):
+        if node_id is None:
+            answer = prompt({
+                'type': 'input',
+                'name': 'node_id',
+                'message': 'Which node do you want to remove? ',
+                'filter': lambda val: val.strip()
+            })
+            node_id = answer['node_id']
+
+            if node_id not in self.current_nodes:
+                print('That name does not exist.')
+                return "not"
+
+        # Remove node from adjacency lists
+        for id, node in self.current_nodes.items():
+            adjacency_list = node[ADJACENCY_LIST]
+            adjacency_list[:] = [edge for edge in adjacency_list if edge[DEST_ID] == node_id]
+
+        # Then remove the node itself
+        del self.current_nodes[node_id]
+        return ""
+
+    def save(self):
+        nodes_json = json.dumps(self.current_nodes, indent=4, sort_keys=True)
+        with open("nodes.json", "w") as outfile:
+            outfile.write(nodes_json)
+            self.last_saved_nodes = copy.deepcopy(self.current_nodes)
+
+    def undo(self):
+        if self.last_change_type == ADD_TYPE:
+            if self.last_change_dest is None:  # last added was a single node
+                del self.current_nodes[self.last_change_src]
+            else:
+                del self.current_nodes[self.last_change_dest]
+                # TODO: remove edge
+
+        elif self.last_change_type == DEL_TYPE:
+            # TODO: add back edge
+            pass
+
+    def revert_changes(self):
+        self.current_nodes = copy.deepcopy(self.last_saved_nodes)
 
     def read_json_files(self):
         nodes_file = Path('nodes.json')
 
         if nodes_file.exists():
             f_nodes = open(nodes_file, )
-            self.nodes = json.load(f_nodes)
+            self.current_nodes = json.load(f_nodes)
+            self.last_saved_nodes = copy.deepcopy(self.current_nodes)
             f_nodes.close()
 
-    def write_json_files(self):
-        nodes_json = json.dumps(self.nodes, indent=4, sort_keys=True)
-        with open("../../test/resources/nodes.json", "w") as outfile:
-            outfile.write(nodes_json)
-
-    # ----- record and playback -----
-    def preloop(self):
-        self.read_json_files()
-
-    def postloop(self):
-        self.write_json_files()
-
-    def precmd(self, line):
-        line = line.lower()
-        if self.file and 'playback' not in line:
-            print(line, file=self.file)
-        return line
-
-    def close(self):
-        pass
-
-def parse(arg):
-    'Convert a series of zero or more numbers to an argument tuple'
-    return tuple(map(int, arg.split()))
 
 if __name__ == '__main__':
-    GraphJsonShell().cmdloop()
+    GraphJsonShell().main_prompt()
