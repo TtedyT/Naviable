@@ -28,7 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         spinner.setSelection(db.getSpinnerChosenOption());
 
-        ImageButton backButton = findViewById(R.id.back_button);
+        ImageButton backButton = findViewById(R.id.back_button_settings);
         backButton.setOnClickListener(view -> {
             finish();
         });

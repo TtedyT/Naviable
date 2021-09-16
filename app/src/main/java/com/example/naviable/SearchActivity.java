@@ -1,24 +1,33 @@
 package com.example.naviable;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Objects;
 
 public class SearchActivity extends AppCompatActivity {
+
+    private static final int SPEECH_INPUT = 1;
 
     RecyclerView recyclerViewSearchSuggestions;
     private MyAdapter.RecyclerViewClickListener clickListener;
     private EditText searchBarEditText;
+    private ImageButton micVoiceBtn;
     private NaviableApplication app;
 
     @Override
@@ -32,6 +41,28 @@ public class SearchActivity extends AppCompatActivity {
         boolean searchTypeIsDestinationSearch = intent.getBooleanExtra("searchTypeIsDestinationSearch", false);
 
         searchBarEditText = (EditText) findViewById(R.id.search_bar_edit_text);
+        searchBarEditText.requestFocus(); // focuses on the search on when entering this screen
+        ImageButton backButton = findViewById(R.id.back_button_search);
+        micVoiceBtn = findViewById(R.id.voiceBtn);
+        micVoiceBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speech To Text");
+
+                try {
+                    startActivityForResult(intent, SPEECH_INPUT);
+                }
+                catch (Exception e){
+                    Toast.makeText(SearchActivity.this," " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        backButton.setOnClickListener(view -> {
+            finish();
+        });
         recyclerViewSearchSuggestions = (RecyclerView) findViewById(R.id.search_suggestions_recycler_view);
         app = NaviableApplication.getInstance();
 //        searchBarEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -83,5 +114,20 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {}
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("resultCode: " + resultCode);
+        if(requestCode == SPEECH_INPUT)
+        {
+            if((resultCode == RESULT_OK) && (data != null))
+            {
+                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                searchBarEditText.setText(Objects.requireNonNull((result).get(0)));
+            }
+        }
     }
 }
