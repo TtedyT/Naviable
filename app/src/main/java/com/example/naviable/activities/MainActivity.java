@@ -17,6 +17,8 @@ package com.example.naviable.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +31,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ImageButton;
 
+import com.example.naviable.InstructionsAdapter;
 import com.example.naviable.NaviableApplication;
 import com.example.naviable.R;
 import com.example.naviable.navigation.EdgeInfo;
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button goButton;
     private NaviableApplication app;
     private final int ZOOM_OUT_FACTOR=5;
+    private RecyclerView recyclerViewInstructions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +142,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 updateMapLocation();
             }
         });
+
+        recyclerViewInstructions = (RecyclerView) findViewById(R.id.directions_recycler_view);
+        ArrayList<String> temporaryDirectionsForDebug = new ArrayList<>();
+        temporaryDirectionsForDebug.add("direction 1");
+        temporaryDirectionsForDebug.add("direction 2");
+        temporaryDirectionsForDebug.add("direction 3");
+        temporaryDirectionsForDebug.add("direction 4");
+        temporaryDirectionsForDebug.add("direction 5");
+        temporaryDirectionsForDebug.add("direction 6");
+
+        InstructionsAdapter instructionsAdapter = new InstructionsAdapter(this, temporaryDirectionsForDebug);
+        recyclerViewInstructions.setAdapter(instructionsAdapter);
+        recyclerViewInstructions.setLayoutManager(new LinearLayoutManager(this));
     }
 
     /**

@@ -19,6 +19,8 @@ public class SplashScreenActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
-        }, 3000);
+        }, 100);
+        // todo change the delay back to 3000
+        //      for debug options its now 100
     }
 }
