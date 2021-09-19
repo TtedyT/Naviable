@@ -2,6 +2,7 @@
     <string name="app_name">Naviable</string>
     <string name="choose_campus_text">Campus:</string>
     <string name="search_bar_text">Where are you going?</string>
+    <string name="recents_text">Recents</string>
     <string-array name="campuses_array">
         <item>Givat Ram Campus</item>
         <item>Mount Scopus Campus</item>

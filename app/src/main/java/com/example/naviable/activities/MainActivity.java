@@ -16,12 +16,14 @@ package com.example.naviable.activities;
 //}
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.solver.widgets.analyzer.Direct;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
@@ -34,6 +36,7 @@ import android.widget.ImageButton;
 import com.example.naviable.InstructionsAdapter;
 import com.example.naviable.NaviableApplication;
 import com.example.naviable.R;
+import com.example.naviable.navigation.Direction;
 import com.example.naviable.navigation.EdgeInfo;
 import com.example.naviable.navigation.Graph;
 import com.example.naviable.navigation.MapNode;
@@ -54,6 +57,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -77,15 +81,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             startActivity(intent);
         });
 
-        // Get the navigator for the map to use
-        try {
-            InputStream nodesInput = getAssets().open("nodes.json");
-            Graph graph = new Graph(nodesInput);
-            Navigator navigator = new Navigator(graph);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -98,6 +93,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchBarSourceTextView.setVisibility(View.GONE);
         goButton = (Button) findViewById(R.id.go_button);
         goButton.setVisibility(View.GONE);
+
+        Button goButton = findViewById(R.id.go_button);
+        Navigator finalNavigator = app.getDB().getNavigator();
+        goButton.setOnClickListener(view -> {
+            String src = searchBarSourceTextView.getText().toString();
+            String dest = searchBarDestTextView.getText().toString();
+            List<Direction> directions = finalNavigator.getDirections(dest, src);
+            Log.i("MainActivity", "onCreate: printing directions..");
+            for (Direction dir : directions){
+                Log.i("MainActivity", "direction: "+ dir.getDescription());
+            }
+
+        });
 
         // todo: use "if" to check if dest is set - if so, show the source search
 //        searchBarDestTextView.setVisibility(View.GONE);

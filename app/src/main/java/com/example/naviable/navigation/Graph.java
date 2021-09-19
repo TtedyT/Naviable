@@ -11,6 +11,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Graph {
     private Map<String, MapNode> nodeMap;
@@ -43,5 +44,17 @@ public class Graph {
 
     public MapNode getNode(String stringId){
         return nodeMap.get(stringId);
+    }
+
+    public List<String> getMappableLocations(){
+        List<String> locations = new ArrayList<>();
+        for (Map.Entry<String, MapNode> entry : nodeMap.entrySet()){
+            if (entry.getValue().isMappable() == true) {
+                // Remove the word entrance for display
+                String nameForList = entry.getKey().replace("entrance", "");
+                locations.add(nameForList);
+            }
+        }
+        return locations;
     }
 }

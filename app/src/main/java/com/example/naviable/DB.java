@@ -3,10 +3,15 @@ package com.example.naviable;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.naviable.navigation.Graph;
+import com.example.naviable.navigation.Navigator;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class DB {
     private final SharedPreferences sp;
@@ -24,6 +29,8 @@ public class DB {
     private static LatLng einKeremCampus = new LatLng(31.765301216056226, 35.14982248131393);
     private static LatLng rehovotCampus = new LatLng(31.90506819982093, 34.80482152595895);
     private static HashMap<String, LatLng> campuses;
+    private Navigator navigator;
+    private List<String> locations;
 
     public DB(Context context){
         sp = context.getSharedPreferences("db", Context.MODE_PRIVATE);
@@ -35,6 +42,16 @@ public class DB {
         campuses.put("Mount Scopus Campus", mountScopusCampus);
         campuses.put("Ein Kerem Campus", einKeremCampus);
         campuses.put("Rehovot Campus", rehovotCampus);
+        // Get the navigator for the map to use
+        navigator = null;
+        try {
+            InputStream nodesInput = context.getAssets().open("nodes.json");
+            Graph graph = new Graph(nodesInput);
+            navigator = new Navigator(graph);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        locations = navigator.getLocations();
     }
 
     public void setCampus(String campus){
@@ -53,6 +70,14 @@ public class DB {
         }
         LatLng campus = campuses.get(campusName);
         return campus;
+    }
+
+    public Navigator getNavigator(){
+        return navigator;
+    }
+
+    public List<String> getLocations() {
+        return locations;
     }
 
     public void saveSpinnerChosenOption(int optionIdx){

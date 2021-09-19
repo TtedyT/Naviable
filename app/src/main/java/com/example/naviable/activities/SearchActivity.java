@@ -21,6 +21,7 @@ import com.example.naviable.NaviableApplication;
 import com.example.naviable.R;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -79,30 +80,23 @@ public class SearchActivity extends AppCompatActivity {
 //            }
 //        });
 
-        ArrayList<String> temporaryNamesForDebug = new ArrayList<>();
-        temporaryNamesForDebug.add("Canada");
-        temporaryNamesForDebug.add("Auditorium");
-        temporaryNamesForDebug.add("Silberman");
-        temporaryNamesForDebug.add("Feldman");
-        temporaryNamesForDebug.add("Levi");
-        temporaryNamesForDebug.add("Shprintzak");
-
+        List<String> locations = app.getDB().getLocations();
         this.clickListener = new MyAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
                 System.out.println("clicked position is: " + position);
                 // todo: pass to main the chosen location and if its "source" or "destination"
                 if(searchTypeIsDestinationSearch){
-                    app.setSearchDestination(temporaryNamesForDebug.get(position));
+                    app.setSearchDestination(locations.get(position));
                 }
                 else{
-                    app.setSearchSource(temporaryNamesForDebug.get(position));
+                    app.setSearchSource(locations.get(position));
                 }
                 finish();
             }
         };
 
-        MyAdapter myAdapter = new MyAdapter(this, temporaryNamesForDebug, this.clickListener);
+        MyAdapter myAdapter = new MyAdapter(this, (ArrayList<String>) locations, this.clickListener);
         recyclerViewSearchSuggestions.setAdapter(myAdapter);
         recyclerViewSearchSuggestions.setLayoutManager(new LinearLayoutManager(this));
 
