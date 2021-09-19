@@ -30,7 +30,7 @@ public class DB {
     private static LatLng rehovotCampus = new LatLng(31.90506819982093, 34.80482152595895);
     private static HashMap<String, LatLng> campuses;
     private Navigator navigator;
-    private List<String> locations;
+    private ArrayList<String> locations;
 
     public DB(Context context){
         sp = context.getSharedPreferences("db", Context.MODE_PRIVATE);
@@ -76,7 +76,7 @@ public class DB {
         return navigator;
     }
 
-    public List<String> getLocations() {
+    public ArrayList<String> getLocations() {
         return locations;
     }
 

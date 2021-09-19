@@ -46,12 +46,13 @@ public class Graph {
         return nodeMap.get(stringId);
     }
 
-    public List<String> getMappableLocations(){
-        List<String> locations = new ArrayList<>();
+    public ArrayList<String> getMappableLocations(){
+        ArrayList<String> locations = new ArrayList<>();
         for (Map.Entry<String, MapNode> entry : nodeMap.entrySet()){
-            if (entry.getValue().isMappable() == true) {
+            if (entry.getValue().isMappable()) {
                 // Remove the word entrance for display
-                String nameForList = entry.getKey().replace("entrance", "");
+//                String nameForList = entry.getKey().replace("entrance", "");
+                String nameForList = entry.getKey();
                 locations.add(nameForList);
             }
         }

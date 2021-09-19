@@ -80,7 +80,15 @@ public class SearchActivity extends AppCompatActivity {
 //            }
 //        });
 
-        List<String> locations = app.getDB().getLocations();
+        ArrayList<String> locations = new ArrayList<String>(app.getDB().getLocations());
+        ArrayList<String> temporaryNamesForDebug = new ArrayList<>();
+        temporaryNamesForDebug.add("Canada");
+        temporaryNamesForDebug.add("Auditorium");
+        temporaryNamesForDebug.add("Silberman");
+        temporaryNamesForDebug.add("Feldman");
+        temporaryNamesForDebug.add("Levi");
+        temporaryNamesForDebug.add("Shprintzak");
+
         this.clickListener = new MyAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
@@ -96,7 +104,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         };
 
-        MyAdapter myAdapter = new MyAdapter(this, (ArrayList<String>) locations, this.clickListener);
+        MyAdapter myAdapter = new MyAdapter(this, locations, this.clickListener);
         recyclerViewSearchSuggestions.setAdapter(myAdapter);
         recyclerViewSearchSuggestions.setLayoutManager(new LinearLayoutManager(this));
 
