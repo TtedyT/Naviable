@@ -126,7 +126,7 @@
                 "destId": "Engineering Building A Floor 3 south entrance",
                 "directions": [
                     {
-                        "description": "Take the rampe towards the Engineering Building",
+                        "description": "Take the ramp towards the Engineering Building",
                         "type": "straight"
                     },
                     {
@@ -150,10 +150,6 @@
                     {
                         "description": "Turn right towards the National Library ramp",
                         "type": "right"
-                    },
-                    {
-                        "description": "Take the ramp towards the National Library",
-                        "type": "straight"
                     }
                 ],
                 "distance": 0.0004679959759229066
@@ -275,7 +271,7 @@
                 "destId": "National Library entrance",
                 "directions": [
                     {
-                        "description": "Take the ramp",
+                        "description": "Take the ramp towards the National Library",
                         "type": "straight"
                     },
                     {
