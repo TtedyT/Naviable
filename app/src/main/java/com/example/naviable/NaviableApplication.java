@@ -21,7 +21,7 @@ public class NaviableApplication extends Application {
     private final MutableLiveData<String> campusChosenMutableLiveData = new MutableLiveData<>();
     private final LiveData<String> campusChosenLiveDataPublic = campusChosenMutableLiveData;
 
-    static enum SEARCH_TYPE {
+    public static enum SEARCH_TYPE {
         SOURCE,
         DESTINATION
     }

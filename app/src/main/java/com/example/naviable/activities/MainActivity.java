@@ -1,4 +1,4 @@
-package com.example.naviable;
+package com.example.naviable.activities;
 
 //import androidx.appcompat.app.AppCompatActivity;
 //
@@ -17,13 +17,9 @@ package com.example.naviable;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
@@ -31,17 +27,31 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.view.View;
 import android.widget.ImageButton;
 
+import com.example.naviable.NaviableApplication;
+import com.example.naviable.R;
+import com.example.naviable.navigation.EdgeInfo;
+import com.example.naviable.navigation.Graph;
+import com.example.naviable.navigation.MapNode;
+import com.example.naviable.navigation.Navigator;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -62,6 +72,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         });
+
+        // Get the navigator for the map to use
+        try {
+            InputStream nodesInput = getAssets().open("nodes.json");
+            Graph graph = new Graph(nodesInput);
+            Navigator navigator = new Navigator(graph);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
