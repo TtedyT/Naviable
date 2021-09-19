@@ -12,17 +12,23 @@ from PyInquirer import prompt, Separator
 from prompt_toolkit.validation import Validator, ValidationError
 from examples import custom_style_2
 
-ADD_TYPE = 0
-DEL_TYPE = 1
 # ---- Main Options ----
 ADD_EDGE = 'Add an edge'
 ADD_NODE = 'Add a single node'
 DELETE_EDGE = 'Delete an edge'
 DELETE_NODE = 'Delete a node'
+EDIT_EDGE = 'Edit an edge'
 SAVE = 'Save changes'
 UNDO = 'Undo last change'
 REVERT = 'Revert to last save'
 QUIT = 'Quit'
+# ---- Changes ----
+ADD_CHANGE = 0
+DEL_CHANGE = 1
+NO_NODES_CHANGED = 0
+SRC_NODE_CHANGED = 1
+DEST_NODE_CHANGED = 2
+BOTH_NODES_CHANGED = 3
 # ---- MapNode Fields ----
 NODE_ID = 'name'
 X_COORD = 'x'
@@ -60,6 +66,7 @@ class GraphJsonShell():
     last_saved_nodes = {}
     current_nodes = {}
     last_change_type = None
+    last_nodes_changed = None
     last_change_src = None
     last_change_dest = None
 
@@ -76,6 +83,7 @@ class GraphJsonShell():
                 ADD_NODE,
                 DELETE_EDGE,
                 DELETE_NODE,
+                EDIT_EDGE,
                 SAVE,
                 {
                     'name': UNDO,
@@ -103,31 +111,42 @@ class GraphJsonShell():
 
     def do_action(self, action):
         if action == ADD_EDGE:
+            self.last_change_type = ADD_CHANGE
+            self.last_nodes_changed = NO_NODES_CHANGED
             new_src, new_dest = self.add_edge()
             if new_src is None or new_dest is None:
                 return
             print("Edge added")
-            self.last_change_type = ADD_TYPE
             self.last_change_src = new_src[NODE_ID]
             self.last_change_dest = new_dest[NODE_ID]
             self.current_nodes[self.last_change_src] = new_src
             self.current_nodes[self.last_change_dest] = new_dest
         elif action == ADD_NODE:
+            self.last_change_type = ADD_CHANGE
+            self.last_nodes_changed = NO_NODES_CHANGED
             new_node = self.add_node()
             if new_node is None:
                 return
             print("Node added")
-            self.last_change_type = ADD_TYPE
             self.last_change_src = new_node[NODE_ID]
             self.last_change_dest = None
             self.current_nodes[self.last_change_src] = new_node
         elif action == DELETE_EDGE:
-            self.last_change_type = DEL_TYPE
-            self.delete_edge()
+            self.last_change_type = DEL_CHANGE
+            self.last_nodes_changed = NO_NODES_CHANGED
+            src_id, dest_id = self.delete_edge()
+            self.last_change_src = src_id
+            self.last_change_dest = dest_id
         elif action == DELETE_NODE:
-            self.last_change_type = DEL_TYPE
-            success = self.delete_node()
-            print("Node %s deleted" % success)
+            self.last_change_type = DEL_CHANGE
+            src_id = self.delete_node()
+            self.last_change_src = src_id
+            self.last_change_dest = None
+            if src_id != "not":
+                self.last_nodes_changed = NO_NODES_CHANGED
+            print("Node %s deleted" % src_id)
+        elif action == EDIT_EDGE:
+            self.edit_edge()
         elif action == SAVE:
             self.save()
         elif action == UNDO:
@@ -283,7 +302,92 @@ class GraphJsonShell():
         x_coord, y_coord = node_answers['coords'].split(',')
         node = {NODE_ID: node_answers[NODE_ID],
                 X_COORD: float(x_coord), Y_COORD: float(y_coord), MAPPABLE: node_answers[MAPPABLE], ADJACENCY_LIST: []}
+        self.last_nodes_changed += 1
         return node
+
+    def edit_edge(self):
+        edit_questions = [
+            {
+                'type': 'input',
+                'name': 'src',
+                'message': 'What is the name of the src node? ',
+                'validate': lambda val: 'That name does not exist ' if val.strip() not in self.current_nodes else True,
+                'filter': lambda val: val.strip()
+            },
+            {
+                'type': 'input',
+                'name': 'dest',
+                'message': 'What is the name of the dest node? ',
+                'validate': lambda val: 'That name does not exist ' if val.strip() not in self.current_nodes else True,
+                'filter': lambda val: val.strip()
+            },
+            {
+                'type': 'expand',
+                'message': 'Do you want to edit the directions or the distance of the edge?',
+                'name': 'edit',
+                'default': 'd',
+                'choices': [
+                    {
+                        'key': 'd',
+                        'name': 'directions',
+                        'value': 'dir'
+                    },
+                    {
+                        'key': 'w',
+                        'name': 'distance',
+                        'value': 'dist'
+                    }
+                ]
+            },
+            {
+                'type': 'rawlist',
+                'name': 'distance_type',
+                'message': 'Do you want Euclidean distance or to enter one?',
+                'when': lambda answers: answers['edit'] == 'dist',
+                'choices': [
+                    'Euclidean distance',
+                    'Enter a distance',
+                ]
+            },
+            {
+                'type': 'input',
+                'message': 'Distance: ',
+                'name': DISTANCE,
+                'when': lambda answers: answers['edit'] == 'dist' and answers['distance_type'] == 'Enter a distance',
+                'validate': DistanceValidator,
+                'filter': lambda val: float(val)
+            },
+        ]
+
+        edit_answers = prompt(edit_questions, style=custom_style_2)
+        src_id = edit_answers['src']
+        dest_id = edit_answers['dest']
+        src = self.current_nodes[src_id]
+        dest = self.current_nodes[dest_id]
+
+        if edit_answers['edit'] == 'dist':
+            if edit_answers['distance_type'] == 'Euclidean distance':
+                x_dist = src["x"] - dest["x"]
+                y_dist = src["y"] - dest["y"]
+                distance = math.sqrt(x_dist ** 2 + y_dist ** 2)
+            else:
+                distance = edit_answers[DISTANCE]
+
+            adjacency_list = src[ADJACENCY_LIST]
+            for i, edge in enumerate(adjacency_list):
+                if edge[DEST_ID] == dest_id:
+                    adjacency_list[i][DISTANCE] = distance
+
+        if edit_answers['edit'] == 'dir':
+            print("Editing directions from %s to %s..." % (src[NODE_ID], dest[NODE_ID]))
+            directions = self.get_directions()
+
+            adjacency_list = src[ADJACENCY_LIST]
+            for i, edge in enumerate(adjacency_list):
+                if edge[DEST_ID] == dest_id:
+                    adjacency_list[i][DIRECTIONS] = directions
+
+
 
     def delete_edge(self):
         delete_questions = [
@@ -338,17 +442,22 @@ class GraphJsonShell():
 
         # Remove edge
         adjacency_list = self.current_nodes[src_id][ADJACENCY_LIST]
-        adjacency_list[:] = [edge for edge in adjacency_list if edge[DEST_ID] == dest_id]
+        adjacency_list[:] = [edge for edge in adjacency_list if edge[DEST_ID] != dest_id]
 
         # Remove nodes
         if delete_answers['nodes'] != 'none':
-            if delete_answers['nodes'] != 'src':
+            if delete_answers['nodes'] == 'src':
                 self.delete_node(src_id)
-            elif delete_answers['nodes'] != 'dest':
+                self.last_nodes_changed = SRC_NODE_CHANGED
+            elif delete_answers['nodes'] == 'dest':
                 self.delete_node(dest_id)
-            elif delete_answers['nodes'] != 'both':
+                self.last_nodes_changed = DEST_NODE_CHANGED
+            elif delete_answers['nodes'] == 'both':
                 self.delete_node(src_id)
                 self.delete_node(dest_id)
+                self.last_nodes_changed = BOTH_NODES_CHANGED
+
+        return src_id, dest_id
 
 
     def delete_node(self, node_id=None):
@@ -372,7 +481,7 @@ class GraphJsonShell():
 
         # Then remove the node itself
         del self.current_nodes[node_id]
-        return ""
+        return node_id
 
     def save(self):
         nodes_json = json.dumps(self.current_nodes, indent=4, sort_keys=True)
@@ -381,16 +490,58 @@ class GraphJsonShell():
             self.last_saved_nodes = copy.deepcopy(self.current_nodes)
 
     def undo(self):
-        if self.last_change_type == ADD_TYPE:
-            if self.last_change_dest is None:  # last added was a single node
-                del self.current_nodes[self.last_change_src]
-            else:
-                del self.current_nodes[self.last_change_dest]
-                # TODO: remove edge
+        if self.last_change_type == ADD_CHANGE:
+            # last added was a single node
+            if self.last_change_dest is None and self.last_nodes_changed == SRC_NODE_CHANGED:
+                self.last_change_type = DEL_CHANGE
+                self.delete_node(self.last_change_src)
+            # last added was an edge
+            elif self.last_change_dest is not None:
+                self.last_change_type = DEL_CHANGE
+                self.last_nodes_changed = NO_NODES_CHANGED
+                # Remove edge
+                adjacency_list = self.current_nodes[self.last_change_src][ADJACENCY_LIST]
+                adjacency_list[:] = [edge for edge in adjacency_list if edge[DEST_ID] != self.last_change_dest]
 
-        elif self.last_change_type == DEL_TYPE:
-            # TODO: add back edge
+                # Remove any added nodes
+                if self.last_nodes_changed == SRC_NODE_CHANGED:
+                    self.delete_node(self.last_change_src)
+                    self.last_nodes_changed = SRC_NODE_CHANGED
+                elif self.last_nodes_changed == DEST_NODE_CHANGED:
+                    self.delete_node(self.last_change_dest)
+                    self.last_nodes_changed = DEST_NODE_CHANGED
+                elif self.last_nodes_changed == BOTH_NODES_CHANGED:
+                    self.delete_node(self.last_change_src)
+                    self.delete_node(self.last_change_dest)
+                    self.last_nodes_changed = BOTH_NODES_CHANGED
+
+        elif self.last_change_type == DEL_CHANGE:
+            # TODO: undo delete
             pass
+            # # last deleted was a single node
+            # if self.last_change_dest is None and self.last_nodes_changed == SRC_NODE_CHANGED:
+            #     self.last_change_type = ADD_CHANGE
+            #     self.last_nodes_changed = NO_NODES_CHANGED
+            #     self.add_node(self.last_change_src)
+            # # last added was an edge
+            # elif self.last_change_dest is not None:
+            #     self.last_change_type = DEL_CHANGE
+            #     self.last_nodes_changed = NO_NODES_CHANGED
+            #     # Remove edge
+            #     adjacency_list = self.current_nodes[self.last_change_src][ADJACENCY_LIST]
+            #     adjacency_list[:] = [edge for edge in adjacency_list if edge[DEST_ID] != self.last_change_dest]
+            #
+            #     # Remove any added nodes
+            #     if self.last_nodes_changed == SRC_NODE_CHANGED:
+            #         self.delete_node(self.last_change_src)
+            #         self.last_nodes_changed = SRC_NODE_CHANGED
+            #     elif self.last_nodes_changed == DEST_NODE_CHANGED:
+            #         self.delete_node(self.last_change_dest)
+            #         self.last_nodes_changed = DEST_NODE_CHANGED
+            #     elif self.last_nodes_changed == BOTH_NODES_CHANGED:
+            #         self.delete_node(self.last_change_src)
+            #         self.delete_node(self.last_change_dest)
+            #         self.last_nodes_changed = BOTH_NODES_CHANGED
 
     def revert_changes(self):
         self.current_nodes = copy.deepcopy(self.last_saved_nodes)
