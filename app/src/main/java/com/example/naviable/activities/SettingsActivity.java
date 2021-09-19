@@ -10,6 +10,10 @@ import android.widget.Spinner;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.naviable.DB;
+import com.example.naviable.NaviableApplication;
+import com.example.naviable.R;
+
 import java.util.ArrayList;
 
 public class SettingsActivity extends AppCompatActivity {
