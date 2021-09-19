@@ -203,13 +203,13 @@ class GraphJsonShell():
         print("Adding directions from %s to %s..." % (src[NODE_ID], dest[NODE_ID]))
         directions = self.get_directions()
         edge = {DEST_ID: dest[NODE_ID], DIRECTIONS: directions, DISTANCE: distance}
-        src["adjacency"].append(edge)
+        src[ADJACENCY_LIST].append(edge)
 
         if edge_answers['bi_directional']:
             print("Adding directions from %s to %s..." % (dest[NODE_ID], src[NODE_ID]))
             directions = self.get_directions()
             edge = {DEST_ID: src[NODE_ID], DIRECTIONS: directions, DISTANCE: distance}
-            dest["adjacency"].append(edge)
+            dest[ADJACENCY_LIST].append(edge)
 
         return src, dest
 
@@ -477,7 +477,7 @@ class GraphJsonShell():
         # Remove node from adjacency lists
         for id, node in self.current_nodes.items():
             adjacency_list = node[ADJACENCY_LIST]
-            adjacency_list[:] = [edge for edge in adjacency_list if edge[DEST_ID] == node_id]
+            adjacency_list[:] = [edge for edge in adjacency_list if edge[DEST_ID] != node_id]
 
         # Then remove the node itself
         del self.current_nodes[node_id]

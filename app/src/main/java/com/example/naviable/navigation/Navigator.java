@@ -62,4 +62,8 @@ public class Navigator {
         }
         return directions;
     }
+
+    public ArrayList<String> getLocations(){
+        return graph.getMappableLocations();
+    }
 }

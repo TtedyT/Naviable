@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.SearchActivity"
-    android:background="#e0debf">
+    android:background="@color/white">
 
     <!--    todo: move appbar and his content to a new view and import it inside each sceren (or fragment)-->
     <View
@@ -28,6 +28,21 @@
         app:layout_constraintTop_toTopOf="@id/app_bar"
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/alef"/>
+
+    <TextView
+        android:textColor="@color/black"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_suggestions_recycler_view"
+        app:layout_constraintVertical_bias="0"
+        android:text="@string/recents_text"
         android:fontFamily="@font/alef"/>
 
     <EditText
