@@ -1,4 +1,4 @@
-package com.example.naviable;
+package com.example.naviable.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +15,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.naviable.MyAdapter;
+import com.example.naviable.NaviableApplication;
+import com.example.naviable.R;
 
 import java.util.ArrayList;
 import java.util.Locale;

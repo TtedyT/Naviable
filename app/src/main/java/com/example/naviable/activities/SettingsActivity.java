@@ -1,4 +1,4 @@
-package com.example.naviable;
+package com.example.naviable.activities;
 
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +9,10 @@ import android.widget.Spinner;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.naviable.DB;
+import com.example.naviable.NaviableApplication;
+import com.example.naviable.R;
 
 import java.util.ArrayList;
 
