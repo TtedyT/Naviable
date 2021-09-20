@@ -55,6 +55,7 @@
     <TextView
         android:id="@+id/search_bar_dest_text_view"
         android:hint="where are you going?"
+        android:gravity="center|left"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@drawable/rounded_rectangle_view"
@@ -76,6 +77,7 @@
         android:layout_height="50dp"
         android:background="@drawable/rounded_rectangle_view"
         android:fontFamily="@font/alef"
+        android:gravity="center|left"
         app:layout_constraintEnd_toEndOf="@+id/search_bar_dest_text_view"
         app:layout_constraintStart_toStartOf="@+id/search_bar_dest_text_view"
         app:layout_constraintTop_toBottomOf="@id/search_bar_dest_text_view"

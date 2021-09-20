@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -55,12 +56,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         String location = searchSuggestions.get(position);
         if(this.searchSuggestionsRecents.contains(location)){
-            String recentLoc = location + " !";
-            holder.searchSuggestionTextView.setText(recentLoc);
+            holder.searchSuggestionImageView.setImageResource(R.drawable.recent_searched);
         }
         else {
-            holder.searchSuggestionTextView.setText(location);
+            holder.searchSuggestionImageView.setImageResource(R.drawable.not_recent_search);
         }
+        holder.searchSuggestionTextView.setText(location);
     }
 
     @Override
@@ -107,11 +108,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView searchSuggestionTextView;
+        ImageView searchSuggestionImageView;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             searchSuggestionTextView = itemView.findViewById(R.id.mySearchSuggestionTextView);
+            searchSuggestionImageView = itemView.findViewById(R.id.mySearchSuggestionImageView);
         }
 
         @Override
