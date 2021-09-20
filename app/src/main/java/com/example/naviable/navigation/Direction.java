@@ -6,6 +6,15 @@ import java.util.Map;
 public class Direction {
     private String description;
     private String type;
+    /**
+     * base on the python file in assets:
+     *
+     * 'STRAIGHT',
+     * 'RIGHT',
+     * 'LEFT',
+     * 'ELEVATOR'
+     */
+
     private static Map<String, String> path_map = new HashMap<>();
 
     public Direction(String description, String type){
@@ -19,8 +28,11 @@ public class Direction {
         return description;
     }
 
-    public static String getPath(String type){
-        return path_map.get(type);
-    }
+//    public static String getPath(String type){
+//        return path_map.get(type);
+//    }
 
+    public String getType(){
+        return this.type;
+    }
 }
