@@ -1,4 +1,84 @@
 {
+    "Canada Hall entrance": {
+        "adjacency": [
+            {
+                "destId": "Main Gate",
+                "directions": [
+                    {
+                        "description": "Turn left",
+                        "type": "left"
+                    },
+                    {
+                        "description": "Head south along path",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn right",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Turn left",
+                        "type": "left"
+                    },
+                    {
+                        "description": "Take ramp to Sderot Magnes",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn right onto Sderot Magnes",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Head north on Sderot Magnes",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn left",
+                        "type": "left"
+                    },
+                    {
+                        "description": "Exit the main gate",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0009885677146430302
+            },
+            {
+                "destId": "Engineering Building C Floor 1 east entrance",
+                "directions": [
+                    {
+                        "description": "Turn right",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Take the ramp to Derech Brodetski",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn right onto Derech Brodetski",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Head south on Derech Brodetski",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn right at Engineering Building C",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Head towards the east entrance",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.001348157988073972
+            }
+        ],
+        "mappable": true,
+        "name": "Canada Hall entrance",
+        "x": 31.778160289236446,
+        "y": 35.19785848137681
+    },
     "Engineering Building A Floor 1": {
         "adjacency": [
             {
@@ -90,6 +170,28 @@
                     }
                 ],
                 "distance": 0.0003449356398799522
+            },
+            {
+                "destId": "Main Gate",
+                "directions": [
+                    {
+                        "description": "Turn right onto Sderot Magnes",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Head north on Sderot Magnes",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn left",
+                        "type": "left"
+                    },
+                    {
+                        "description": "Exit the main gate",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0025987118274694333
             }
         ],
         "mappable": false,
@@ -194,6 +296,16 @@
                     }
                 ],
                 "distance": 0.00033143946676791197
+            },
+            {
+                "destId": "Engineering Building C Floor 1 east entrance",
+                "directions": [
+                    {
+                        "description": "Exit the east entrance",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.00017111629729388904
             }
         ],
         "mappable": true,
@@ -202,7 +314,48 @@
         "y": 35.19776376701855
     },
     "Engineering Building C Floor 1 east entrance": {
-        "adjacency": [],
+        "adjacency": [
+            {
+                "destId": "Canada Hall entrance",
+                "directions": [
+                    {
+                        "description": "Head towards Derech Brodetski",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn left onto Derech Brodetski",
+                        "type": "left"
+                    },
+                    {
+                        "description": "Head north on Derech Brodetski",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn left onto ramp towards Canada Hall",
+                        "type": "left"
+                    },
+                    {
+                        "description": "Take the ramp",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn left",
+                        "type": "left"
+                    }
+                ],
+                "distance": 0.001348157988073972
+            },
+            {
+                "destId": "Engineering Building C Floor 1",
+                "directions": [
+                    {
+                        "description": "Enter the east entrance",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.00017111629729388904
+            }
+        ],
         "mappable": false,
         "name": "Engineering Building C Floor 1 east entrance",
         "x": 31.776812264004256,
@@ -517,6 +670,88 @@
                     }
                 ],
                 "distance": 0.0006678899563281919
+            },
+            {
+                "destId": "Sherman Building entrance",
+                "directions": [
+                    {
+                        "description": "Enter the main gate",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn right",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Take the ramp",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.000397780600507557
+            },
+            {
+                "destId": "Engineering Building ramp",
+                "directions": [
+                    {
+                        "description": "Enter the main gate",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn left",
+                        "type": "left"
+                    },
+                    {
+                        "description": "Turn right onto Sderot Magnes",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Head south on Sderot Magnes",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn left onto the Engineering Building ramp",
+                        "type": "left"
+                    }
+                ],
+                "distance": 0.0028160917045036322
+            },
+            {
+                "destId": "Canada Hall entrance",
+                "directions": [
+                    {
+                        "description": "Turn left",
+                        "type": "left"
+                    },
+                    {
+                        "description": "Turn right onto Sderot Magnes",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Head south on Sderot Magnes",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn left onto ramp at Engineering Building C",
+                        "type": "left"
+                    },
+                    {
+                        "description": "Head north along ramp",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn right",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Turn left",
+                        "type": "left"
+                    },
+                    {
+                        "description": "Head north along path",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0009885677146430302
             }
         ],
         "mappable": true,
@@ -592,10 +827,6 @@
                     {
                         "description": "Turn right onto the Engineering Building ramp",
                         "type": "right"
-                    },
-                    {
-                        "description": "Take the ramp",
-                        "type": "straight"
                     }
                 ],
                 "distance": 0.0004679959759229066
@@ -679,6 +910,24 @@
                     }
                 ],
                 "distance": 0.0005134184155834485
+            },
+            {
+                "destId": "Main Gate",
+                "directions": [
+                    {
+                        "description": "Take the ramp",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn left",
+                        "type": "left"
+                    },
+                    {
+                        "description": "Exit through the main gate",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.000397780600507557
             }
         ],
         "mappable": true,
