@@ -88,13 +88,7 @@ public class SearchActivity extends AppCompatActivity {
 //        temporaryNamesForDebug.add("Feldman");
 //        temporaryNamesForDebug.add("Levi");
 //        temporaryNamesForDebug.add("Shprintzak");
-//        temporaryNamesForDebug.add("loc1");
-//        temporaryNamesForDebug.add("loc2");
-//        temporaryNamesForDebug.add("loc3");
-//        temporaryNamesForDebug.add("loc4");
-//        temporaryNamesForDebug.add("loc5");
-//        temporaryNamesForDebug.add("loc6");
-//        temporaryNamesForDebug.add("loc7");
+
 
         this.clickListener = new MyAdapter.RecyclerViewClickListener() {
             @Override

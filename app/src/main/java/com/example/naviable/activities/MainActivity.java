@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.naviable.InstructionsAdapter;
 import com.example.naviable.NaviableApplication;
@@ -59,6 +60,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import es.dmoral.toasty.Toasty;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -99,10 +102,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         goButton.setOnClickListener(view -> {
             String src = searchBarSourceTextView.getText().toString();
             String dest = searchBarDestTextView.getText().toString();
-            List<Direction> directions = finalNavigator.getDirections(dest, src);
-            Log.i("MainActivity", "onCreate: printing directions..");
-            for (Direction dir : directions){
-                Log.i("MainActivity", "direction: "+ dir.getDescription());
+            if(src.equals(dest)){
+                Toasty.info(this, "Start and destination are the same.", Toast.LENGTH_SHORT, true).show();
+            }
+            else {
+                List<Direction> directions = finalNavigator.getDirections(dest, src);
+                if(directions.isEmpty()){
+                    Toasty.info(this, "No accessible route found.", Toast.LENGTH_SHORT, true).show();
+                }
+                else {
+                    Log.i("MainActivity", "onCreate: printing directions..");
+                    for (Direction dir : directions) {
+                        Log.i("MainActivity", "direction: " + dir.getDescription());
+                    }
+                }
             }
 
         });
