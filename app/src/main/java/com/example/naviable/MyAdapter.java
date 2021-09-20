@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,13 +23,24 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
     private Context context;
     private ArrayList<String> searchSuggestions;
     private ArrayList<String> searchSuggestionsAll;
+    private ArrayList<String> searchSuggestionsRecents;
+
     private final RecyclerViewClickListener clickListener;
 
-    public MyAdapter(Context context, ArrayList<String> searchSuggestions, RecyclerViewClickListener clickListener){
+    public MyAdapter(Context context, ArrayList<String> searchSuggestions, ArrayList<String> recentSearchedLocations, RecyclerViewClickListener clickListener){
         this.context = context;
-        this.searchSuggestions = searchSuggestions;
-        this.searchSuggestionsAll = new ArrayList<>(searchSuggestions);
+        this.searchSuggestionsRecents = new ArrayList<>(recentSearchedLocations);
+        makeRecentSearchesFirst(searchSuggestions);
+        this.searchSuggestionsAll = new ArrayList<>(this.searchSuggestions);
         this.clickListener = clickListener;
+    }
+
+    public void makeRecentSearchesFirst(ArrayList<String> searchSuggestions){
+        ArrayList<String> searchSuggestionsNotRecents = new ArrayList<>(searchSuggestions);
+        searchSuggestionsNotRecents.removeAll(this.searchSuggestionsRecents);
+
+        this.searchSuggestions = new ArrayList<>(this.searchSuggestionsRecents);
+        this.searchSuggestions.addAll(searchSuggestionsNotRecents);
     }
 
     @NonNull
@@ -41,7 +54,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.searchSuggestionTextView.setText(searchSuggestions.get(position));
+        String location = searchSuggestions.get(position);
+        if(this.searchSuggestionsRecents.contains(location)){
+            holder.searchSuggestionImageView.setImageResource(R.drawable.recent_searched);
+        }
+        else {
+            holder.searchSuggestionImageView.setImageResource(R.drawable.not_recent_search);
+        }
+        holder.searchSuggestionTextView.setText(location);
     }
 
     @Override
@@ -88,11 +108,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView searchSuggestionTextView;
+        ImageView searchSuggestionImageView;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             searchSuggestionTextView = itemView.findViewById(R.id.mySearchSuggestionTextView);
+            searchSuggestionImageView = itemView.findViewById(R.id.mySearchSuggestionImageView);
         }
 
         @Override
