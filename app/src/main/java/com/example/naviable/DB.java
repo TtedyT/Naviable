@@ -6,15 +6,23 @@ import android.content.SharedPreferences;
 import com.example.naviable.navigation.Graph;
 import com.example.naviable.navigation.Navigator;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class DB {
     private final SharedPreferences sp;
+    private final SharedPreferences spRecentSearchedLocations;
 
 //    public String[] campusesNames = new String[] {
 //            "Givat Ram Campus",
@@ -32,8 +40,12 @@ public class DB {
     private Navigator navigator;
     private ArrayList<String> locations;
 
+    private LinkedBlockingQueue<String> recentLocations;
+    private int RECENT_LOCATIONS_MAX_SIZE = 10;
+
     public DB(Context context){
         sp = context.getSharedPreferences("db", Context.MODE_PRIVATE);
+        spRecentSearchedLocations = context.getSharedPreferences("recentSearchedLocations", Context.MODE_PRIVATE);
 
         // todo: remove once we have firebase
         campuses = new HashMap<>();
@@ -52,6 +64,8 @@ public class DB {
             e.printStackTrace();
         }
         locations = navigator.getLocations();
+        recentLocations = new LinkedBlockingQueue<>();
+        fetchRecentSearches();
     }
 
     public void setCampus(String campus){
@@ -90,6 +104,36 @@ public class DB {
         return sp.getInt("spinnerChosenOption", 0);
     }
 
+    public void addRecentLocation(String location){
+        recentLocations.remove(location); // removes the location if already exist to push it as last
+        if(recentLocations.size()==RECENT_LOCATIONS_MAX_SIZE){
+            // element wasnt in and reached full capacity
+            recentLocations.poll();
+        }
+        recentLocations.add(location);
+        saveRecentsToSp();
+    }
+
+    public Object[] getRecentLocationsStaticArray(){
+        return recentLocations.toArray();
+    }
+
+    private void saveRecentsToSp(){
+        Gson gson = new Gson();
+        SharedPreferences.Editor editor = spRecentSearchedLocations.edit();
+        String recentLocationsStringRepre = gson.toJson(this.recentLocations);
+        editor.putString("recentLocationsKey", recentLocationsStringRepre);
+        editor.apply();
+    }
+
+    private void fetchRecentSearches(){
+        Gson gson = new Gson();
+        Type type = new TypeToken<LinkedBlockingQueue<String>>() {}.getType();
+        String recentLocationsStringRepre = spRecentSearchedLocations.getString("recentLocationsKey", "");
+        if(! recentLocationsStringRepre.isEmpty()){
+            this.recentLocations = gson.fromJson(recentLocationsStringRepre, type);
+        }
+    }
 //    public String[] getCampusesNames(){
 //        return campusesNames;
 //    }
