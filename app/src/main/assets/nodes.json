@@ -10,6 +10,16 @@
                     }
                 ],
                 "distance": 0.0
+            },
+            {
+                "destId": "Engineering Building B Floor 1",
+                "directions": [
+                    {
+                        "description": "Head north down the hallway",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0003806950070451271
             }
         ],
         "mappable": true,
@@ -38,6 +48,16 @@
                     }
                 ],
                 "distance": 0.0
+            },
+            {
+                "destId": "Engineering Building B Floor 3",
+                "directions": [
+                    {
+                        "description": "Head north down the hallway",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0003806950070451271
             }
         ],
         "mappable": true,
@@ -77,6 +97,82 @@
         "x": 31.77625754786799,
         "y": 35.19782230762318
     },
+    "Engineering Building B Floor 1": {
+        "adjacency": [
+            {
+                "destId": "Engineering Building B Floor 3",
+                "directions": [
+                    {
+                        "description": "Take the elevator to floor 3",
+                        "type": "elevator"
+                    }
+                ],
+                "distance": 0.0
+            },
+            {
+                "destId": "Engineering Building A Floor 1",
+                "directions": [
+                    {
+                        "description": "Head south down the hallway",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0003806950070451271
+            },
+            {
+                "destId": "Engineering Building C Floor 1",
+                "directions": [
+                    {
+                        "description": "Head north down the hallway",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.00033143946676791197
+            }
+        ],
+        "mappable": true,
+        "name": "Engineering Building B Floor 1",
+        "x": 31.77663425819237,
+        "y": 35.19776737111534
+    },
+    "Engineering Building B Floor 3": {
+        "adjacency": [
+            {
+                "destId": "Engineering Building B Floor 1",
+                "directions": [
+                    {
+                        "description": "Take the elevator to floor 1",
+                        "type": "elevator"
+                    }
+                ],
+                "distance": 0.0
+            },
+            {
+                "destId": "Engineering Building A Floor 3",
+                "directions": [
+                    {
+                        "description": "Head south down the hallway",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0003806950070451271
+            },
+            {
+                "destId": "Engineering Building C Floor 3",
+                "directions": [
+                    {
+                        "description": "Head north down the hallway",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.00033143946676791197
+            }
+        ],
+        "mappable": true,
+        "name": "Engineering Building B Floor 3",
+        "x": 31.77663425819237,
+        "y": 35.19776737111534
+    },
     "Engineering Building C Floor 1": {
         "adjacency": [
             {
@@ -88,6 +184,16 @@
                     }
                 ],
                 "distance": 0.0
+            },
+            {
+                "destId": "Engineering Building B Floor 1",
+                "directions": [
+                    {
+                        "description": "Head south down the hallway",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.00033143946676791197
             }
         ],
         "mappable": true,
@@ -113,6 +219,16 @@
                     }
                 ],
                 "distance": 0.0
+            },
+            {
+                "destId": "Engineering Building B Floor 3",
+                "directions": [
+                    {
+                        "description": "Head south down the hallway",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.00033143946676791197
             }
         ],
         "mappable": true,

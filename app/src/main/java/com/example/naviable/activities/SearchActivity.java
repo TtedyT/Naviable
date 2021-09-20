@@ -81,13 +81,13 @@ public class SearchActivity extends AppCompatActivity {
 //        });
 
         ArrayList<String> locations = new ArrayList<String>(app.getDB().getLocations());
-        ArrayList<String> temporaryNamesForDebug = new ArrayList<>();
-        temporaryNamesForDebug.add("Canada");
-        temporaryNamesForDebug.add("Auditorium");
-        temporaryNamesForDebug.add("Silberman");
-        temporaryNamesForDebug.add("Feldman");
-        temporaryNamesForDebug.add("Levi");
-        temporaryNamesForDebug.add("Shprintzak");
+//        ArrayList<String> temporaryNamesForDebug = new ArrayList<>();
+//        temporaryNamesForDebug.add("Canada");
+//        temporaryNamesForDebug.add("Auditorium");
+//        temporaryNamesForDebug.add("Silberman");
+//        temporaryNamesForDebug.add("Feldman");
+//        temporaryNamesForDebug.add("Levi");
+//        temporaryNamesForDebug.add("Shprintzak");
 
         this.clickListener = new MyAdapter.RecyclerViewClickListener() {
             @Override
