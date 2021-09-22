@@ -27,20 +27,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
 
     private final RecyclerViewClickListener clickListener;
 
-    public MyAdapter(Context context, ArrayList<String> searchSuggestions, ArrayList<String> recentSearchedLocations, RecyclerViewClickListener clickListener){
+    public MyAdapter(Context context, ArrayList<String> searchSuggestionsNotRecents, ArrayList<String> recentSearchedLocations, RecyclerViewClickListener clickListener){
         this.context = context;
         this.searchSuggestionsRecents = new ArrayList<>(recentSearchedLocations);
-        makeRecentSearchesFirst(searchSuggestions);
+        this.searchSuggestions = new ArrayList<>(recentSearchedLocations);
+        ArrayList<String> notRecentCopy = new ArrayList<>(searchSuggestionsNotRecents);
+        this.searchSuggestions.addAll(notRecentCopy);
         this.searchSuggestionsAll = new ArrayList<>(this.searchSuggestions);
+        // makeRecentSearchesFirst(searchSuggestions);
         this.clickListener = clickListener;
-    }
-
-    public void makeRecentSearchesFirst(ArrayList<String> searchSuggestions){
-        ArrayList<String> searchSuggestionsNotRecents = new ArrayList<>(searchSuggestions);
-        searchSuggestionsNotRecents.removeAll(this.searchSuggestionsRecents);
-
-        this.searchSuggestions = new ArrayList<>(this.searchSuggestionsRecents);
-        this.searchSuggestions.addAll(searchSuggestionsNotRecents);
     }
 
     @NonNull
@@ -54,7 +49,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        String location = searchSuggestions.get(position);
+        String location = this.searchSuggestions.get(position);
         if(this.searchSuggestionsRecents.contains(location)){
             holder.searchSuggestionImageView.setImageResource(R.drawable.recent_searched);
         }
@@ -66,7 +61,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
 
     @Override
     public int getItemCount() {
-        return searchSuggestions.size();
+        return this.searchSuggestions.size();
     }
 
     @Override
@@ -119,6 +114,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
 
         @Override
         public void onClick(View v) {
+            //System.out.println("adapter position: " + getAdapterPosition());
+            //System.out.println(searchSuggestions);
             clickListener.onClick(v, getAdapterPosition());
         }
     }

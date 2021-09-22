@@ -107,9 +107,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        temporaryDirectionsForDebug.add("direction 5");
 //        temporaryDirectionsForDebug.add("direction 6");
 
-        InstructionsAdapter instructionsAdapter = new InstructionsAdapter(this, n);
-        recyclerViewInstructions.setAdapter(instructionsAdapter);
-        recyclerViewInstructions.setLayoutManager(new LinearLayoutManager(this));
+
 
         Button goButton = findViewById(R.id.go_button);
         Navigator finalNavigator = app.getDB().getNavigator();
@@ -126,10 +124,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 else {
                     // Log.i("MainActivity", "onCreate: printing directions..");
-                    for (Direction dir : directions) {
-                        // Log.i("MainActivity", "direction: " + dir.getDescription());
-
-                    }
+                    InstructionsAdapter instructionsAdapter = new InstructionsAdapter(this, directions);
+                    recyclerViewInstructions.setAdapter(instructionsAdapter);
+                    recyclerViewInstructions.setLayoutManager(new LinearLayoutManager(this));
+//                    for (Direction dir : directions) {
+//                        // Log.i("MainActivity", "direction: " + dir.getDescription());
+//
+//                    }
                 }
             }
 
