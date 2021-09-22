@@ -2,6 +2,7 @@ package com.example.naviable;
 
 import android.annotation.SuppressLint;
 import android.media.Image;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.ImageAnalysis;
@@ -54,6 +55,7 @@ public class MyImageAnalyzer implements ImageAnalysis.Analyzer {
                 case Barcode.TYPE_URL:
                     // code block
                     url = barcode.getUrl();
+                    Log.i("QR Scanner:", "readBarcodeData: " + url.getUrl());
                     break;
                 default:
                     // code block
