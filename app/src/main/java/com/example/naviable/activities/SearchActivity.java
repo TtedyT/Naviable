@@ -89,13 +89,24 @@ public class SearchActivity extends AppCompatActivity {
 //        temporaryNamesForDebug.add("Levi");
 //        temporaryNamesForDebug.add("Shprintzak");
 
+        ArrayList<String> recentSearchedLocations = new ArrayList<>();
+        Object[] recentSearchedLocationsObjectArr = app.getDB().getRecentLocationsStaticArray();
+        for(int i=0; i<recentSearchedLocationsObjectArr.length; i++){
+            recentSearchedLocations.add(recentSearchedLocationsObjectArr[i].toString());
+        }
+
+        ArrayList<String> searchSuggestionsNotRecents = new ArrayList<>(locations);
+        searchSuggestionsNotRecents.removeAll(recentSearchedLocations);
+
+        ArrayList<String> updatedLocationRecentThenNotRecent = new ArrayList<>(recentSearchedLocations);
+        updatedLocationRecentThenNotRecent.addAll(searchSuggestionsNotRecents);
 
         this.clickListener = new MyAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
-                System.out.println("clicked position is: " + position);
+                // System.out.println("clicked position is: " + position);
                 // todo: pass to main the chosen location and if its "source" or "destination"
-                String location = locations.get(position);
+                String location = updatedLocationRecentThenNotRecent.get(position);
                 if(searchTypeIsDestinationSearch){
                     app.setSearchDestination(location);
                 }
@@ -107,13 +118,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         };
 
-        ArrayList<String> recentSearchedLocations = new ArrayList<>();
-        Object[] recentSearchedLocationsObjectArr = app.getDB().getRecentLocationsStaticArray();
-        for(int i=0; i<recentSearchedLocationsObjectArr.length; i++){
-            recentSearchedLocations.add(recentSearchedLocationsObjectArr[i].toString());
-        }
-
-        MyAdapter myAdapter = new MyAdapter(this, locations, recentSearchedLocations, this.clickListener);
+        MyAdapter myAdapter = new MyAdapter(this, searchSuggestionsNotRecents, recentSearchedLocations, this.clickListener);
         recyclerViewSearchSuggestions.setAdapter(myAdapter);
         recyclerViewSearchSuggestions.setLayoutManager(new LinearLayoutManager(this));
 

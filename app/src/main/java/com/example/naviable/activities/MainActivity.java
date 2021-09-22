@@ -97,6 +97,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         goButton = (Button) findViewById(R.id.go_button);
         goButton.setVisibility(View.GONE);
 
+
+        recyclerViewInstructions = (RecyclerView) findViewById(R.id.directions_recycler_view);
+//        ArrayList<String> temporaryDirectionsForDebug = new ArrayList<>();
+//        temporaryDirectionsForDebug.add("direction 1");
+//        temporaryDirectionsForDebug.add("direction 2");
+//        temporaryDirectionsForDebug.add("direction 3");
+//        temporaryDirectionsForDebug.add("direction 4");
+//        temporaryDirectionsForDebug.add("direction 5");
+//        temporaryDirectionsForDebug.add("direction 6");
+
+
+
         Button goButton = findViewById(R.id.go_button);
         Navigator finalNavigator = app.getDB().getNavigator();
         goButton.setOnClickListener(view -> {
@@ -111,10 +123,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Toasty.info(this, "No accessible route found.", Toast.LENGTH_SHORT, true).show();
                 }
                 else {
-                    Log.i("MainActivity", "onCreate: printing directions..");
-                    for (Direction dir : directions) {
-                        Log.i("MainActivity", "direction: " + dir.getDescription());
-                    }
+                    // Log.i("MainActivity", "onCreate: printing directions..");
+                    InstructionsAdapter instructionsAdapter = new InstructionsAdapter(this, directions);
+                    recyclerViewInstructions.setAdapter(instructionsAdapter);
+                    recyclerViewInstructions.setLayoutManager(new LinearLayoutManager(this));
+//                    for (Direction dir : directions) {
+//                        // Log.i("MainActivity", "direction: " + dir.getDescription());
+//
+//                    }
                 }
             }
 
@@ -163,19 +179,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 updateMapLocation();
             }
         });
-
-        recyclerViewInstructions = (RecyclerView) findViewById(R.id.directions_recycler_view);
-        ArrayList<String> temporaryDirectionsForDebug = new ArrayList<>();
-        temporaryDirectionsForDebug.add("direction 1");
-        temporaryDirectionsForDebug.add("direction 2");
-        temporaryDirectionsForDebug.add("direction 3");
-        temporaryDirectionsForDebug.add("direction 4");
-        temporaryDirectionsForDebug.add("direction 5");
-        temporaryDirectionsForDebug.add("direction 6");
-
-        InstructionsAdapter instructionsAdapter = new InstructionsAdapter(this, temporaryDirectionsForDebug);
-        recyclerViewInstructions.setAdapter(instructionsAdapter);
-        recyclerViewInstructions.setLayoutManager(new LinearLayoutManager(this));
     }
 
     /**
