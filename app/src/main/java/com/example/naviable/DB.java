@@ -24,29 +24,21 @@ public class DB {
     private final SharedPreferences sp;
     private final SharedPreferences spRecentSearchedLocations;
 
-//    public String[] campusesNames = new String[] {
-//            "Givat Ram Campus",
-//            "Mount Scopus Campus",
-//            "Ein Kerem Campus",
-//            "Rehovot Campus"
-//    };
 
-    // todo: move to firebase
-    private static LatLng givatRamCampus = new LatLng(31.776581574592292, 35.1981551984834);
-    private static LatLng mountScopusCampus = new LatLng(31.792265890048565, 35.24341248840097);
-    private static LatLng einKeremCampus = new LatLng(31.765301216056226, 35.14982248131393);
-    private static LatLng rehovotCampus = new LatLng(31.90506819982093, 34.80482152595895);
+    private static final LatLng givatRamCampus = new LatLng(31.776581574592292, 35.1981551984834);
+    private static final LatLng mountScopusCampus = new LatLng(31.792265890048565, 35.24341248840097);
+    private static final LatLng einKeremCampus = new LatLng(31.765301216056226, 35.14982248131393);
+    private static final LatLng rehovotCampus = new LatLng(31.90506819982093, 34.80482152595895);
+    private static final int RECENT_LOCATIONS_MAX_SIZE = 5;
     private static HashMap<String, LatLng> campuses;
     private Navigator navigator;
     private ArrayList<String> locations;
 
     private LinkedBlockingQueue<String> recentLocations;
-    private int RECENT_LOCATIONS_MAX_SIZE = 10;
 
 
     /**
      * base on the python file in assets:
-     *
      * 'straight',
      * 'right',
      * 'left',

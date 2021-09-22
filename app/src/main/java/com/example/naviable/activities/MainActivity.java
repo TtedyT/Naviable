@@ -17,11 +17,13 @@ package com.example.naviable.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final int ZOOM_OUT_FACTOR=5;
     private RecyclerView recyclerViewInstructions;
 
-    @Override
+  @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -66,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         });
+	Drawable searchBackground = ContextCompat.getDrawable(this,
+			R.drawable.rounded_rectangle_view_search_background);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -128,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     searchBarSourceTextView.setVisibility(View.VISIBLE);
                     backButton.setVisibility(View.VISIBLE);
                     goButton.setVisibility(View.VISIBLE);
-                    constraintLayout.setBackgroundColor(0xffffffff);
+				  	constraintLayout.setBackground(searchBackground);
                 }
             }
         });
