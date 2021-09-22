@@ -1,4 +1,4 @@
-package com.example.naviable;
+package com.example.naviable.activities;
 
 //import androidx.appcompat.app.AppCompatActivity;
 //
@@ -16,38 +16,59 @@ package com.example.naviable;
 //}
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.solver.widgets.analyzer.Direct;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.view.View;
 import android.widget.ImageButton;
 
+import com.example.naviable.InstructionsAdapter;
+import com.example.naviable.NaviableApplication;
+import com.example.naviable.R;
+import com.example.naviable.navigation.Direction;
+import com.example.naviable.navigation.EdgeInfo;
+import com.example.naviable.navigation.Graph;
+import com.example.naviable.navigation.MapNode;
+import com.example.naviable.navigation.Navigator;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private TextView searchBarDestTextView;
     private TextView searchBarSourceTextView;
+    private Button goButton;
     private NaviableApplication app;
+    private final int ZOOM_OUT_FACTOR=5;
+    private RecyclerView recyclerViewInstructions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +96,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         searchBarDestTextView = (TextView) findViewById(R.id.search_bar_dest_text_view);
         searchBarSourceTextView = (TextView) findViewById(R.id.search_bar_source_text_view);
+        searchBarSourceTextView.setVisibility(View.GONE);
+        goButton = (Button) findViewById(R.id.go_button);
+        goButton.setVisibility(View.GONE);
+
+        Button goButton = findViewById(R.id.go_button);
+        Navigator finalNavigator = app.getDB().getNavigator();
+        goButton.setOnClickListener(view -> {
+            String src = searchBarSourceTextView.getText().toString();
+            String dest = searchBarDestTextView.getText().toString();
+            List<Direction> directions = finalNavigator.getDirections(dest, src);
+            Log.i("MainActivity", "onCreate: printing directions..");
+            for (Direction dir : directions){
+                Log.i("MainActivity", "direction: "+ dir.getDescription());
+            }
+
+        });
+
         // todo: use "if" to check if dest is set - if so, show the source search
 //        searchBarDestTextView.setVisibility(View.GONE);
 
@@ -90,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onChanged(String observedDestination) {
                 if(!observedDestination.isEmpty()){
                     searchBarDestTextView.setText(observedDestination);
+                    searchBarSourceTextView.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -106,9 +145,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onChanged(String observedSource) {
                 if(!observedSource.isEmpty()){
                     searchBarSourceTextView.setText(observedSource);
+                    goButton.setVisibility(View.VISIBLE);
                 }
             }
         });
+
+        app.getCampusChosenLiveDataPublic().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                updateMapLocation();
+            }
+        });
+
+        recyclerViewInstructions = (RecyclerView) findViewById(R.id.directions_recycler_view);
+        ArrayList<String> temporaryDirectionsForDebug = new ArrayList<>();
+        temporaryDirectionsForDebug.add("direction 1");
+        temporaryDirectionsForDebug.add("direction 2");
+        temporaryDirectionsForDebug.add("direction 3");
+        temporaryDirectionsForDebug.add("direction 4");
+        temporaryDirectionsForDebug.add("direction 5");
+        temporaryDirectionsForDebug.add("direction 6");
+
+        InstructionsAdapter instructionsAdapter = new InstructionsAdapter(this, temporaryDirectionsForDebug);
+        recyclerViewInstructions.setAdapter(instructionsAdapter);
+        recyclerViewInstructions.setLayoutManager(new LinearLayoutManager(this));
     }
 
     /**
@@ -124,13 +184,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions()
-                .position(sydney)
-                .title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        updateMapLocation();
     }
 
     private void moveToSearchActivity(NaviableApplication.SEARCH_TYPE type){
@@ -138,5 +192,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         boolean searchTypeIsDestinationSearch = type.equals(NaviableApplication.SEARCH_TYPE.DESTINATION);
         intent.putExtra("searchTypeIsDestinationSearch", searchTypeIsDestinationSearch);
         startActivity(intent);
+    }
+
+    // changes which campus we focus on in the map
+    public void updateMapLocation(){
+        LatLng  campus = app.getDB().getCampus();
+//        mMap.addMarker(new MarkerOptions()
+//                .position(campus));
+        // todo - *note*: zoom level is between 2.0 and 21.0
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(campus, 18.5f));
     }
 }

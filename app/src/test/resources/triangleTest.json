@@ -1,0 +1,59 @@
+{
+    "b": {
+        "adjacency": [
+            {
+                "destId": "dest",
+                "directions": [
+                    {
+                        "description": "well too late now",
+                        "type": "idk"
+                    }
+                ],
+                "distance": 2.0
+            }
+        ],
+        "mappable": true,
+        "name": "b",
+        "x": 0.0,
+        "y": 0.0
+    },
+    "dest": {
+        "adjacency": [],
+        "mappable": true,
+        "name": "dest",
+        "x": 0.0,
+        "y": 0.0
+    },
+    "src": {
+        "adjacency": [
+            {
+                "destId": "dest",
+                "directions": [
+                    {
+                        "description": "Go the correct path!",
+                        "type": "end"
+                    }
+                ],
+                "distance": 1.0
+            },
+            {
+                "destId": "b",
+                "directions": [
+                    {
+                        "description": "this is the wrong path :( ",
+                        "type": "end"
+                    },
+                    {
+                        "description": "just go back ",
+                        "type": ".."
+                    }
+                ],
+                "distance": 1.0
+            }
+        ],
+        "mappable": true,
+        "name": "src",
+        "x": 0.0,
+        "y": 0.0
+    }
+}

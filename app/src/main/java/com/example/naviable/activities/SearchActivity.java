@@ -1,24 +1,38 @@
-package com.example.naviable;
+package com.example.naviable.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.naviable.MyAdapter;
+import com.example.naviable.NaviableApplication;
+import com.example.naviable.R;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 public class SearchActivity extends AppCompatActivity {
+
+    private static final int SPEECH_INPUT = 1;
 
     RecyclerView recyclerViewSearchSuggestions;
     private MyAdapter.RecyclerViewClickListener clickListener;
     private EditText searchBarEditText;
+    private ImageButton micVoiceBtn;
     private NaviableApplication app;
 
     @Override
@@ -32,6 +46,28 @@ public class SearchActivity extends AppCompatActivity {
         boolean searchTypeIsDestinationSearch = intent.getBooleanExtra("searchTypeIsDestinationSearch", false);
 
         searchBarEditText = (EditText) findViewById(R.id.search_bar_edit_text);
+        searchBarEditText.requestFocus(); // focuses on the search on when entering this screen
+        ImageButton backButton = findViewById(R.id.back_button_search);
+        micVoiceBtn = findViewById(R.id.voiceBtn);
+        micVoiceBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speech To Text");
+
+                try {
+                    startActivityForResult(intent, SPEECH_INPUT);
+                }
+                catch (Exception e){
+                    Toast.makeText(SearchActivity.this," " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        backButton.setOnClickListener(view -> {
+            finish();
+        });
         recyclerViewSearchSuggestions = (RecyclerView) findViewById(R.id.search_suggestions_recycler_view);
         app = NaviableApplication.getInstance();
 //        searchBarEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -44,6 +80,7 @@ public class SearchActivity extends AppCompatActivity {
 //            }
 //        });
 
+        ArrayList<String> locations = new ArrayList<String>(app.getDB().getLocations());
         ArrayList<String> temporaryNamesForDebug = new ArrayList<>();
         temporaryNamesForDebug.add("Canada");
         temporaryNamesForDebug.add("Auditorium");
@@ -58,16 +95,16 @@ public class SearchActivity extends AppCompatActivity {
                 System.out.println("clicked position is: " + position);
                 // todo: pass to main the chosen location and if its "source" or "destination"
                 if(searchTypeIsDestinationSearch){
-                    app.setSearchDestination("bla bla destination");
+                    app.setSearchDestination(locations.get(position));
                 }
                 else{
-                    app.setSearchSource("bla bla source");
+                    app.setSearchSource(locations.get(position));
                 }
                 finish();
             }
         };
 
-        MyAdapter myAdapter = new MyAdapter(this, temporaryNamesForDebug, this.clickListener);
+        MyAdapter myAdapter = new MyAdapter(this, locations, this.clickListener);
         recyclerViewSearchSuggestions.setAdapter(myAdapter);
         recyclerViewSearchSuggestions.setLayoutManager(new LinearLayoutManager(this));
 
@@ -83,5 +120,20 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {}
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("resultCode: " + resultCode);
+        if(requestCode == SPEECH_INPUT)
+        {
+            if((resultCode == RESULT_OK) && (data != null))
+            {
+                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                searchBarEditText.setText(Objects.requireNonNull((result).get(0)));
+            }
+        }
     }
 }

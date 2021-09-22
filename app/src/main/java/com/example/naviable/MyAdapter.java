@@ -11,8 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> implements Filterable {
 
@@ -53,7 +55,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
     }
 
     Filter filter = new Filter() {
-
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
             String charSequenceStringLowerCased = charSequence.toString().toLowerCase();

@@ -5,6 +5,10 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
+
 public class NaviableApplication extends Application {
     private static NaviableApplication naviableApplication = null;
 
@@ -14,16 +18,21 @@ public class NaviableApplication extends Application {
     private final MutableLiveData<String> chosenSourceMutableLiveData = new MutableLiveData<>();
     private final LiveData<String> chosenSourceLiveDataPublic = chosenSourceMutableLiveData;
 
-    static enum SEARCH_TYPE {
+    private final MutableLiveData<String> campusChosenMutableLiveData = new MutableLiveData<>();
+    private final LiveData<String> campusChosenLiveDataPublic = campusChosenMutableLiveData;
+
+    public static enum SEARCH_TYPE {
         SOURCE,
         DESTINATION
     }
+
     private DB db;
 
     @Override
     public void onCreate() {
         naviableApplication = this;
         this.db = new DB(this);
+
         super.onCreate();
     }
 
@@ -35,7 +44,7 @@ public class NaviableApplication extends Application {
     }
 
     public DB getDB(){
-        return naviableApplication.db;
+        return db;
     }
 
     // todo: continue from here
@@ -55,5 +64,11 @@ public class NaviableApplication extends Application {
     public void setSearchSource(String chosenSource){
         chosenSourceMutableLiveData.postValue(chosenSource);
         System.out.println("source setted");
+    }
+
+    public LiveData<String> getCampusChosenLiveDataPublic() {return campusChosenLiveDataPublic; }
+
+    public void setCampus(String campusChosen){
+        campusChosenMutableLiveData.postValue(campusChosen);
     }
 }

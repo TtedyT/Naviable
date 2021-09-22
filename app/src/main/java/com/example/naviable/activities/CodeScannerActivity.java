@@ -1,4 +1,11 @@
-package com.example.naviable;
+package com.example.naviable.activities;
+
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,13 +17,7 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.Settings;
-
+import com.example.naviable.R;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.ExecutionException;

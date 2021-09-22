@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity"
-    android:background="#e0debf">
+    tools:context=".activities.SearchActivity"
+    android:background="@color/white">
 
     <!--    todo: move appbar and his content to a new view and import it inside each sceren (or fragment)-->
     <View
@@ -30,6 +30,21 @@
         android:layout_marginTop="8dp"
         android:fontFamily="@font/alef"/>
 
+    <TextView
+        android:textColor="@color/black"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_suggestions_recycler_view"
+        app:layout_constraintVertical_bias="0"
+        android:text="@string/recents_text"
+        android:fontFamily="@font/alef"/>
+
     <EditText
         android:id="@+id/search_bar_edit_text"
         android:hint="where are you going?"
@@ -41,10 +56,34 @@
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:layout_marginTop="15dp"
-        android:paddingStart="10dp"
+        android:paddingStart="60dp"
         android:paddingEnd="10dp"
         android:background="@drawable/rounded_rectangle_view"
         android:fontFamily="@font/alef"
+        />
+
+    <ImageButton
+        android:id="@+id/back_button_search"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="?attr/selectableItemBackground"
+        android:src="@drawable/ic_baseline_arrow_back_48"
+        app:layout_constraintLeft_toLeftOf="@id/search_bar_edit_text"
+        app:layout_constraintTop_toTopOf="@id/search_bar_edit_text"
+        />
+
+    <ImageButton
+        android:id="@+id/voiceBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_mic"
+        android:scaleType="fitCenter"
+        android:background="@null"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        app:layout_constraintTop_toTopOf="@id/search_bar_edit_text"
+        app:layout_constraintBottom_toBottomOf="@id/search_bar_edit_text"
+        app:layout_constraintRight_toRightOf="@id/search_bar_edit_text"
         />
 
     <androidx.recyclerview.widget.RecyclerView

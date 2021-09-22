@@ -1,0 +1,347 @@
+{
+    "Engineering Building A Floor 1": {
+        "adjacency": [
+            {
+                "destId": "Engineering Building A Floor 3",
+                "directions": [
+                    {
+                        "description": "Take the elevator to floor 3",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0
+            }
+        ],
+        "mappable": true,
+        "name": "Engineering Building A Floor 1",
+        "x": 31.77625754786799,
+        "y": 35.19782230762318
+    },
+    "Engineering Building A Floor 3": {
+        "adjacency": [
+            {
+                "destId": "Engineering Building A Floor 1",
+                "directions": [
+                    {
+                        "description": "Take the elevator to floor 1",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0
+            },
+            {
+                "destId": "Engineering Building A Floor 3 south entrance",
+                "directions": [
+                    {
+                        "description": "Exit through the south entrance",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0
+            }
+        ],
+        "mappable": true,
+        "name": "Engineering Building A Floor 3",
+        "x": 31.77625754786799,
+        "y": 35.19782230762318
+    },
+    "Engineering Building A Floor 3 south entrance": {
+        "adjacency": [
+            {
+                "destId": "Engineering Building A Floor 3",
+                "directions": [
+                    {
+                        "description": "Enter through the south entrance",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0
+            },
+            {
+                "destId": "Engineering Building ramp",
+                "directions": [
+                    {
+                        "description": "Turn right",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Take the ramp towards Sderot Magnes",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0003449356398799522
+            }
+        ],
+        "mappable": false,
+        "name": "Engineering Building A Floor 3 south entrance",
+        "x": 31.77625754786799,
+        "y": 35.19782230762318
+    },
+    "Engineering Building C Floor 1": {
+        "adjacency": [
+            {
+                "destId": "Engineering Building C Floor 3",
+                "directions": [
+                    {
+                        "description": "Take the elevator to floor 3",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0
+            }
+        ],
+        "mappable": true,
+        "name": "Engineering Building C Floor 1",
+        "x": 31.776965678062954,
+        "y": 35.19776376701855
+    },
+    "Engineering Building C Floor 1 east entrance": {
+        "adjacency": [],
+        "mappable": false,
+        "name": "Engineering Building C Floor 1 east entrance",
+        "x": 31.776812264004256,
+        "y": 35.19783956222812
+    },
+    "Engineering Building C Floor 3": {
+        "adjacency": [
+            {
+                "destId": "Engineering Building C Floor 1",
+                "directions": [
+                    {
+                        "description": "Take the elevator to floor 1",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0
+            }
+        ],
+        "mappable": true,
+        "name": "Engineering Building C Floor 3",
+        "x": 31.776965678062954,
+        "y": 35.19776376701855
+    },
+    "Engineering Building ramp": {
+        "adjacency": [
+            {
+                "destId": "Engineering Building A Floor 3 south entrance",
+                "directions": [
+                    {
+                        "description": "Take the rampe towards the Engineering Building",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn right",
+                        "type": "right"
+                    }
+                ],
+                "distance": 0.0003449356398799522
+            },
+            {
+                "destId": "National Library ramp",
+                "directions": [
+                    {
+                        "description": "Turn left onto Sderot Magnes",
+                        "type": "left"
+                    },
+                    {
+                        "description": "Cross Sderot Magnes",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn right towards the National Library ramp",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Take the ramp towards the National Library",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0004679959759229066
+            }
+        ],
+        "mappable": false,
+        "name": "Engineering Building ramp",
+        "x": 31.77598115038909,
+        "y": 35.197615946218555
+    },
+    "Feldman ramp": {
+        "adjacency": [],
+        "mappable": false,
+        "name": "Feldman ramp",
+        "x": 31.77820363309712,
+        "y": 35.19666306904709
+    },
+    "Harman Science Library entrance": {
+        "adjacency": [],
+        "mappable": true,
+        "name": "Harman Science Library entrance",
+        "x": 31.776599572824175,
+        "y": 35.19633175472752
+    },
+    "Levi 6": {
+        "adjacency": [],
+        "mappable": true,
+        "name": "Levi 6",
+        "x": 31.776805528924662,
+        "y": 35.195729464520525
+    },
+    "Levi 7": {
+        "adjacency": [],
+        "mappable": true,
+        "name": "Levi 7",
+        "x": 31.776805528924662,
+        "y": 35.195729464520525
+    },
+    "Levi Building elevator": {
+        "adjacency": [],
+        "mappable": false,
+        "name": "Levi Building elevator",
+        "x": 31.776805528924662,
+        "y": 35.195729464520525
+    },
+    "Levi Building entrance": {
+        "adjacency": [],
+        "mappable": true,
+        "name": "Levi Building entrance",
+        "x": 31.776894509112903,
+        "y": 35.196328607636936
+    },
+    "Main Gate": {
+        "adjacency": [],
+        "mappable": true,
+        "name": "Main Gate",
+        "x": 31.77874159586241,
+        "y": 35.197058888522264
+    },
+    "National Library entrance": {
+        "adjacency": [
+            {
+                "destId": "National Library ramp",
+                "directions": [
+                    {
+                        "description": "Head east",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn right onto the ramp",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Take the ramp towards Sderot Magnes",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn left",
+                        "type": "left"
+                    }
+                ],
+                "distance": 0.0007002692046330503
+            }
+        ],
+        "mappable": true,
+        "name": "National Library entrance",
+        "x": 31.776147746227046,
+        "y": 35.19669400063978
+    },
+    "National Library ramp": {
+        "adjacency": [
+            {
+                "destId": "Engineering Building ramp",
+                "directions": [
+                    {
+                        "description": "Take the ramp towards Sderot Magnes",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn left onto Sderot Magnes",
+                        "type": "left"
+                    },
+                    {
+                        "description": "Cross Sderot Magnes",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn right onto the Engineering Building ramp",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Take the ramp",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0004679959759229066
+            },
+            {
+                "destId": "National Library entrance",
+                "directions": [
+                    {
+                        "description": "Take the ramp",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn left",
+                        "type": "left"
+                    },
+                    {
+                        "description": "Head west towards the National Library entrance",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0007002692046330503
+            }
+        ],
+        "mappable": false,
+        "name": "National Library ramp",
+        "x": 31.77570601418387,
+        "y": 35.19723736953932
+    },
+    "Popick ramp": {
+        "adjacency": [],
+        "mappable": false,
+        "name": "Popick ramp",
+        "x": 31.777997038201846,
+        "y": 35.19647658876015
+    },
+    "Sherman Building entrance": {
+        "adjacency": [],
+        "mappable": true,
+        "name": "Sherman Building entrance",
+        "x": 31.778717050103122,
+        "y": 35.19666186596391
+    },
+    "Sprinzak Building Floor 1": {
+        "adjacency": [],
+        "mappable": true,
+        "name": "Sprinzak Building Floor 1",
+        "x": 31.777798624844245,
+        "y": 35.195680137481006
+    },
+    "Sprinzak Building Floor 2": {
+        "adjacency": [],
+        "mappable": true,
+        "name": "Sprinzak Building Floor 2",
+        "x": 31.777798624844245,
+        "y": 35.195680137481006
+    },
+    "Sprinzak Building elevator": {
+        "adjacency": [],
+        "mappable": false,
+        "name": "Sprinzak Building elevator",
+        "x": 31.777798624844245,
+        "y": 35.195680137481006
+    },
+    "Sprinzak Building entrance": {
+        "adjacency": [],
+        "mappable": true,
+        "name": "Sprinzak Building entrance",
+        "x": 31.77779555659144,
+        "y": 35.196327404512836
+    },
+    "The Submarine entrance": {
+        "adjacency": [],
+        "mappable": true,
+        "name": "The Submarine entrance",
+        "x": 31.776763643386477,
+        "y": 35.196328785490586
+    }
+}
