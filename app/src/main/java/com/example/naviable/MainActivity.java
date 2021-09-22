@@ -60,6 +60,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             startActivity(intent);
         });
 
+        ImageButton qrButton = findViewById(R.id.qr_scan_button);
+        qrButton.setOnClickListener(view -> {
+            Intent intent = new Intent(this, CodeScannerActivity.class);
+            startActivity(intent);
+        });
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
