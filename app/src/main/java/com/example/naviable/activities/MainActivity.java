@@ -96,10 +96,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchBarSourceTextView = (TextView) findViewById(R.id.search_bar_source_text_view);
         searchBarSourceTextView.setVisibility(View.GONE);
         goButton = (Button) findViewById(R.id.go_button);
-        goButton.setVisibility(View.GONE);
-
+        goButton.setVisibility(View.GONE); 
 
         recyclerViewInstructions = (RecyclerView) findViewById(R.id.directions_recycler_view);
+        Button doneNavigationButton = (Button) findViewById(R.id.done_navigation_botton);
+        recyclerViewInstructions.setVisibility(View.GONE);
+        doneNavigationButton.setVisibility(View.GONE);
+        doneNavigationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // restart navigation
+                // todo: make the correct views visible/invisible
+            }
+        });
 //        ArrayList<String> temporaryDirectionsForDebug = new ArrayList<>();
 //        temporaryDirectionsForDebug.add("direction 1");
 //        temporaryDirectionsForDebug.add("direction 2");
@@ -107,8 +116,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        temporaryDirectionsForDebug.add("direction 4");
 //        temporaryDirectionsForDebug.add("direction 5");
 //        temporaryDirectionsForDebug.add("direction 6");
-
-
 
         Button goButton = findViewById(R.id.go_button);
         Navigator finalNavigator = app.getDB().getNavigator();
@@ -125,12 +132,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 else {
                     // Log.i("MainActivity", "onCreate: printing directions..");
+                    searchLayout.setVisibility(View.GONE);
+
+                    recyclerViewInstructions.setVisibility(View.VISIBLE);
+                    doneNavigationButton.setVisibility(View.VISIBLE);
+
                     InstructionsAdapter instructionsAdapter = new InstructionsAdapter(this, directions);
                     recyclerViewInstructions.setAdapter(instructionsAdapter);
                     recyclerViewInstructions.setLayoutManager(new LinearLayoutManager(this));
 //                    for (Direction dir : directions) {
 //                        // Log.i("MainActivity", "direction: " + dir.getDescription());
-//
 //                    }
                 }
             }
