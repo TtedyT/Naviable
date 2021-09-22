@@ -6,17 +6,20 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Size;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.example.naviable.MyImageAnalyzer;
 import com.example.naviable.R;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -47,6 +50,7 @@ public class CodeScannerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_scanner);
 
+        checkCameraPermission();
         previewView = findViewById(R.id.preview_view);
         cameraExecutor = Executors.newSingleThreadExecutor();
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
@@ -72,5 +76,17 @@ public class CodeScannerActivity extends AppCompatActivity {
         preview.setSurfaceProvider(previewView.createSurfaceProvider(null));
 
         Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview);
+
+        MyImageAnalyzer analyzer = new MyImageAnalyzer();
+        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
+                .setTargetResolution(new Size(1280, 720))
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .build();
+        imageAnalysis.setAnalyzer(cameraExecutor, analyzer);
+        cameraProvider.bindToLifecycle(this,
+                cameraSelector,
+                imageAnalysis,
+                preview
+        );
     }
 }
