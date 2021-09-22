@@ -70,24 +70,8 @@ public class SearchActivity extends AppCompatActivity {
         });
         recyclerViewSearchSuggestions = (RecyclerView) findViewById(R.id.search_suggestions_recycler_view);
         app = NaviableApplication.getInstance();
-//        searchBarEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View view, boolean b) {
-////                recyclerViewSearchSuggestions.setVisibility(View.VISIBLE);
-//                // instead ill tey to set the height to his original height:
-//                recyclerViewSearchSuggestions.requestLayout();
-//                recyclerViewSearchSuggestions.getLayoutParams().height = 400;
-//            }
-//        });
 
         ArrayList<String> locations = new ArrayList<String>(app.getDB().getLocations());
-//        ArrayList<String> temporaryNamesForDebug = new ArrayList<>();
-//        temporaryNamesForDebug.add("Canada");
-//        temporaryNamesForDebug.add("Auditorium");
-//        temporaryNamesForDebug.add("Silberman");
-//        temporaryNamesForDebug.add("Feldman");
-//        temporaryNamesForDebug.add("Levi");
-//        temporaryNamesForDebug.add("Shprintzak");
 
         ArrayList<String> recentSearchedLocations = new ArrayList<>();
         Object[] recentSearchedLocationsObjectArr = app.getDB().getRecentLocationsStaticArray();
@@ -104,7 +88,6 @@ public class SearchActivity extends AppCompatActivity {
         this.clickListener = new MyAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
-                // System.out.println("clicked position is: " + position);
                 // todo: pass to main the chosen location and if its "source" or "destination"
                 String location = updatedLocationRecentThenNotRecent.get(position);
                 if(searchTypeIsDestinationSearch){
