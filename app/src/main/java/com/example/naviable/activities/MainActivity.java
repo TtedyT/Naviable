@@ -17,6 +17,7 @@ package com.example.naviable.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.solver.widgets.analyzer.Direct;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ConstraintLayout searchLayout = (ConstraintLayout) findViewById(R.id.search_constraint_layout);
         ImageButton settingsButton = findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(view -> {
             Intent intent = new Intent(this, SettingsActivity.class);
@@ -151,7 +152,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onChanged(String observedDestination) {
                 if(!observedDestination.isEmpty()){
                     searchBarDestTextView.setText(observedDestination);
+
                     searchBarSourceTextView.setVisibility(View.VISIBLE);
+                    goButton.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -168,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onChanged(String observedSource) {
                 if(!observedSource.isEmpty()){
                     searchBarSourceTextView.setText(observedSource);
-                    goButton.setVisibility(View.VISIBLE);
                 }
             }
         });
