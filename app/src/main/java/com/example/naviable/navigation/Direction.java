@@ -1,5 +1,7 @@
 package com.example.naviable.navigation;
 
+import com.example.naviable.R;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,13 +11,13 @@ public class Direction {
     /**
      * base on the python file in assets:
      *
-     * 'STRAIGHT',
-     * 'RIGHT',
-     * 'LEFT',
-     * 'ELEVATOR'
+     * 'straight',
+     * 'right',
+     * 'left',
+     * 'elevator'
      */
 
-    private static Map<String, String> path_map = new HashMap<>();
+
 
     public Direction(String description, String type){
         this.description = description;

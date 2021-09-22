@@ -49,20 +49,24 @@ public class InstructionsAdapter extends RecyclerView.Adapter<InstructionsAdapte
          * 'LEFT',
          * 'ELEVATOR'
          */
-        switch (instruction.getType()){
-            case "STRAIGHT":
-                holder.instructionImageView.setImageResource(R.drawable.ic_baseline_straight_24);
-                break;
-            case "RIGHT":
-                holder.instructionImageView.setImageResource(R.drawable.ic_turn_right);
-                break;
-            case "LEFT":
-                holder.instructionImageView.setImageResource(R.drawable.ic_turn_left);
-                break;
-            case "ELEVATOR":
-                holder.instructionImageView.setImageResource(R.drawable.ic_baseline_elevator_24);
-                break;
-        }
+        int imageFromType = NaviableApplication.getInstance().getDB().getImagePathFromMap(instruction.getType());
+        // todo: make images same size
+        //       make all images with gray background (some of them are black)
+        holder.instructionImageView.setImageResource(imageFromType);
+//        switch (instruction.getType()){
+//            case "STRAIGHT":
+//                holder.instructionImageView.setImageResource();
+//                break;
+//            case "RIGHT":
+//                holder.instructionImageView.setImageResource(R.drawable.ic_turn_right);
+//                break;
+//            case "LEFT":
+//                holder.instructionImageView.setImageResource(R.drawable.ic_turn_left);
+//                break;
+//            case "ELEVATOR":
+//                holder.instructionImageView.setImageResource(R.drawable.ic_baseline_elevator_24);
+//                break;
+//        }
     }
 
     @Override

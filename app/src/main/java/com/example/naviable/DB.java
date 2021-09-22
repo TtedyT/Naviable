@@ -43,7 +43,29 @@ public class DB {
     private LinkedBlockingQueue<String> recentLocations;
     private int RECENT_LOCATIONS_MAX_SIZE = 10;
 
+
+    /**
+     * base on the python file in assets:
+     *
+     * 'straight',
+     * 'right',
+     * 'left',
+     * 'elevator'
+     */
+    private static Map<String, Integer> path_map = new HashMap<>();
+    private void initMapWithPaths(){
+        path_map.put("straight", R.drawable.ic_baseline_straight_24);
+        path_map.put("right", R.drawable.ic_turn_right);
+        path_map.put("left", R.drawable.ic_turn_left);
+        path_map.put("elevator", R.drawable.ic_baseline_elevator_24);
+    }
+    public int getImagePathFromMap(String type){
+        System.out.println("type:" + type);
+        return path_map.get(type);
+    }
+
     public DB(Context context){
+        initMapWithPaths();
         sp = context.getSharedPreferences("db", Context.MODE_PRIVATE);
         spRecentSearchedLocations = context.getSharedPreferences("recentSearchedLocations", Context.MODE_PRIVATE);
 
