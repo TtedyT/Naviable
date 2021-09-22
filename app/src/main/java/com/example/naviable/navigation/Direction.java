@@ -1,12 +1,23 @@
 package com.example.naviable.navigation;
 
+import com.example.naviable.R;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Direction {
     private String description;
     private String type;
-    private static Map<String, String> path_map = new HashMap<>();
+    /**
+     * base on the python file in assets:
+     *
+     * 'straight',
+     * 'right',
+     * 'left',
+     * 'elevator'
+     */
+
+
 
     public Direction(String description, String type){
         this.description = description;
@@ -19,8 +30,11 @@ public class Direction {
         return description;
     }
 
-    public static String getPath(String type){
-        return path_map.get(type);
-    }
+//    public static String getPath(String type){
+//        return path_map.get(type);
+//    }
 
+    public String getType(){
+        return this.type;
+    }
 }

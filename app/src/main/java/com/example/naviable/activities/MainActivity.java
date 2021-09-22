@@ -17,6 +17,7 @@ package com.example.naviable.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.solver.widgets.analyzer.Direct;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +33,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.naviable.InstructionsAdapter;
 import com.example.naviable.NaviableApplication;
@@ -60,6 +62,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import es.dmoral.toasty.Toasty;
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -74,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ConstraintLayout searchLayout = (ConstraintLayout) findViewById(R.id.search_constraint_layout);
         ImageButton settingsButton = findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(view -> {
             Intent intent = new Intent(this, SettingsActivity.class);
@@ -100,15 +104,41 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         goButton = (Button) findViewById(R.id.go_button);
         goButton.setVisibility(View.GONE);
 
+
+        recyclerViewInstructions = (RecyclerView) findViewById(R.id.directions_recycler_view);
+//        ArrayList<String> temporaryDirectionsForDebug = new ArrayList<>();
+//        temporaryDirectionsForDebug.add("direction 1");
+//        temporaryDirectionsForDebug.add("direction 2");
+//        temporaryDirectionsForDebug.add("direction 3");
+//        temporaryDirectionsForDebug.add("direction 4");
+//        temporaryDirectionsForDebug.add("direction 5");
+//        temporaryDirectionsForDebug.add("direction 6");
+
+
+
         Button goButton = findViewById(R.id.go_button);
         Navigator finalNavigator = app.getDB().getNavigator();
         goButton.setOnClickListener(view -> {
             String src = searchBarSourceTextView.getText().toString();
             String dest = searchBarDestTextView.getText().toString();
-            List<Direction> directions = finalNavigator.getDirections(dest, src);
-            Log.i("MainActivity", "onCreate: printing directions..");
-            for (Direction dir : directions){
-                Log.i("MainActivity", "direction: "+ dir.getDescription());
+            if(src.equals(dest)){
+                Toasty.info(this, "Start and destination are the same.", Toast.LENGTH_SHORT, true).show();
+            }
+            else {
+                List<Direction> directions = finalNavigator.getDirections(dest, src);
+                if(directions.isEmpty()){
+                    Toasty.info(this, "No accessible route found.", Toast.LENGTH_SHORT, true).show();
+                }
+                else {
+                    // Log.i("MainActivity", "onCreate: printing directions..");
+                    InstructionsAdapter instructionsAdapter = new InstructionsAdapter(this, directions);
+                    recyclerViewInstructions.setAdapter(instructionsAdapter);
+                    recyclerViewInstructions.setLayoutManager(new LinearLayoutManager(this));
+//                    for (Direction dir : directions) {
+//                        // Log.i("MainActivity", "direction: " + dir.getDescription());
+//
+//                    }
+                }
             }
 
         });
@@ -128,7 +158,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onChanged(String observedDestination) {
                 if(!observedDestination.isEmpty()){
                     searchBarDestTextView.setText(observedDestination);
+
                     searchBarSourceTextView.setVisibility(View.VISIBLE);
+                    goButton.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -145,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onChanged(String observedSource) {
                 if(!observedSource.isEmpty()){
                     searchBarSourceTextView.setText(observedSource);
-                    goButton.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -156,19 +187,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 updateMapLocation();
             }
         });
-
-        recyclerViewInstructions = (RecyclerView) findViewById(R.id.directions_recycler_view);
-        ArrayList<String> temporaryDirectionsForDebug = new ArrayList<>();
-        temporaryDirectionsForDebug.add("direction 1");
-        temporaryDirectionsForDebug.add("direction 2");
-        temporaryDirectionsForDebug.add("direction 3");
-        temporaryDirectionsForDebug.add("direction 4");
-        temporaryDirectionsForDebug.add("direction 5");
-        temporaryDirectionsForDebug.add("direction 6");
-
-        InstructionsAdapter instructionsAdapter = new InstructionsAdapter(this, temporaryDirectionsForDebug);
-        recyclerViewInstructions.setAdapter(instructionsAdapter);
-        recyclerViewInstructions.setLayoutManager(new LinearLayoutManager(this));
     }
 
     /**
