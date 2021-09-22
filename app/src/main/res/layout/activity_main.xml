@@ -94,10 +94,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_navigation_bar_menu" />
 
-    <ImageButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/qr_scan_button"
         android:layout_width="64dp"
         android:layout_height="64dp"
+        app:fabCustomSize="64dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:background="@color/teal_200"
