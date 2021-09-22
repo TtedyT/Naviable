@@ -148,4 +148,18 @@
         app:menu="@menu/bottom_navigation_bar_menu"
         />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/qr_scan_button"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/ic_baseline_qr_code_scanner_24"
+        android:backgroundTint="@color/app_secondary_color"
+        android:src="@drawable/ic_baseline_qr_code_scanner_24"
+        app:fabCustomSize="64dp"
+        app:layout_constraintBottom_toBottomOf="@+id/map"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_goneMarginBottom="16dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

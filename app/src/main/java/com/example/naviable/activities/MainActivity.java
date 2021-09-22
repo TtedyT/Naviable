@@ -49,6 +49,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             startActivity(intent);
         });
 
-        ImageButton qrButton = findViewById(R.id.qr_scan_button);
+        FloatingActionButton qrButton = findViewById(R.id.qr_scan_button);
         qrButton.setOnClickListener(view -> {
             Intent intent = new Intent(this, CodeScannerActivity.class);
             startActivity(intent);
