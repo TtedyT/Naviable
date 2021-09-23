@@ -1,6 +1,7 @@
 package com.example.naviable.activities;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -8,14 +9,20 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Size;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
@@ -23,34 +30,31 @@ import com.example.naviable.MyImageAnalyzer;
 import com.example.naviable.R;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.File;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class CodeScannerActivity extends AppCompatActivity {
-
+    private final int REQUEST_CODE_PERMISSIONS = 10;
+    private final String REQUIRED_PERMISSION = Manifest.permission.CAMERA;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private ExecutorService cameraExecutor;
     private PreviewView previewView;
-
-    private void checkCameraPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            intent.setData(Uri.fromParts("package",
-                    getApplicationContext().getPackageName(), null));
-            startActivity(intent);
-            finish();
-        }
-    }
+    private ImageCapture imageCapture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_scanner);
 
-        checkCameraPermission();
+        if (checkCameraPermission()) {
+            useCamera();
+        }
+
+    }
+    
+    void useCamera(){
         previewView = findViewById(R.id.preview_view);
         cameraExecutor = Executors.newSingleThreadExecutor();
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
@@ -65,7 +69,7 @@ public class CodeScannerActivity extends AppCompatActivity {
             }
         }, ContextCompat.getMainExecutor(this));
     }
-
+    
     void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
         Preview preview = new Preview.Builder().build();
 
@@ -77,6 +81,12 @@ public class CodeScannerActivity extends AppCompatActivity {
 
         Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview);
 
+        imageCapture =
+                new ImageCapture.Builder()
+                        .setTargetRotation(previewView.getDisplay().getRotation())
+                        .build();
+
+
         MyImageAnalyzer analyzer = new MyImageAnalyzer();
         ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
                 .setTargetResolution(new Size(1280, 720))
@@ -85,8 +95,84 @@ public class CodeScannerActivity extends AppCompatActivity {
         imageAnalysis.setAnalyzer(cameraExecutor, analyzer);
         cameraProvider.bindToLifecycle(this,
                 cameraSelector,
+                imageCapture,
                 imageAnalysis,
                 preview
         );
+    }
+
+    public void onClick() {
+        ImageCapture.OutputFileOptions outputFileOptions =
+                new ImageCapture.OutputFileOptions.Builder(new File("qr_code")).build();
+        imageCapture.takePicture(outputFileOptions, cameraExecutor,
+                new ImageCapture.OnImageSavedCallback() {
+                    @Override
+                    public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
+                        // insert your code here.
+                    }
+                    @Override
+                    public void onError(ImageCaptureException error) {
+                        error.printStackTrace();
+                        // insert your code here.
+                    }
+                }
+        );
+    }
+
+    public boolean checkCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.CAMERA)) {
+
+                new AlertDialog.Builder(this)
+                        .setTitle("Camera Permission")
+                        .setMessage("The app needs permission to access the camera.")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //Prompt the user once explanation has been shown
+                                ActivityCompat.requestPermissions(CodeScannerActivity.this,
+                                        new String[]{Manifest.permission.CAMERA},
+                                        REQUEST_CODE_PERMISSIONS);
+                            }
+                        })
+                        .create()
+                        .show();
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_CODE_PERMISSIONS);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.CAMERA)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        useCamera();
+                    }
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+        }
     }
 }

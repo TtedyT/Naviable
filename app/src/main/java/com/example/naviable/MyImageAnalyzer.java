@@ -36,7 +36,9 @@ public class MyImageAnalyzer implements ImageAnalysis.Analyzer {
                     .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
                         @Override
                         public void onSuccess(List<Barcode> barcodes) {
-                            readBarcodeData(barcodes);
+                            if (!barcodes.isEmpty()) {
+                                readBarcodeData(barcodes);
+                            }
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -49,17 +51,8 @@ public class MyImageAnalyzer implements ImageAnalysis.Analyzer {
     }
 
     private void readBarcodeData(List<Barcode> barcodes) {
-        Barcode.UrlBookmark url;
         for (Barcode barcode : barcodes) {
-            switch(barcode.getValueType()) {
-                case Barcode.TYPE_URL:
-                    // code block
-                    url = barcode.getUrl();
-                    Log.i("QR Scanner:", "readBarcodeData: " + url.getUrl());
-                    break;
-                default:
-                    // code block
-            }
+            Log.i("QR Scanner:", "readBarcodeData: " + barcode.getRawValue());
         }
     }
 }
