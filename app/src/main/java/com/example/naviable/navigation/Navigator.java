@@ -1,21 +1,29 @@
 package com.example.naviable.navigation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
 
 public class Navigator {
     private Graph graph;
 
+    static int i = 0; // todo: test variable, delete later
+
     public Navigator(Graph graph){
         this.graph = graph;
     }
 
+    private void resetAllNodeData(){
+
+      for(String id : graph.getNodeMap().keySet()){
+        graph.getNode(id).resetNodeData();
+	  }
+	}
+
     private void findPath(String srcId){
         MapNode src = graph.getNode(srcId);
+        resetAllNodeData();
         src.setMinDistance(0);
         PriorityQueue<MapNode> queue = new PriorityQueue<>();
         queue.add(src);

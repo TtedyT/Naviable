@@ -46,6 +46,10 @@ public class Graph {
         return nodeMap.get(stringId);
     }
 
+    public Map<String, MapNode> getNodeMap(){
+      return nodeMap;
+	}
+
     public ArrayList<String> getMappableLocations(){
         ArrayList<String> locations = new ArrayList<>();
         for (Map.Entry<String, MapNode> entry : nodeMap.entrySet()){
