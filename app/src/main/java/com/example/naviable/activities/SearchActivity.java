@@ -49,26 +49,24 @@ public class SearchActivity extends AppCompatActivity {
         searchBarEditText.requestFocus(); // focuses on the search on when entering this screen
         ImageButton backButton = findViewById(R.id.back_button_search);
         micVoiceBtn = findViewById(R.id.voiceBtn);
-        micVoiceBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speech To Text");
 
-                try {
-                    startActivityForResult(intent, SPEECH_INPUT);
-                }
-                catch (Exception e){
-                    Toast.makeText(SearchActivity.this," " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        micVoiceBtn.setOnClickListener(view -> {
+			Intent intent1 = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+			intent1.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+			intent1.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+			intent1.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speech To Text");
+
+			try {
+				startActivityForResult(intent1, SPEECH_INPUT);
+			}
+			catch (Exception e){
+				Toast.makeText(SearchActivity.this," " + e.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		});
         backButton.setOnClickListener(view -> {
             finish();
         });
-        recyclerViewSearchSuggestions = (RecyclerView) findViewById(R.id.search_suggestions_recycler_view);
+        recyclerViewSearchSuggestions = findViewById(R.id.search_suggestions_recycler_view);
         app = NaviableApplication.getInstance();
 
         ArrayList<String> locations = new ArrayList<String>(app.getDB().getLocations());
@@ -85,23 +83,19 @@ public class SearchActivity extends AppCompatActivity {
         ArrayList<String> updatedLocationRecentThenNotRecent = new ArrayList<>(recentSearchedLocations);
         updatedLocationRecentThenNotRecent.addAll(searchSuggestionsNotRecents);
 
-        this.clickListener = new MyAdapter.RecyclerViewClickListener() {
-            @Override
-            public void onClick(View v, int position) {
-                // todo: pass to main the chosen location and if its "source" or "destination"
-//                System.out.println(updatedLocationRecentThenNotRecent);
-//                System.out.println(position);
-                String location = updatedLocationRecentThenNotRecent.get(position);
-                if(searchTypeIsDestinationSearch){
-                    app.setSearchDestination(location);
-                }
-                else{
-                    app.setSearchSource(location);
-                }
-                app.getDB().addRecentLocation(location);
-                finish();
-            }
-        };
+        this.clickListener = (v, position) -> {
+			// todo: pass to main the chosen location and if its "source" or "destination"
+
+			String location = updatedLocationRecentThenNotRecent.get(position);
+			if(searchTypeIsDestinationSearch){
+				app.setSearchDestination(location);
+			}
+			else{
+				app.setSearchSource(location);
+			}
+			app.getDB().addRecentLocation(location);
+			finish();
+		};
 
         MyAdapter myAdapter = new MyAdapter(this, searchSuggestionsNotRecents, recentSearchedLocations, this.clickListener);
         recyclerViewSearchSuggestions.setAdapter(myAdapter);
