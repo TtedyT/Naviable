@@ -8,9 +8,10 @@ import java.util.Map;
 public class Direction {
     private String description;
     private String type;
+
     /**
      * base on the python file in assets:
-     *
+     * <p>
      * 'straight',
      * 'right',
      * 'left',
@@ -18,8 +19,7 @@ public class Direction {
      */
 
 
-
-    public Direction(String description, String type){
+    public Direction(String description, String type) {
         this.description = description;
         this.type = type;
         // todo : add images to each type
@@ -34,7 +34,7 @@ public class Direction {
 //        return path_map.get(type);
 //    }
 
-    public String getType(){
+    public String getType() {
         return this.type;
     }
 }

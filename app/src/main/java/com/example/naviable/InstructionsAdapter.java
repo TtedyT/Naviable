@@ -23,7 +23,7 @@ public class InstructionsAdapter extends RecyclerView.Adapter<InstructionsAdapte
     private Context context;
     private List<Direction> instructions;
 
-    public InstructionsAdapter(Context context, List<Direction> instructions){
+    public InstructionsAdapter(Context context, List<Direction> instructions) {
         this.context = context;
         this.instructions = instructions;
     }
@@ -74,7 +74,7 @@ public class InstructionsAdapter extends RecyclerView.Adapter<InstructionsAdapte
         return instructions.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView instructionTextView;
         ImageView instructionImageView;
@@ -84,5 +84,9 @@ public class InstructionsAdapter extends RecyclerView.Adapter<InstructionsAdapte
             instructionTextView = itemView.findViewById(R.id.myInstructionTextView);
             instructionImageView = itemView.findViewById(R.id.instructionImage);
         }
+    }
+
+    public void setInstructions(List<Direction> instructions) {
+        this.instructions = instructions;
     }
 }

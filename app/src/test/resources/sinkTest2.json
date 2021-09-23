@@ -1,139 +1,139 @@
 {
-    "a": {
-        "adjacency": [
-            {
-                "destId": "b",
-                "directions": [
-                    {
-                        "description": "go from a to b",
-                        "type": "idk"
-                    }
-                ],
-                "distance": 2.0
-            },
-            {
-                "destId": "c",
-                "directions": [
-                    {
-                        "description": "go from a to c",
-                        "type": "idk"
-                    }
-                ],
-                "distance": 2.0
-            },
-            {
-                "destId": "d",
-                "directions": [
-                    {
-                        "description": "go from a to d",
-                        "type": "idk"
-                    }
-                ],
-                "distance": 1.0
-            }
+  "a": {
+    "adjacency": [
+      {
+        "destId": "b",
+        "directions": [
+          {
+            "description": "go from a to b",
+            "type": "idk"
+          }
         ],
-        "mappable": false,
-        "name": "a",
-        "x": 0.0,
-        "y": 0.0
-    },
-    "b": {
-        "adjacency": [
-            {
-                "destId": "d",
-                "directions": [
-                    {
-                        "description": "go from b to d",
-                        "type": "idk"
-                    }
-                ],
-                "distance": 2.0
-            }
+        "distance": 2.0
+      },
+      {
+        "destId": "c",
+        "directions": [
+          {
+            "description": "go from a to c",
+            "type": "idk"
+          }
         ],
-        "mappable": false,
-        "name": "b",
-        "x": 0.0,
-        "y": 0.0
-    },
-    "c": {
-        "adjacency": [
-            {
-                "destId": "d",
-                "directions": [
-                    {
-                        "description": "go from c to d",
-                        "type": "idk"
-                    }
-                ],
-                "distance": 3.0
-            },
-            {
-                "destId": "e",
-                "directions": [
-                    {
-                        "description": "go from c to e",
-                        "type": "idk"
-                    }
-                ],
-                "distance": 1.0
-            }
+        "distance": 2.0
+      },
+      {
+        "destId": "d",
+        "directions": [
+          {
+            "description": "go from a to d",
+            "type": "idk"
+          }
         ],
-        "mappable": false,
-        "name": "c",
-        "x": 0.0,
-        "y": 0.0
-    },
-    "d": {
-        "adjacency": [
-            {
-                "destId": "e",
-                "directions": [
-                    {
-                        "description": "go from d to e",
-                        "type": "idk"
-                    }
-                ],
-                "distance": 2.0
-            }
+        "distance": 1.0
+      }
+    ],
+    "mappable": false,
+    "name": "a",
+    "x": 0.0,
+    "y": 0.0
+  },
+  "b": {
+    "adjacency": [
+      {
+        "destId": "d",
+        "directions": [
+          {
+            "description": "go from b to d",
+            "type": "idk"
+          }
         ],
-        "mappable": false,
-        "name": "d",
-        "x": 0.0,
-        "y": 0.0
-    },
-    "e": {
-        "adjacency": [],
-        "mappable": false,
-        "name": "e",
-        "x": 0.0,
-        "y": 0.0
-    },
-    "s": {
-        "adjacency": [
-            {
-                "destId": "a",
-                "directions": [
-                    {
-                        "description": "go from s to a",
-                        "type": "idk"
-                    }
-                ],
-                "distance": 1.0
-            },
-            {
-                "destId": "b",
-                "directions": [
-                    {
-                        "description": "go from s to b",
-                        "type": "idk"
-                    }
-                ],
-                "distance": 5.0
-            }
+        "distance": 2.0
+      }
+    ],
+    "mappable": false,
+    "name": "b",
+    "x": 0.0,
+    "y": 0.0
+  },
+  "c": {
+    "adjacency": [
+      {
+        "destId": "d",
+        "directions": [
+          {
+            "description": "go from c to d",
+            "type": "idk"
+          }
         ],
-        "mappable": false,
-        "name": "s",
-        "x": 0.0,
-        "y": 0.0
-    }
+        "distance": 3.0
+      },
+      {
+        "destId": "e",
+        "directions": [
+          {
+            "description": "go from c to e",
+            "type": "idk"
+          }
+        ],
+        "distance": 1.0
+      }
+    ],
+    "mappable": false,
+    "name": "c",
+    "x": 0.0,
+    "y": 0.0
+  },
+  "d": {
+    "adjacency": [
+      {
+        "destId": "e",
+        "directions": [
+          {
+            "description": "go from d to e",
+            "type": "idk"
+          }
+        ],
+        "distance": 2.0
+      }
+    ],
+    "mappable": false,
+    "name": "d",
+    "x": 0.0,
+    "y": 0.0
+  },
+  "e": {
+    "adjacency": [],
+    "mappable": false,
+    "name": "e",
+    "x": 0.0,
+    "y": 0.0
+  },
+  "s": {
+    "adjacency": [
+      {
+        "destId": "a",
+        "directions": [
+          {
+            "description": "go from s to a",
+            "type": "idk"
+          }
+        ],
+        "distance": 1.0
+      },
+      {
+        "destId": "b",
+        "directions": [
+          {
+            "description": "go from s to b",
+            "type": "idk"
+          }
+        ],
+        "distance": 5.0
+      }
+    ],
+    "mappable": false,
+    "name": "s",
+    "x": 0.0,
+    "y": 0.0
+  }
 }
