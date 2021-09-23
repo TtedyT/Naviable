@@ -1,5 +1,7 @@
 package com.example.naviable.navigation;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -78,5 +80,9 @@ public class Navigator {
 
   public ArrayList<String> getLocations() {
 	return graph.getMappableLocations();
+  }
+  public LatLng getCoordinate(String locName){
+    MapNode n = graph.getNode(locName);
+    return new LatLng(n.getX(), n.getY());
   }
 }
