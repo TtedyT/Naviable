@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.util.Size;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -41,7 +42,6 @@ public class CodeScannerActivity extends AppCompatActivity {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private ExecutorService cameraExecutor;
     private PreviewView previewView;
-    private ImageCapture imageCapture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +55,7 @@ public class CodeScannerActivity extends AppCompatActivity {
     }
     
     void useCamera(){
+        Log.i("CodeScannerActivity", "useCamera: ");
         previewView = findViewById(R.id.preview_view);
         cameraExecutor = Executors.newSingleThreadExecutor();
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
@@ -81,12 +82,6 @@ public class CodeScannerActivity extends AppCompatActivity {
 
         Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview);
 
-        imageCapture =
-                new ImageCapture.Builder()
-                        .setTargetRotation(previewView.getDisplay().getRotation())
-                        .build();
-
-
         MyImageAnalyzer analyzer = new MyImageAnalyzer();
         ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
                 .setTargetResolution(new Size(1280, 720))
@@ -95,31 +90,13 @@ public class CodeScannerActivity extends AppCompatActivity {
         imageAnalysis.setAnalyzer(cameraExecutor, analyzer);
         cameraProvider.bindToLifecycle(this,
                 cameraSelector,
-                imageCapture,
                 imageAnalysis,
                 preview
         );
     }
 
-    public void onClick() {
-        ImageCapture.OutputFileOptions outputFileOptions =
-                new ImageCapture.OutputFileOptions.Builder(new File("qr_code")).build();
-        imageCapture.takePicture(outputFileOptions, cameraExecutor,
-                new ImageCapture.OnImageSavedCallback() {
-                    @Override
-                    public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
-                        // insert your code here.
-                    }
-                    @Override
-                    public void onError(ImageCaptureException error) {
-                        error.printStackTrace();
-                        // insert your code here.
-                    }
-                }
-        );
-    }
-
     public boolean checkCameraPermission() {
+        Log.i("CodeScannerActivity", "checkCameraPermission: ");
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
