@@ -49,6 +49,7 @@ public class DB {
         path_map.put("straight", R.drawable.ic_baseline_straight_24);
         path_map.put("right", R.drawable.ic_turn_left_24);
         path_map.put("left", R.drawable.ic_turn_right_24);
+        path_map.put("ramp", R.drawable.ic_ramp);
         path_map.put("elevator", R.drawable.ic_baseline_elevator_24);
     }
     public int getImagePathFromMap(String type){

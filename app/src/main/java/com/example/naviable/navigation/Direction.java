@@ -14,6 +14,7 @@ public class Direction {
      * 'straight',
      * 'right',
      * 'left',
+     * 'ramp',
      * 'elevator'
      */
 

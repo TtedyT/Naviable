@@ -2,36 +2,6 @@
     "Canada Hall entrance": {
         "adjacency": [
             {
-                "destId": "Engineering Building C Floor 1 east entrance",
-                "directions": [
-                    {
-                        "description": "Turn right towards ramp",
-                        "type": "right"
-                    },
-                    {
-                        "description": "Take the ramp to Derech Brodetski",
-                        "type": "ramp"
-                    },
-                    {
-                        "description": "Turn right onto Derech Brodetski",
-                        "type": "right"
-                    },
-                    {
-                        "description": "Head south on Derech Brodetski",
-                        "type": "straight"
-                    },
-                    {
-                        "description": "Turn right at Engineering Building C",
-                        "type": "right"
-                    },
-                    {
-                        "description": "Head towards the east entrance",
-                        "type": "straight"
-                    }
-                ],
-                "distance": 0.001348157988073972
-            },
-            {
                 "destId": "Engineering Building C ramp",
                 "directions": [
                     {
@@ -56,12 +26,70 @@
                     }
                 ],
                 "distance": 0.0009731959470819712
+            },
+            {
+                "destId": "Canada Hall ramp",
+                "directions": [
+                    {
+                        "description": "Turn right towards ramp",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Take the ramp to Derech Brodetski",
+                        "type": "ramp"
+                    }
+                ],
+                "distance": 0.0004197113581984822
             }
         ],
         "mappable": true,
         "name": "Canada Hall entrance",
         "x": 31.778160289236446,
         "y": 35.19785848137681
+    },
+    "Canada Hall ramp": {
+        "adjacency": [
+            {
+                "destId": "Canada Hall entrance",
+                "directions": [
+                    {
+                        "description": "Take the ramp towards Canada Hall",
+                        "type": "ramp"
+                    },
+                    {
+                        "description": "Turn left",
+                        "type": "left"
+                    }
+                ],
+                "distance": 0.0004197113581984822
+            },
+            {
+                "destId": "Engineering Building C Floor 1 east entrance",
+                "directions": [
+                    {
+                        "description": "Turn right onto Derech Brodetski",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Head south on Derech Brodetski",
+                        "type": "straight"
+                    },
+                    {
+                        "description": "Turn right at Engineering Building C",
+                        "type": "right"
+                    },
+                    {
+                        "description": "Head towards the east entrance",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.0015059540710459585
+            }
+        ],
+        "mappable": false,
+        "name": "Canada Hall ramp",
+        "x": 31.77825626284331,
+        "y": 35.19826707248169
     },
     "Engineering Building A Floor 1": {
         "adjacency": [
@@ -79,7 +107,7 @@
                 "destId": "Engineering Building B Floor 1",
                 "directions": [
                     {
-                        "description": "Head north down the hallway",
+                        "description": "Head north down the hallway towards Building B",
                         "type": "straight"
                     }
                 ],
@@ -117,7 +145,7 @@
                 "destId": "Engineering Building B Floor 3",
                 "directions": [
                     {
-                        "description": "Head north down the hallway",
+                        "description": "Head north down the hallway towards Building B",
                         "type": "straight"
                     }
                 ],
@@ -253,7 +281,7 @@
                 "destId": "Engineering Building A Floor 1",
                 "directions": [
                     {
-                        "description": "Head south down the hallway",
+                        "description": "Head south down the hallway towards Building A",
                         "type": "straight"
                     }
                 ],
@@ -263,7 +291,7 @@
                 "destId": "Engineering Building C Floor 1",
                 "directions": [
                     {
-                        "description": "Head north down the hallway",
+                        "description": "Head north down the hallway towards Building C",
                         "type": "straight"
                     }
                 ],
@@ -291,7 +319,7 @@
                 "destId": "Engineering Building A Floor 3",
                 "directions": [
                     {
-                        "description": "Head south down the hallway",
+                        "description": "Head south down the hallway towards Building A",
                         "type": "straight"
                     }
                 ],
@@ -301,7 +329,7 @@
                 "destId": "Engineering Building C Floor 3",
                 "directions": [
                     {
-                        "description": "Head north down the hallway",
+                        "description": "Head north down the hallway towards Building C",
                         "type": "straight"
                     }
                 ],
@@ -329,7 +357,7 @@
                 "destId": "Engineering Building B Floor 1",
                 "directions": [
                     {
-                        "description": "Head south down the hallway",
+                        "description": "Head south down the hallway towards Building B",
                         "type": "straight"
                     }
                 ],
@@ -354,7 +382,17 @@
     "Engineering Building C Floor 1 east entrance": {
         "adjacency": [
             {
-                "destId": "Canada Hall entrance",
+                "destId": "Engineering Building C Floor 1",
+                "directions": [
+                    {
+                        "description": "Enter the east entrance",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 0.00017111629729388904
+            },
+            {
+                "destId": "Canada Hall ramp",
                 "directions": [
                     {
                         "description": "Head towards Derech Brodetski",
@@ -371,27 +409,9 @@
                     {
                         "description": "Turn left onto ramp towards Canada Hall",
                         "type": "left"
-                    },
-                    {
-                        "description": "Take the ramp",
-                        "type": "ramp"
-                    },
-                    {
-                        "description": "Turn left",
-                        "type": "left"
                     }
                 ],
-                "distance": 0.001348157988073972
-            },
-            {
-                "destId": "Engineering Building C Floor 1",
-                "directions": [
-                    {
-                        "description": "Enter the east entrance",
-                        "type": "straight"
-                    }
-                ],
-                "distance": 0.00017111629729388904
+                "distance": 0.0015059540710459585
             }
         ],
         "mappable": false,
@@ -415,7 +435,7 @@
                 "destId": "Engineering Building B Floor 3",
                 "directions": [
                     {
-                        "description": "Head south down the hallway",
+                        "description": "Head south down the hallway towards Building B",
                         "type": "straight"
                     }
                 ],
@@ -573,7 +593,7 @@
                         "type": "left"
                     },
                     {
-                        "description": "Head east",
+                        "description": "Head east towards National Library",
                         "type": "straight"
                     }
                 ],
@@ -583,7 +603,7 @@
                 "destId": "The Submarine entrance",
                 "directions": [
                     {
-                        "description": "Head north",
+                        "description": "Head north towards the Submarine",
                         "type": "straight"
                     }
                 ],
@@ -683,7 +703,7 @@
                 "destId": "The Submarine entrance",
                 "directions": [
                     {
-                        "description": "Head south",
+                        "description": "Head south towards the Submarine",
                         "type": "straight"
                     }
                 ],
@@ -707,7 +727,7 @@
                 "destId": "Sprinzak Building entrance",
                 "directions": [
                     {
-                        "description": "Head north",
+                        "description": "Head north towards Sprinzak Building",
                         "type": "straight"
                     }
                 ],
@@ -835,7 +855,7 @@
                         "type": "right"
                     },
                     {
-                        "description": "Head north",
+                        "description": "Head north towards Harman Science Library",
                         "type": "straight"
                     }
                 ],
@@ -1075,7 +1095,7 @@
                 "destId": "Levi Building entrance",
                 "directions": [
                     {
-                        "description": "Head south",
+                        "description": "Head south towards Levi Building",
                         "type": "straight"
                     }
                 ],
