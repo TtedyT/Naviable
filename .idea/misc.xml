@@ -25,14 +25,28 @@
         <entry key="..\:/Users/jasgr/AndroidStudioProjects/Naviable/app/src/main/res/layout/item_one_result.xml" value="0.2015625" />
         <entry key="app/src/main/res/drawable-hdpi/rounded_rectangle_view_search_background.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/drawable-v24/ellipse_59.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/drawable-v24/ic_mic.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/drawable-xxxhdpi/ic_baseline_subdirectory_arrow_left_24.xml" value="0.13240740740740742" />
+        <entry key="app/src/main/res/drawable-xxxhdpi/ic_baseline_subdirectory_arrow_right_24.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/drawable/background_settings_view.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/drawable/ic_arrow_left_black_24dp.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/drawable/ic_arrow_right_black_24dp.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/drawable/ic_baseline_arrow_back_36.xml" value="0.2078125" />
         <entry key="app/src/main/res/drawable/ic_baseline_arrow_back_48.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/drawable/ic_baseline_elevator_24.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/drawable/ic_coffee.xml" value="0.2078125" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/drawable/ic_subdirectory_arrow_left_black_24dp.xml" value="0.1361111111111111" />
         <entry key="app/src/main/res/drawable/ic_turn_left.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/drawable/ic_turn_right.xml" value="0.2" />
+        <entry key="app/src/main/res/drawable/ic_turn_right_24.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/drawable/not_recent_search.xml" value="0.2078125" />
+        <entry key="app/src/main/res/drawable/recent_searched.xml" value="0.2078125" />
         <entry key="app/src/main/res/drawable/rounded_rectangle_view.xml" value="0.21145833333333333" />
+        <entry key="app/src/main/res/drawable/turn_left.xml" value="0.6125" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.25769927536231885" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.19166666666666668" />
       </map>
     </option>
   </component>

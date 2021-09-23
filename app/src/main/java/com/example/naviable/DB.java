@@ -47,13 +47,12 @@ public class DB {
     private static Map<String, Integer> path_map = new HashMap<>();
     private void initMapWithPaths(){
         path_map.put("straight", R.drawable.ic_baseline_straight_24);
-        path_map.put("right", R.drawable.ic_turn_right);
-        path_map.put("left", R.drawable.ic_turn_left);
+        path_map.put("right", R.drawable.ic_turn_left_24);
+        path_map.put("left", R.drawable.ic_turn_right_24);
         path_map.put("elevator", R.drawable.ic_baseline_elevator_24);
     }
     public int getImagePathFromMap(String type){
-        System.out.println("type:" + type);
-        return path_map.get(type);
+      return path_map.get(type);
     }
 
     public DB(Context context){
@@ -148,7 +147,5 @@ public class DB {
             this.recentLocations = gson.fromJson(recentLocationsStringRepre, type);
         }
     }
-//    public String[] getCampusesNames(){
-//        return campusesNames;
-//    }
+
 }

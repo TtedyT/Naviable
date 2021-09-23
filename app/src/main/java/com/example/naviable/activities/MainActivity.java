@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	  	backButton.setOnClickListener(view -> hideSearch());
 
 	  	Button goButton = findViewById(R.id.go_button);
+	  	goButton.setEnabled(false);
         Navigator finalNavigator = app.getDB().getNavigator();
         goButton.setOnClickListener(view -> {
             String src = searchBarSourceTextView.getText().toString();
@@ -126,13 +127,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         app.getChosenDestinationLiveDataPublic().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String observedDestination) {
-                if(!observedDestination.isEmpty()){
-                    searchBarDestTextView.setText(observedDestination);
-
+			  if(!observedDestination.isEmpty()){
+				    searchBarDestTextView.setText(observedDestination);
                     searchBarSourceTextView.setVisibility(View.VISIBLE);
                     backButton.setVisibility(View.VISIBLE);
                     goButton.setVisibility(View.VISIBLE);
 				  	constraintLayout.setBackground(searchBackground);
+				    tryEnableButton();
                 }
             }
         });
@@ -148,7 +149,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onChanged(String observedSource) {
                 if(!observedSource.isEmpty()){
-                    searchBarSourceTextView.setText(observedSource);
+				  searchBarSourceTextView.setText(observedSource);
+				  tryEnableButton();
                 }
             }
         });
@@ -161,6 +163,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+
+    private void tryEnableButton(){
+      if(searchBarDestTextView.getText().toString().isEmpty() ||
+			  searchBarSourceTextView.getText().toString().isEmpty() ){
+        goButton.setEnabled(false);
+
+	  }
+      else{
+        goButton.setEnabled(true);
+	  }
+	}
 
     private void hideSearch() {
       searchBarSourceTextView.setVisibility(View.GONE);
