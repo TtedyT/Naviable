@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -25,9 +26,10 @@ public class MyImageAnalyzer implements ImageAnalysis.Analyzer {
     public void analyze(@NonNull ImageProxy image) {
         scanBarcode(image);
     }
-    @SuppressLint("UnsafeExperimentalUsageError")
+
+    @SuppressLint("UnsafeOptInUsageError")
     private void scanBarcode(ImageProxy imageProxy) {
-        Image inputImage = imageProxy.getImage();
+         Image inputImage = imageProxy.getImage();
         if (inputImage != null) {
             InputImage image =
                     InputImage.fromMediaImage(inputImage, imageProxy.getImageInfo().getRotationDegrees());
@@ -51,6 +53,12 @@ public class MyImageAnalyzer implements ImageAnalysis.Analyzer {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             e.printStackTrace();
+                        }
+                    })
+                    .addOnCompleteListener(new OnCompleteListener<List<Barcode>>() {
+                        @Override
+                        public void onComplete(@NonNull Task<List<Barcode>> task) {
+                            imageProxy.close();
                         }
                     });
         }
