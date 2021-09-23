@@ -86,4 +86,8 @@ public class Navigator {
   public ArrayList<String> getLocations() {
 	return graph.getMappableLocations();
   }
+  public LatLng getCoordinate(String locName){
+    MapNode n = graph.getNode(locName);
+    return new LatLng(n.getX(), n.getY());
+  }
 }

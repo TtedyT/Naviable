@@ -114,8 +114,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
 
         @Override
         public void onClick(View v) {
-            //System.out.println("adapter position: " + getAdapterPosition());
-            //System.out.println(searchSuggestions);
+
             clickListener.onClick(v, getAdapterPosition());
         }
     }
