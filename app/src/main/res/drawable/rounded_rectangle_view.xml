@@ -9,9 +9,9 @@
         />
 
     <corners
-        android:bottomRightRadius="15dp"
-        android:bottomLeftRadius="15dp"
-        android:topRightRadius="15dp"
-        android:topLeftRadius="15dp"
+        android:bottomRightRadius="@dimen/rectangle_view_roundness"
+        android:bottomLeftRadius="@dimen/rectangle_view_roundness"
+        android:topRightRadius="@dimen/rectangle_view_roundness"
+        android:topLeftRadius="@dimen/rectangle_view_roundness"
         />
 </shape>
