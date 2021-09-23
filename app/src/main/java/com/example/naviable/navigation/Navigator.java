@@ -1,5 +1,7 @@
 package com.example.naviable.navigation;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -71,9 +73,14 @@ public class Navigator {
 	return directions;
   }
 
-  public List<MapNode> getNodes(String srcId, String destId) {
+  public ArrayList<LatLng> getPathLatLng(String srcId, String destId) {
 	findPath(srcId);
-	return getShortestPathTo(destId);
+	  List<MapNode> shortestPath = getShortestPathTo(destId);
+	  ArrayList<LatLng> pathLatLng = new ArrayList<>();
+	  for(MapNode mapNode : shortestPath){
+	  	pathLatLng.add(new LatLng(mapNode.getX(), mapNode.getY()));
+	  }
+	  return pathLatLng;
   }
 
   public ArrayList<String> getLocations() {
