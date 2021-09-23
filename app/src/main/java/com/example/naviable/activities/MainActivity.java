@@ -15,6 +15,7 @@ package com.example.naviable.activities;
 //
 //}
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -114,53 +115,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         });
 
-        // todo: use "if" to check if dest is set - if so, show the source search
-//        searchBarDestTextView.setVisibility(View.GONE);
+        searchBarDestTextView.setOnClickListener(view ->
+				moveToSearchActivity(NaviableApplication.SEARCH_TYPE.DESTINATION));
 
-        searchBarDestTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                moveToSearchActivity(NaviableApplication.SEARCH_TYPE.DESTINATION);
-            }
-        });
+        app.getChosenDestinationLiveDataPublic().observe(this, observedDestination -> {
+		  if(!observedDestination.isEmpty()){
+				searchBarDestTextView.setText(observedDestination);
+				searchBarSourceTextView.setVisibility(View.VISIBLE);
+				backButton.setVisibility(View.VISIBLE);
+				goButton.setVisibility(View.VISIBLE);
+				  constraintLayout.setBackground(searchBackground);
+				tryEnableButton();
+			}
+		});
 
-        app.getChosenDestinationLiveDataPublic().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String observedDestination) {
-			  if(!observedDestination.isEmpty()){
-				    searchBarDestTextView.setText(observedDestination);
-                    searchBarSourceTextView.setVisibility(View.VISIBLE);
-                    backButton.setVisibility(View.VISIBLE);
-                    goButton.setVisibility(View.VISIBLE);
-				  	constraintLayout.setBackground(searchBackground);
-				    tryEnableButton();
-                }
-            }
-        });
+        searchBarSourceTextView.setOnClickListener(view ->
+				moveToSearchActivity(NaviableApplication.SEARCH_TYPE.SOURCE));
 
-        searchBarSourceTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                moveToSearchActivity(NaviableApplication.SEARCH_TYPE.SOURCE);
-            }
-        });
+        app.getChosenSourceLiveDataPublic().observe(this, observedSource -> {
+			if(!observedSource.isEmpty()){
+			  searchBarSourceTextView.setText(observedSource);
+			  tryEnableButton();
+			}
+		});
 
-        app.getChosenSourceLiveDataPublic().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String observedSource) {
-                if(!observedSource.isEmpty()){
-				  searchBarSourceTextView.setText(observedSource);
-				  tryEnableButton();
-                }
-            }
-        });
-
-        app.getCampusChosenLiveDataPublic().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                updateMapLocation();
-            }
-        });
+        app.getCampusChosenLiveDataPublic().observe(this, s -> updateMapLocation());
     }
 
 
@@ -193,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         updateMapLocation();
     }

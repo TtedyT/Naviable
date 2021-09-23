@@ -45,7 +45,7 @@ public class SearchActivity extends AppCompatActivity {
         // default value never used
         boolean searchTypeIsDestinationSearch = intent.getBooleanExtra("searchTypeIsDestinationSearch", false);
 
-        searchBarEditText = (EditText) findViewById(R.id.search_bar_edit_text);
+        searchBarEditText = findViewById(R.id.search_bar_edit_text);
         searchBarEditText.requestFocus(); // focuses on the search on when entering this screen
         ImageButton backButton = findViewById(R.id.back_button_search);
         micVoiceBtn = findViewById(R.id.voiceBtn);
@@ -75,9 +75,9 @@ public class SearchActivity extends AppCompatActivity {
 
         ArrayList<String> recentSearchedLocations = new ArrayList<>();
         Object[] recentSearchedLocationsObjectArr = app.getDB().getRecentLocationsStaticArray();
-        for(int i=0; i<recentSearchedLocationsObjectArr.length; i++){
-            recentSearchedLocations.add(recentSearchedLocationsObjectArr[i].toString());
-        }
+	  for (Object o : recentSearchedLocationsObjectArr) {
+		recentSearchedLocations.add(o.toString());
+	  }
 
         ArrayList<String> searchSuggestionsNotRecents = new ArrayList<>(locations);
         searchSuggestionsNotRecents.removeAll(recentSearchedLocations);
