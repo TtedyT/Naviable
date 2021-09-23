@@ -1,10 +1,8 @@
 package com.example.naviable.navigation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
 
 public class Navigator {
@@ -16,16 +14,16 @@ public class Navigator {
         this.graph = graph;
     }
 
-    private void resetDistances(){
+    private void resetAllNodeData(){
 
       for(String id : graph.getNodeMap().keySet()){
-        graph.getNode(id).setMinDistance(Double.POSITIVE_INFINITY);
+        graph.getNode(id).resetNodeData();
 	  }
 	}
 
     private void findPath(String srcId){
         MapNode src = graph.getNode(srcId);
-        resetDistances();
+        resetAllNodeData();
         src.setMinDistance(0);
         PriorityQueue<MapNode> queue = new PriorityQueue<>();
         queue.add(src);
