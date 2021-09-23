@@ -93,6 +93,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 	  	Button goButton = findViewById(R.id.go_button);
 	  	goButton.setEnabled(false);
+        Button doneNavigationButton = (Button) findViewById(R.id.done_navigation_botton);
+        recyclerViewInstructions.setVisibility(View.GONE);
+        doneNavigationButton.setVisibility(View.GONE);
+        doneNavigationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // restart navigation
+                // todo: make the correct views visible/invisible
+            }
+        });
+
+  
         Navigator finalNavigator = app.getDB().getNavigator();
         goButton.setOnClickListener(view -> {
             String src = searchBarSourceTextView.getText().toString();
@@ -106,9 +118,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Toasty.info(this, "No accessible route found.", Toast.LENGTH_SHORT, true).show();
                 }
                 else {
+
                     InstructionsAdapter instructionsAdapter = new InstructionsAdapter(this, directions);
                     recyclerViewInstructions.setAdapter(instructionsAdapter);
                     recyclerViewInstructions.setLayoutManager(new LinearLayoutManager(this));
+                    searchLayout.setVisibility(View.GONE);
+                    recyclerViewInstructions.setVisibility(View.VISIBLE);
+                    doneNavigationButton.setVisibility(View.VISIBLE);
+
 
                 }
             }

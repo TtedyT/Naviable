@@ -89,12 +89,14 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v, int position) {
                 // todo: pass to main the chosen location and if its "source" or "destination"
+//                System.out.println(updatedLocationRecentThenNotRecent);
+//                System.out.println(position);
                 String location = updatedLocationRecentThenNotRecent.get(position);
                 if(searchTypeIsDestinationSearch){
                     app.setSearchDestination(location);
                 }
                 else{
-                    app.setSearchSource(locations.get(position));
+                    app.setSearchSource(location);
                 }
                 app.getDB().addRecentLocation(location);
                 finish();
