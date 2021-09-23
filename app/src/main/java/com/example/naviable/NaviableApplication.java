@@ -36,39 +36,41 @@ public class NaviableApplication extends Application {
         super.onCreate();
     }
 
-    public static NaviableApplication getInstance(){
-        if(naviableApplication == null){
+    public static NaviableApplication getInstance() {
+        if (naviableApplication == null) {
             naviableApplication = new NaviableApplication();
         }
         return naviableApplication;
     }
 
-    public DB getDB(){
+    public DB getDB() {
         return db;
     }
 
     // todo: continue from here
-    public LiveData<String> getChosenDestinationLiveDataPublic(){
+    public LiveData<String> getChosenDestinationLiveDataPublic() {
         return chosenDestinationLiveDataPublic;
     }
 
-    public void setSearchDestination(String chosenDestination){
+    public void setSearchDestination(String chosenDestination) {
         chosenDestinationMutableLiveData.postValue(chosenDestination);
         System.out.println("dest setted");
     }
 
-    public LiveData<String> getChosenSourceLiveDataPublic(){
-        return  chosenSourceLiveDataPublic;
+    public LiveData<String> getChosenSourceLiveDataPublic() {
+        return chosenSourceLiveDataPublic;
     }
 
-    public void setSearchSource(String chosenSource){
+    public void setSearchSource(String chosenSource) {
         chosenSourceMutableLiveData.postValue(chosenSource);
         System.out.println("source setted");
     }
 
-    public LiveData<String> getCampusChosenLiveDataPublic() {return campusChosenLiveDataPublic; }
+    public LiveData<String> getCampusChosenLiveDataPublic() {
+        return campusChosenLiveDataPublic;
+    }
 
-    public void setCampus(String campusChosen){
+    public void setCampus(String campusChosen) {
         campusChosenMutableLiveData.postValue(campusChosen);
     }
 }

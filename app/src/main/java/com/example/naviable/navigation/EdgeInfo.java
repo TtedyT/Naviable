@@ -7,13 +7,12 @@ import java.util.List;
 
 public class EdgeInfo {
 
-//    private final List<Direction> directions;
+    //    private final List<Direction> directions;
     private final List<Direction> directions;
     private double distance;
     private final String destId;
 
-    public EdgeInfo(String destId, List<Direction> directions, double distance)
-    {
+    public EdgeInfo(String destId, List<Direction> directions, double distance) {
         this.destId = destId;
         this.directions = directions;
         this.distance = distance;
@@ -27,8 +26,7 @@ public class EdgeInfo {
         return directions;
     }
 
-    public double getDistance()
-    {
+    public double getDistance() {
         return distance;
     }
 }

@@ -1,27 +1,27 @@
 {
-    "a": {
-        "adjacency": [
-            {
-                "destId": "b",
-                "directions": [
-                    {
-                        "description": "Go Straight",
-                        "type": "idk"
-                    }
-                ],
-                "distance": 1.0
-            }
+  "a": {
+    "adjacency": [
+      {
+        "destId": "b",
+        "directions": [
+          {
+            "description": "Go Straight",
+            "type": "idk"
+          }
         ],
-        "mappable": true,
-        "name": "a",
-        "x": 0.0,
-        "y": 0.0
-    },
-    "b": {
-        "adjacency": [],
-        "mappable": true,
-        "name": "b",
-        "x": 1.0,
-        "y": 0.0
-    }
+        "distance": 1.0
+      }
+    ],
+    "mappable": true,
+    "name": "a",
+    "x": 0.0,
+    "y": 0.0
+  },
+  "b": {
+    "adjacency": [],
+    "mappable": true,
+    "name": "b",
+    "x": 1.0,
+    "y": 0.0
+  }
 }

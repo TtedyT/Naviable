@@ -56,6 +56,7 @@ import es.dmoral.toasty.Toasty;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+
 	private Drawable searchBackground;
 	private GoogleMap mMap;
 	private TextView searchBarDestTextView;
@@ -229,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void showHomeUI() {
 		srcMarker.remove();
 		destMarker.remove();
+
         searchBarDestTextView.setVisibility(View.VISIBLE);
         recyclerViewInstructions.setVisibility(View.GONE);
         doneNavigationButton.setVisibility(View.GONE);
@@ -266,4 +268,5 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		// note: zoom level is between 2.0 and 21.0
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(campus, 17.25f));
 	}
+
 }

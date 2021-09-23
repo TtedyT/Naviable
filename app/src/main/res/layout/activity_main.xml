@@ -5,18 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity"
-    android:background="#e0debf"
-    >
+    android:background="#e0debf">
 
-<!--    todo: move appbar and his content to a new view and import it inside each screen (or fragment)-->
+    <!--    todo: move appbar and his content to a new view and import it inside each screen (or fragment)-->
     <View
         android:id="@+id/app_bar"
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/app_bar_text"
@@ -29,7 +27,7 @@
         app:layout_constraintTop_toTopOf="@id/app_bar"
         android:layout_marginStart="12dp"
         android:layout_marginTop="4dp"
-        android:fontFamily="@font/alef"/>
+        android:fontFamily="@font/alef" />
 
     <ImageButton
         android:id="@+id/settings_button"
@@ -84,7 +82,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/search_bar_dest_text_view"
@@ -104,8 +102,7 @@
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:textSize="16sp"
-            android:textColor="@color/black"
-            />
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/go_button"
@@ -116,17 +113,28 @@
             app:layout_constraintStart_toStartOf="@+id/search_bar_dest_text_view"
             app:layout_constraintTop_toBottomOf="@id/search_bar_dest_text_view"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:backgroundTint="@color/app_secondary_color"
-            />
+            android:backgroundTint="@color/app_secondary_color" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="15dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/go_button"
-            />
+            app:layout_constraintTop_toBottomOf="@id/go_button" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/show_navigation_src_dest_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_rectangle_view"
+        app:layout_constraintLeft_toLeftOf="@id/directions_recycler_view"
+        app:layout_constraintRight_toRightOf="@id/directions_recycler_view"
+        app:layout_constraintBottom_toTopOf="@+id/directions_recycler_view"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:layout_marginBottom="5dp"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/directions_recycler_view"
@@ -140,8 +148,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        />
+        android:paddingEnd="10dp" />
 
     <Button
         android:id="@+id/done_navigation_botton"
@@ -151,8 +158,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_bar"
         app:layout_constraintLeft_toLeftOf="@id/directions_recycler_view"
-        android:layout_marginBottom="5dp"
-        />
+        android:layout_marginBottom="5dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_bar"
@@ -163,7 +169,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:itemIconTint="@color/black"
-        app:menu="@menu/bottom_navigation_bar_menu"
-        />
+        app:menu="@menu/bottom_navigation_bar_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,7 +27,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
 
     private final RecyclerViewClickListener clickListener;
 
-    public MyAdapter(Context context, ArrayList<String> searchSuggestionsNotRecents, ArrayList<String> recentSearchedLocations, RecyclerViewClickListener clickListener){
+    public MyAdapter(Context context, ArrayList<String> searchSuggestionsNotRecents, ArrayList<String> recentSearchedLocations, RecyclerViewClickListener clickListener) {
         this.context = context;
         this.searchSuggestionsRecents = new ArrayList<>(recentSearchedLocations);
         this.searchSuggestions = new ArrayList<>(recentSearchedLocations);
@@ -50,10 +50,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         String location = this.searchSuggestions.get(position);
-        if(this.searchSuggestionsRecents.contains(location)){
+        if (this.searchSuggestionsRecents.contains(location)) {
             holder.searchSuggestionImageView.setImageResource(R.drawable.recent_searched);
-        }
-        else {
+        } else {
             holder.searchSuggestionImageView.setImageResource(R.drawable.not_recent_search);
         }
         holder.searchSuggestionTextView.setText(location);
@@ -74,14 +73,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
         protected FilterResults performFiltering(CharSequence charSequence) {
             String charSequenceStringLowerCased = charSequence.toString().toLowerCase();
             ArrayList<String> filteredSearchSuggestions = new ArrayList<>();
-            if(charSequence.toString().isEmpty())
-            {
+            if (charSequence.toString().isEmpty()) {
                 filteredSearchSuggestions.addAll(searchSuggestionsAll);
-            }
-            else
-            {
-                for (String resultSuggestion : searchSuggestions){
-                    if(resultSuggestion.toLowerCase().contains(charSequenceStringLowerCased))
+            } else {
+                for (String resultSuggestion : searchSuggestions) {
+                    if (resultSuggestion.toLowerCase().contains(charSequenceStringLowerCased))
                         filteredSearchSuggestions.add(resultSuggestion);
                 }
             }
@@ -100,7 +96,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
         }
     };
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView searchSuggestionTextView;
         ImageView searchSuggestionImageView;
@@ -114,12 +110,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
 
         @Override
         public void onClick(View v) {
-
             clickListener.onClick(v, getAdapterPosition());
         }
     }
 
-    public interface RecyclerViewClickListener{
+    public interface RecyclerViewClickListener {
         void onClick(View v, int position);
     }
 
