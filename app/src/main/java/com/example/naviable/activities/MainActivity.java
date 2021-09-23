@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		Toasty.info(this, "Start and destination are the same.",
 				Toast.LENGTH_SHORT, true).show();
 	  } else {
-		List<Direction> directions = finalNavigator.getDirections(dest, src);
+		List<Direction> directions = finalNavigator.getDirections(src, dest);
 		if (directions.isEmpty()) {
 		  Toasty.info(this, "No accessible route found.",
 				  Toast.LENGTH_SHORT, true).show();
