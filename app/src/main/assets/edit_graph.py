@@ -231,6 +231,7 @@ class GraphJsonShell():
                         'STRAIGHT',
                         'RIGHT',
                         'LEFT',
+                        'RAMP',
                         'ELEVATOR'
                     ],
                     'filter': lambda val: val.lower()

@@ -60,6 +60,10 @@ public class MapNode implements Comparable<MapNode> {
     public void setMinDistance(double newDistance) {
         this.minDistance = newDistance;
     }
+    public void resetNodeData(){
+      this.minDistance = Double.POSITIVE_INFINITY;
+      this.prev = null;
+	}
 
     @Override
     public int compareTo(MapNode mapNode) {

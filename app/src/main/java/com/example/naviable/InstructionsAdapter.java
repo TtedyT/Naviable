@@ -47,6 +47,7 @@ public class InstructionsAdapter extends RecyclerView.Adapter<InstructionsAdapte
          * 'STRAIGHT',
          * 'RIGHT',
          * 'LEFT',
+         * 'RAMP',
          * 'ELEVATOR'
          */
         int imageFromType = NaviableApplication.getInstance().getDB().getImagePathFromMap(instruction.getType());
