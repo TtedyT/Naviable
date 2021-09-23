@@ -48,10 +48,8 @@ public class CodeScannerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_scanner);
 
-        if (checkCameraPermission()) {
-            useCamera();
-        }
-
+        checkCameraPermission();
+        useCamera();
     }
     
     void useCamera(){
