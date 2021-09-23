@@ -5,7 +5,7 @@ import java.util.List;
 
 public class MapNode implements Comparable<MapNode> {
     private String name;
-    private double x,y;
+    private double x, y;
     private boolean mappable;
     private double minDistance = Double.POSITIVE_INFINITY;
     private MapNode prev;
@@ -20,7 +20,7 @@ public class MapNode implements Comparable<MapNode> {
         return prev;
     }
 
-    public MapNode(String name, double x, double y, boolean mappable, List<EdgeInfo> adjacency){
+    public MapNode(String name, double x, double y, boolean mappable, List<EdgeInfo> adjacency) {
         this.name = name;
         this.x = x;
         this.y = y;
@@ -28,7 +28,7 @@ public class MapNode implements Comparable<MapNode> {
         this.adjacency = adjacency;
     }
 
-    public MapNode(){
+    public MapNode() {
         this.minDistance = Double.POSITIVE_INFINITY;
         this.prev = null;
     }
@@ -38,7 +38,7 @@ public class MapNode implements Comparable<MapNode> {
     }
 
     public String getName() {
-        return  name;
+        return name;
     }
 
     public double getX() {
@@ -57,9 +57,13 @@ public class MapNode implements Comparable<MapNode> {
         return mappable;
     }
 
-    public void setMinDistance(double newDistance){
+    public void setMinDistance(double newDistance) {
         this.minDistance = newDistance;
     }
+    public void resetNodeData(){
+      this.minDistance = Double.POSITIVE_INFINITY;
+      this.prev = null;
+	}
 
     @Override
     public int compareTo(MapNode mapNode) {

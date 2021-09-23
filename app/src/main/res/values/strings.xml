@@ -3,6 +3,8 @@
     <string name="choose_campus_text">Campus:</string>
     <string name="search_bar_text">Where are you going?</string>
     <string name="recents_text">Recent:</string>
+    <string name="dest_edit_text_hint">Choose destination</string>
+    <string name="src_edit_text_hint">Choose start location</string>
     <string-array name="campuses_array">
         <item>Givat Ram Campus</item>
         <item>Mount Scopus Campus</item>

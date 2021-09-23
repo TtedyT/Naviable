@@ -11,8 +11,7 @@
         android:background="?attr/selectableItemBackground"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView
         android:id="@+id/myInstructionTextView"
@@ -24,8 +23,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/instructionImage"
-        app:layout_constraintRight_toLeftOf="@id/instructionAudio"
-        />
+        app:layout_constraintRight_toLeftOf="@id/instructionAudio" />
 
     <ImageButton
         android:id="@+id/instructionAudio"
@@ -35,15 +33,13 @@
         android:src="@drawable/ic_baseline_music_note_24"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <View
         app:layout_constraintTop_toBottomOf="@+id/myInstructionTextView"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="10dp"
-        android:background="#a5ada7"
-        />
+        android:background="#a5ada7" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

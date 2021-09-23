@@ -45,54 +45,38 @@ public class SearchActivity extends AppCompatActivity {
         // default value never used
         boolean searchTypeIsDestinationSearch = intent.getBooleanExtra("searchTypeIsDestinationSearch", false);
 
-        searchBarEditText = (EditText) findViewById(R.id.search_bar_edit_text);
+        searchBarEditText = findViewById(R.id.search_bar_edit_text);
+        String hint = searchTypeIsDestinationSearch ? getResources().getString(R.string.dest_edit_text_hint) :
+                                                      getResources().getString(R.string.src_edit_text_hint);
+        searchBarEditText.setHint(hint);
         searchBarEditText.requestFocus(); // focuses on the search on when entering this screen
         ImageButton backButton = findViewById(R.id.back_button_search);
         micVoiceBtn = findViewById(R.id.voiceBtn);
-        micVoiceBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speech To Text");
 
-                try {
-                    startActivityForResult(intent, SPEECH_INPUT);
-                }
-                catch (Exception e){
-                    Toast.makeText(SearchActivity.this," " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+        micVoiceBtn.setOnClickListener(view -> {
+            Intent intent1 = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent1.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            intent1.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+            intent1.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speech To Text");
+
+            try {
+                startActivityForResult(intent1, SPEECH_INPUT);
+            } catch (Exception e) {
+                Toast.makeText(SearchActivity.this, " " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
         backButton.setOnClickListener(view -> {
             finish();
         });
-        recyclerViewSearchSuggestions = (RecyclerView) findViewById(R.id.search_suggestions_recycler_view);
+        recyclerViewSearchSuggestions = findViewById(R.id.search_suggestions_recycler_view);
         app = NaviableApplication.getInstance();
-//        searchBarEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View view, boolean b) {
-////                recyclerViewSearchSuggestions.setVisibility(View.VISIBLE);
-//                // instead ill tey to set the height to his original height:
-//                recyclerViewSearchSuggestions.requestLayout();
-//                recyclerViewSearchSuggestions.getLayoutParams().height = 400;
-//            }
-//        });
 
         ArrayList<String> locations = new ArrayList<String>(app.getDB().getLocations());
-//        ArrayList<String> temporaryNamesForDebug = new ArrayList<>();
-//        temporaryNamesForDebug.add("Canada");
-//        temporaryNamesForDebug.add("Auditorium");
-//        temporaryNamesForDebug.add("Silberman");
-//        temporaryNamesForDebug.add("Feldman");
-//        temporaryNamesForDebug.add("Levi");
-//        temporaryNamesForDebug.add("Shprintzak");
 
         ArrayList<String> recentSearchedLocations = new ArrayList<>();
         Object[] recentSearchedLocationsObjectArr = app.getDB().getRecentLocationsStaticArray();
-        for(int i=0; i<recentSearchedLocationsObjectArr.length; i++){
-            recentSearchedLocations.add(recentSearchedLocationsObjectArr[i].toString());
+        for (Object o : recentSearchedLocationsObjectArr) {
+            recentSearchedLocations.add(o.toString());
         }
 
         ArrayList<String> searchSuggestionsNotRecents = new ArrayList<>(locations);
@@ -101,21 +85,17 @@ public class SearchActivity extends AppCompatActivity {
         ArrayList<String> updatedLocationRecentThenNotRecent = new ArrayList<>(recentSearchedLocations);
         updatedLocationRecentThenNotRecent.addAll(searchSuggestionsNotRecents);
 
-        this.clickListener = new MyAdapter.RecyclerViewClickListener() {
-            @Override
-            public void onClick(View v, int position) {
-                // System.out.println("clicked position is: " + position);
-                // todo: pass to main the chosen location and if its "source" or "destination"
-                String location = updatedLocationRecentThenNotRecent.get(position);
-                if(searchTypeIsDestinationSearch){
-                    app.setSearchDestination(location);
-                }
-                else{
-                    app.setSearchSource(locations.get(position));
-                }
-                app.getDB().addRecentLocation(location);
-                finish();
+        this.clickListener = (v, position) -> {
+            // todo: pass to main the chosen location and if its "source" or "destination"
+            TextView clickedSuggestionText =  v.findViewById(R.id.mySearchSuggestionTextView);
+            String location = clickedSuggestionText.getText().toString();
+            if (searchTypeIsDestinationSearch) {
+                app.setSearchDestination(location);
+            } else {
+                app.setSearchSource(location);
             }
+            app.getDB().addRecentLocation(location);
+            finish();
         };
 
         MyAdapter myAdapter = new MyAdapter(this, searchSuggestionsNotRecents, recentSearchedLocations, this.clickListener);
@@ -124,7 +104,8 @@ public class SearchActivity extends AppCompatActivity {
 
         searchBarEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -132,19 +113,17 @@ public class SearchActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {}
+            public void afterTextChanged(Editable editable) {
+            }
         });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         System.out.println("resultCode: " + resultCode);
-        if(requestCode == SPEECH_INPUT)
-        {
-            if((resultCode == RESULT_OK) && (data != null))
-            {
+        if (requestCode == SPEECH_INPUT) {
+            if ((resultCode == RESULT_OK) && (data != null)) {
                 ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 searchBarEditText.setText(Objects.requireNonNull((result).get(0)));
             }

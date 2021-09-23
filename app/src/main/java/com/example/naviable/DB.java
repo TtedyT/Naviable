@@ -24,47 +24,41 @@ public class DB {
     private final SharedPreferences sp;
     private final SharedPreferences spRecentSearchedLocations;
 
-//    public String[] campusesNames = new String[] {
-//            "Givat Ram Campus",
-//            "Mount Scopus Campus",
-//            "Ein Kerem Campus",
-//            "Rehovot Campus"
-//    };
 
-    // todo: move to firebase
-    private static LatLng givatRamCampus = new LatLng(31.776581574592292, 35.1981551984834);
-    private static LatLng mountScopusCampus = new LatLng(31.792265890048565, 35.24341248840097);
-    private static LatLng einKeremCampus = new LatLng(31.765301216056226, 35.14982248131393);
-    private static LatLng rehovotCampus = new LatLng(31.90506819982093, 34.80482152595895);
+    private static final LatLng givatRamCampus = new LatLng(31.776581574592292, 35.1981551984834);
+    private static final LatLng mountScopusCampus = new LatLng(31.792265890048565, 35.24341248840097);
+    private static final LatLng einKeremCampus = new LatLng(31.765301216056226, 35.14982248131393);
+    private static final LatLng rehovotCampus = new LatLng(31.90506819982093, 34.80482152595895);
+    private static final int RECENT_LOCATIONS_MAX_SIZE = 5;
     private static HashMap<String, LatLng> campuses;
     private Navigator navigator;
     private ArrayList<String> locations;
 
     private LinkedBlockingQueue<String> recentLocations;
-    private int RECENT_LOCATIONS_MAX_SIZE = 10;
 
 
     /**
      * base on the python file in assets:
-     *
      * 'straight',
      * 'right',
      * 'left',
      * 'elevator'
      */
     private static Map<String, Integer> path_map = new HashMap<>();
-    private void initMapWithPaths(){
+
+    private void initMapWithPaths() {
         path_map.put("straight", R.drawable.ic_baseline_straight_24);
-        path_map.put("right", R.drawable.ic_turn_right);
-        path_map.put("left", R.drawable.ic_turn_left);
+        path_map.put("right", R.drawable.ic_turn_left_24);
+        path_map.put("left", R.drawable.ic_turn_right_24);
+        path_map.put("ramp", R.drawable.ic_ramp);
         path_map.put("elevator", R.drawable.ic_baseline_elevator_24);
     }
-    public int getImagePathFromMap(String type){
-        System.out.println("type:" + type);
+
+    public int getImagePathFromMap(String type) {
         return path_map.get(type);
     }
 
-    public DB(Context context){
+    public DB(Context context) {
         initMapWithPaths();
         sp = context.getSharedPreferences("db", Context.MODE_PRIVATE);
         spRecentSearchedLocations = context.getSharedPreferences("recentSearchedLocations", Context.MODE_PRIVATE);
@@ -90,7 +84,7 @@ public class DB {
         fetchRecentSearches();
     }
 
-    public void setCampus(String campus){
+    public void setCampus(String campus) {
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("campus", campus);
         editor.apply();
@@ -98,9 +92,9 @@ public class DB {
         NaviableApplication.getInstance().setCampus(campus);
     }
 
-    public LatLng getCampus(){
+    public LatLng getCampus() {
         String campusName = sp.getString("campus", "undefined");
-        if(campusName.equals("undefined")){
+        if (campusName.equals("undefined")) {
             // default
             campusName = "Givat Ram Campus";
         }
@@ -108,7 +102,7 @@ public class DB {
         return campus;
     }
 
-    public Navigator getNavigator(){
+    public Navigator getNavigator() {
         return navigator;
     }
 
@@ -116,19 +110,19 @@ public class DB {
         return locations;
     }
 
-    public void saveSpinnerChosenOption(int optionIdx){
+    public void saveSpinnerChosenOption(int optionIdx) {
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("spinnerChosenOption", optionIdx);
         editor.apply();
     }
 
-    public int getSpinnerChosenOption(){
+    public int getSpinnerChosenOption() {
         return sp.getInt("spinnerChosenOption", 0);
     }
 
-    public void addRecentLocation(String location){
+    public void addRecentLocation(String location) {
         recentLocations.remove(location); // removes the location if already exist to push it as last
-        if(recentLocations.size()==RECENT_LOCATIONS_MAX_SIZE){
+        if (recentLocations.size() == RECENT_LOCATIONS_MAX_SIZE) {
             // element wasnt in and reached full capacity
             recentLocations.poll();
         }
@@ -136,11 +130,11 @@ public class DB {
         saveRecentsToSp();
     }
 
-    public Object[] getRecentLocationsStaticArray(){
+    public Object[] getRecentLocationsStaticArray() {
         return recentLocations.toArray();
     }
 
-    private void saveRecentsToSp(){
+    private void saveRecentsToSp() {
         Gson gson = new Gson();
         SharedPreferences.Editor editor = spRecentSearchedLocations.edit();
         String recentLocationsStringRepre = gson.toJson(this.recentLocations);
@@ -148,15 +142,14 @@ public class DB {
         editor.apply();
     }
 
-    private void fetchRecentSearches(){
+    private void fetchRecentSearches() {
         Gson gson = new Gson();
-        Type type = new TypeToken<LinkedBlockingQueue<String>>() {}.getType();
+        Type type = new TypeToken<LinkedBlockingQueue<String>>() {
+        }.getType();
         String recentLocationsStringRepre = spRecentSearchedLocations.getString("recentLocationsKey", "");
-        if(! recentLocationsStringRepre.isEmpty()){
+        if (!recentLocationsStringRepre.isEmpty()) {
             this.recentLocations = gson.fromJson(recentLocationsStringRepre, type);
         }
     }
-//    public String[] getCampusesNames(){
-//        return campusesNames;
-//    }
+
 }
