@@ -10,12 +10,22 @@ import java.util.PriorityQueue;
 public class Navigator {
     private Graph graph;
 
+    static int i = 0; // todo: test variable, delete later
+
     public Navigator(Graph graph){
         this.graph = graph;
     }
 
+    private void resetDistances(){
+
+      for(String id : graph.getNodeMap().keySet()){
+        graph.getNode(id).setMinDistance(Double.POSITIVE_INFINITY);
+	  }
+	}
+
     private void findPath(String srcId){
         MapNode src = graph.getNode(srcId);
+        resetDistances();
         src.setMinDistance(0);
         PriorityQueue<MapNode> queue = new PriorityQueue<>();
         queue.add(src);
