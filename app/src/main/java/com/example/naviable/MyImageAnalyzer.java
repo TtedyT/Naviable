@@ -11,8 +11,10 @@ import androidx.camera.core.ImageProxy;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.mlkit.vision.barcode.Barcode;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.common.InputImage;
 
@@ -31,12 +33,17 @@ public class MyImageAnalyzer implements ImageAnalysis.Analyzer {
             InputImage image =
                     InputImage.fromMediaImage(inputImage, imageProxy.getImageInfo().getRotationDegrees());
 
-            BarcodeScanner scanner = BarcodeScanning.getClient();
+            BarcodeScannerOptions options = new BarcodeScannerOptions.Builder()
+                    .setBarcodeFormats(
+                            Barcode.FORMAT_QR_CODE
+                    ).build();
+
+            BarcodeScanner scanner = BarcodeScanning.getClient(options);
             Task<List<Barcode>> result = scanner.process(image)
                     .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
                         @Override
                         public void onSuccess(List<Barcode> barcodes) {
-                            if (!barcodes.isEmpty()) {
+                            if (barcodes != null && barcodes.size() > 0) {
                                 readBarcodeData(barcodes);
                             }
                         }
