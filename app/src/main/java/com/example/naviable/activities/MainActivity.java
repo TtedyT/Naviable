@@ -44,6 +44,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ConstraintLayout constraintLayout;
     private final int ZOOM_OUT_FACTOR = 5;
     private RecyclerView recyclerViewInstructions;
+    private Polyline pathPolyline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             // todo: make the correct views visible/invisible
         });
 
-
         Navigator finalNavigator = app.getDB().getNavigator();
         goButton.setOnClickListener(view -> {
             String src = searchBarSourceTextView.getText().toString();
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     doneNavigationButton.setVisibility(View.VISIBLE);
 
                     ArrayList<LatLng> path = finalNavigator.getPathLatLng(src, dest);
-                    drawPathOnMap(path);
+                    pathPolyline = drawPathOnMap(path);
                 }
             }
 
@@ -160,9 +161,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         app.getCampusChosenLiveDataPublic().observe(this, s -> updateMapLocation());
     }
 
-    private void drawPathOnMap(ArrayList<LatLng> path){
+    private void deletePathFromMap(){
+        pathPolyline.remove();
+    }
+
+    private Polyline drawPathOnMap(ArrayList<LatLng> path){
         PolylineOptions opts = new PolylineOptions().addAll(path).color(Color.BLUE).width(10);
-        mMap.addPolyline(opts);
+        return mMap.addPolyline(opts);
     }
 
 
@@ -188,8 +193,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         doneNavigationButton.setVisibility(View.GONE);
         searchBarDestTextView.setText("");
         searchBarSourceTextView.setText("");
-
-
+        deletePathFromMap();
     }
 
     /**
