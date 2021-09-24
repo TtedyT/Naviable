@@ -9,6 +9,14 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.Size;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -27,7 +35,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.example.naviable.DB;
 import com.example.naviable.MyImageAnalyzer;
+import com.example.naviable.NaviableApplication;
+import com.example.naviable.QrListener;
 import com.example.naviable.R;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -80,7 +91,16 @@ public class CodeScannerActivity extends AppCompatActivity {
 
         Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview);
 
-        MyImageAnalyzer analyzer = new MyImageAnalyzer();
+        MyImageAnalyzer analyzer = new MyImageAnalyzer(new QrListener() {
+            @Override
+            public void onObjectReady(String title) {
+            }
+
+            @Override
+            public void onDataLoaded(String data) {
+                Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
+            }
+        });
         ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
                 .setTargetResolution(new Size(1280, 720))
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
@@ -91,6 +111,7 @@ public class CodeScannerActivity extends AppCompatActivity {
                 imageAnalysis,
                 preview
         );
+
     }
 
     public boolean checkCameraPermission() {

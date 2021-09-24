@@ -1,13 +1,23 @@
 package com.example.naviable;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.annotation.SuppressLint;
+import android.location.GnssAntennaInfo;
 import android.media.Image;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 
+import com.example.naviable.activities.CodeScannerActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,6 +32,13 @@ import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 
 public class MyImageAnalyzer implements ImageAnalysis.Analyzer {
+
+    private QrListener qrListener;
+
+    public MyImageAnalyzer(QrListener listener){
+        this.qrListener = listener;
+    }
+
     @Override
     public void analyze(@NonNull ImageProxy image) {
         scanBarcode(image);
@@ -67,6 +84,7 @@ public class MyImageAnalyzer implements ImageAnalysis.Analyzer {
     private void readBarcodeData(List<Barcode> barcodes) {
         for (Barcode barcode : barcodes) {
             Log.i("QR Scanner:", "readBarcodeData: " + barcode.getRawValue());
+            qrListener.onDataLoaded(barcode.getRawValue());
         }
     }
 }
