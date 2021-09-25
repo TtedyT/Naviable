@@ -96,12 +96,17 @@ public class CodeScannerActivity extends AppCompatActivity {
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
         Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview);
+        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
+                .setTargetResolution(new Size(1280, 720))
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_BLOCK_PRODUCER)
+                .build();
 
         MyImageAnalyzer analyzer = new MyImageAnalyzer(new QrListener() {
             @Override
             public void onDataLoaded(String data) {
                 // If collected data from QR code in locations list, display alert
                 if (locations.contains(data)) {
+                    cameraProvider.unbindAll();
                     new AlertDialog.Builder(CodeScannerActivity.this)
                             .setTitle("Scan current location")
                             .setMessage(String.format("Is %s your current location?", data))
@@ -114,6 +119,11 @@ public class CodeScannerActivity extends AppCompatActivity {
                             .setNegativeButton("No", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.dismiss();
+                                    cameraProvider.bindToLifecycle(CodeScannerActivity.this,
+                                            cameraSelector,
+                                            imageAnalysis,
+                                            preview
+                                    );
                                 }
                             })
                             .create()
@@ -126,17 +136,13 @@ public class CodeScannerActivity extends AppCompatActivity {
                 }
             }
         });
-        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
-                .setTargetResolution(new Size(1280, 720))
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_BLOCK_PRODUCER)
-                .build();
+
         imageAnalysis.setAnalyzer(cameraExecutor, analyzer);
         cameraProvider.bindToLifecycle(this,
                 cameraSelector,
                 imageAnalysis,
                 preview
         );
-
     }
 
     public boolean checkCameraPermission() {
