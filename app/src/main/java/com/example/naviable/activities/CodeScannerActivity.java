@@ -1,6 +1,7 @@
 package com.example.naviable.activities;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -57,6 +58,7 @@ public class CodeScannerActivity extends AppCompatActivity {
     private ExecutorService cameraExecutor;
     private PreviewView previewView;
     private NaviableApplication app;
+    private boolean alterShownFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +69,8 @@ public class CodeScannerActivity extends AppCompatActivity {
         checkCameraPermission();
         useCamera();
     }
-    
-    void useCamera(){
+
+    void useCamera() {
         Log.i("CodeScannerActivity", "useCamera: ");
         previewView = findViewById(R.id.preview_view);
         cameraExecutor = Executors.newSingleThreadExecutor();
@@ -84,7 +86,7 @@ public class CodeScannerActivity extends AppCompatActivity {
             }
         }, ContextCompat.getMainExecutor(this));
     }
-    
+
     void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
         ArrayList<String> locations = new ArrayList<String>(app.getDB().getLocations());
         Preview preview = new Preview.Builder().build();
@@ -95,43 +97,48 @@ public class CodeScannerActivity extends AppCompatActivity {
 
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
-        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview);
+        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview);
         ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
                 .setTargetResolution(new Size(1280, 720))
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_BLOCK_PRODUCER)
                 .build();
 
-        Toast invalidQrToast = Toasty.info(CodeScannerActivity.this,
+        Toast invalidQrToast = Toasty.info(this,
                 "Invalid QR code. Location does not exist.",
                 Toast.LENGTH_SHORT, true);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
         MyImageAnalyzer analyzer = new MyImageAnalyzer(new QrListener() {
             @Override
             public void onDataLoaded(String data) {
                 // If collected data from QR code in locations list, display alert
                 if (locations.contains(data)) {
-                    cameraProvider.unbindAll();
-                    new AlertDialog.Builder(CodeScannerActivity.this)
-                            .setTitle("Scan current location")
-                            .setMessage(String.format("Is %s your current location?", data))
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    app.setSearchDestination(data);
-                                    finish();
-                                }
-                            })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.dismiss();
-                                    cameraProvider.bindToLifecycle(CodeScannerActivity.this,
-                                            cameraSelector,
-                                            imageAnalysis,
-                                            preview
-                                    );
-                                }
-                            })
-                            .create()
-                            .show();
+                    if (!alterShownFlag) {
+                        alterShownFlag = true;
+                        cameraProvider.unbindAll();
+                        alertDialogBuilder.setTitle("Scan current location")
+                                .setMessage(String.format("Is %s your current location?", data))
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        app.setSearchDestination(data);
+                                        finish();
+                                        alterShownFlag = false;
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                        cameraProvider.bindToLifecycle(CodeScannerActivity.this,
+                                                cameraSelector,
+                                                imageAnalysis,
+                                                preview
+                                        );
+                                        alterShownFlag = false;
+                                    }
+                                })
+                                .create()
+                                .show();
+                    }
                 } else {
                     // Prevent toasts from "stacking" by scanning multiple QR's
                     if (!invalidQrToast.getView().isShown())
@@ -153,7 +160,7 @@ public class CodeScannerActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
-            
+
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.CAMERA)) {
 
@@ -185,7 +192,7 @@ public class CodeScannerActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults){
+                                           String permissions[], int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_CODE_PERMISSIONS: {
