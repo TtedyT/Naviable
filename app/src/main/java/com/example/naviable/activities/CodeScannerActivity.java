@@ -43,9 +43,12 @@ import com.example.naviable.R;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import es.dmoral.toasty.Toasty;
 
 public class CodeScannerActivity extends AppCompatActivity {
     private final int REQUEST_CODE_PERMISSIONS = 10;
@@ -83,6 +86,7 @@ public class CodeScannerActivity extends AppCompatActivity {
     }
     
     void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
+        ArrayList<String> locations = new ArrayList<String>(app.getDB().getLocations());
         Preview preview = new Preview.Builder().build();
 
         CameraSelector cameraSelector = new CameraSelector.Builder()
@@ -96,22 +100,30 @@ public class CodeScannerActivity extends AppCompatActivity {
         MyImageAnalyzer analyzer = new MyImageAnalyzer(new QrListener() {
             @Override
             public void onDataLoaded(String data) {
-                new AlertDialog.Builder(CodeScannerActivity.this)
-                        .setTitle("Scan current location")
-                        .setMessage(String.format("Is %s your current location?", data))
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                app.setSearchDestination(data);
-                                finish();
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .create()
-                        .show();
+                // If collected data from QR code in locations list, display alert
+                if (locations.contains(data)) {
+                    new AlertDialog.Builder(CodeScannerActivity.this)
+                            .setTitle("Scan current location")
+                            .setMessage(String.format("Is %s your current location?", data))
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    app.setSearchDestination(data);
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .create()
+                            .show();
+                } else {
+                    Toasty.info(CodeScannerActivity.this,
+                            "Invalid QR code. Location does not exist.",
+                            Toast.LENGTH_SHORT, true)
+                            .show();
+                }
             }
         });
         ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
