@@ -101,6 +101,10 @@ public class CodeScannerActivity extends AppCompatActivity {
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_BLOCK_PRODUCER)
                 .build();
 
+        Toast invalidQrToast = Toasty.info(CodeScannerActivity.this,
+                "Invalid QR code. Location does not exist.",
+                Toast.LENGTH_SHORT, true);
+
         MyImageAnalyzer analyzer = new MyImageAnalyzer(new QrListener() {
             @Override
             public void onDataLoaded(String data) {
@@ -129,10 +133,9 @@ public class CodeScannerActivity extends AppCompatActivity {
                             .create()
                             .show();
                 } else {
-                    Toasty.info(CodeScannerActivity.this,
-                            "Invalid QR code. Location does not exist.",
-                            Toast.LENGTH_SHORT, true)
-                            .show();
+                    // Prevent toasts from "stacking" by scanning multiple QR's
+                    if (!invalidQrToast.getView().isShown())
+                        invalidQrToast.show();
                 }
             }
         });
