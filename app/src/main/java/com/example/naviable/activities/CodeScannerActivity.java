@@ -53,11 +53,13 @@ public class CodeScannerActivity extends AppCompatActivity {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private ExecutorService cameraExecutor;
     private PreviewView previewView;
+    private NaviableApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_scanner);
+        app = NaviableApplication.getInstance();
 
         checkCameraPermission();
         useCamera();
@@ -93,17 +95,28 @@ public class CodeScannerActivity extends AppCompatActivity {
 
         MyImageAnalyzer analyzer = new MyImageAnalyzer(new QrListener() {
             @Override
-            public void onObjectReady(String title) {
-            }
-
-            @Override
             public void onDataLoaded(String data) {
-                Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(CodeScannerActivity.this)
+                        .setTitle("Scan current location")
+                        .setMessage(String.format("Is %s your current location?", data))
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                app.setSearchDestination(data);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .create()
+                        .show();
             }
         });
         ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
                 .setTargetResolution(new Size(1280, 720))
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_BLOCK_PRODUCER)
                 .build();
         imageAnalysis.setAnalyzer(cameraExecutor, analyzer);
         cameraProvider.bindToLifecycle(this,
@@ -171,4 +184,5 @@ public class CodeScannerActivity extends AppCompatActivity {
             }
         }
     }
+
 }
