@@ -7,8 +7,7 @@ tools:context=".activities.CodeScannerActivity">
 <FrameLayout
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/app_secondary_color">
+    android:layout_height="match_parent">
 
     <androidx.camera.view.PreviewView
         android:id="@+id/preview_view"
@@ -54,6 +53,7 @@ tools:context=".activities.CodeScannerActivity">
 
     <ImageButton
         android:id="@+id/back_button_qr"
+        android:contentDescription="back"
         android:layout_width="64dp"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/app_secondary_color"

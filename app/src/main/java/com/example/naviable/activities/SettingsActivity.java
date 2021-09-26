@@ -47,6 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 db.setCampus(selectedCampus);
                 db.saveSpinnerChosenOption(spinner.getSelectedItemPosition());
+                finish();
             }
         });
     }
