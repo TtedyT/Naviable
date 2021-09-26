@@ -120,7 +120,7 @@ public class CodeScannerActivity extends AppCompatActivity {
                                 .setMessage(String.format("Is %s your current location?", data))
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        app.setSearchDestination(data);
+                                        app.setSearchSource(data);
                                         finish();
                                         alterShownFlag = false;
                                     }
