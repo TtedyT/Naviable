@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	private Marker srcMarker;
 	private Marker destMarker;
     private Polyline pathPolyline;
+    private FloatingActionButton qrButton;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -88,19 +89,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	Drawable searchBackground = ContextCompat.getDrawable(this,
 			R.drawable.rounded_rectangle_view_search_background);
 
-        FloatingActionButton qrButton = findViewById(R.id.qr_scan_button);
-        qrButton.setOnClickListener(view -> {
-            Intent intent = new Intent(this, CodeScannerActivity.class);
-            startActivity(intent);
-        });
+	qrButton = findViewById(R.id.qr_scan_button);
+	qrButton.setOnClickListener(view -> {
+		Intent intent = new Intent(this, CodeScannerActivity.class);
+		startActivity(intent);
+	});
+	qrButton.setVisibility(View.GONE);
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+	// Obtain the SupportMapFragment and get notified when the map is ready to be used.
+	SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+			.findFragmentById(R.id.map);
 
-		assert mapFragment != null;
-		mapFragment.getMapAsync(this);
-		initVars();
+	assert mapFragment != null;
+	mapFragment.getMapAsync(this);
+	initVars();
 
 	Button goButton = findViewById(R.id.go_button);
 	goButton.setEnabled(false);
@@ -206,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	private void onDestChangedAction(String observedDestination) {
 		searchBarDestTextView.setText(observedDestination);
 		searchBarSourceTextView.setVisibility(View.VISIBLE);
+		qrButton.setVisibility(View.VISIBLE);
 		goButton.setVisibility(View.VISIBLE);
 		constraintLayout.setBackground(searchBackground);
 		LatLng destCoordinate = navigator.getCoordinate(observedDestination);
@@ -233,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private void hideSearch() {
 	searchBarSourceTextView.setVisibility(View.GONE);
+	qrButton.setVisibility(View.GONE);
 	goButton.setVisibility(View.GONE);
 	constraintLayout.setBackgroundColor(0x00ffffff);
   }
