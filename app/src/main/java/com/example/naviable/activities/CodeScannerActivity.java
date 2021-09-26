@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -68,6 +69,11 @@ public class CodeScannerActivity extends AppCompatActivity {
 
         checkCameraPermission();
         useCamera();
+
+        ImageButton backButton = findViewById(R.id.back_button_qr);
+        backButton.setOnClickListener(view -> {
+            finish();
+        });
     }
 
     void useCamera() {
