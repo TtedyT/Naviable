@@ -1,6 +1,7 @@
 package com.example.naviable.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.splashscreen.SplashScreen;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,14 +14,9 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
 
-        new Handler().postDelayed(() -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }, 100);
-        // todo change the delay back to 3000
-        //      for debug options its now 100
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 }

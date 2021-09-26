@@ -67,8 +67,8 @@ public class CodeScannerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_code_scanner);
         app = NaviableApplication.getInstance();
 
-        checkCameraPermission();
-        useCamera();
+        if (checkCameraPermission())
+            useCamera();
 
         ImageButton backButton = findViewById(R.id.back_button_qr);
         backButton.setOnClickListener(view -> {
@@ -187,7 +187,7 @@ public class CodeScannerActivity extends AppCompatActivity {
             } else {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        new String[]{Manifest.permission.CAMERA},
                         REQUEST_CODE_PERMISSIONS);
             }
             return false;

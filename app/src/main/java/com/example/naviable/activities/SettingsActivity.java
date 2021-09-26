@@ -2,6 +2,7 @@ package com.example.naviable.activities;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -32,22 +33,22 @@ public class SettingsActivity extends AppCompatActivity {
 
         spinner.setSelection(db.getSpinnerChosenOption());
 
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                db.setCampus(spinner.getSelectedItem().toString());
+                db.saveSpinnerChosenOption(spinner.getSelectedItemPosition());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+
+        });
+
         ImageButton backButton = findViewById(R.id.back_button_settings);
         backButton.setOnClickListener(view -> {
             finish();
-        });
-
-        Button saveSettingsButton = findViewById(R.id.save_setting_btn);
-        saveSettingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // todo: change to correct selection instead this hard coded
-                String selectedCampus = spinner.getSelectedItem().toString();
-                System.out.println("selectedCampus: " + selectedCampus);
-
-                db.setCampus(selectedCampus);
-                db.saveSpinnerChosenOption(spinner.getSelectedItemPosition());
-            }
         });
     }
 
