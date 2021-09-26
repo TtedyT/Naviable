@@ -1,0 +1,34 @@
+{
+    "a": {
+        "adjacency": [
+            {
+                "destId": "b",
+                "directions": [
+                    {
+                        "description": "go",
+                        "type": "straight"
+                    }
+                ],
+                "distance": 1.0
+            }
+        ],
+        "mappable": true,
+        "name": "a",
+        "x": 0.0,
+        "y": 1.0
+    },
+    "b": {
+        "adjacency": [],
+        "mappable": false,
+        "name": "b",
+        "x": 1.0,
+        "y": 1.0
+    },
+    "c": {
+        "adjacency": [],
+        "mappable": false,
+        "name": "c",
+        "x": 1.0,
+        "y": 1.0
+    }
+}

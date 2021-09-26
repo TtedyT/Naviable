@@ -3,9 +3,11 @@
     <item
         android:drawable="@drawable/splash_text"
         android:gravity="center"
-        android:bottom="100dp"/>
+        android:bottom="120dp"/>
     <item
-        android:drawable="@drawable/splash_foreground"
+        android:drawable="@mipmap/splash_icon_foreground"
         android:gravity="center"
-        android:top="100dp" />
+        android:width="256dp"
+        android:height="256dp"
+        android:top="120dp" />
 </layer-list>
