@@ -50,20 +50,6 @@ public class SettingsActivity extends AppCompatActivity {
         backButton.setOnClickListener(view -> {
             finish();
         });
-
-        Button saveSettingsButton = findViewById(R.id.save_setting_btn);
-        saveSettingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // todo: change to correct selection instead this hard coded
-                String selectedCampus = spinner.getSelectedItem().toString();
-                System.out.println("selectedCampus: " + selectedCampus);
-
-                db.setCampus(selectedCampus);
-                db.saveSpinnerChosenOption(spinner.getSelectedItemPosition());
-                finish();
-            }
-        });
     }
 
 }
