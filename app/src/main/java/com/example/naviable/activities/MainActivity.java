@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.naviable.BottomSheetFragment;
 import com.example.naviable.InstructionsAdapter;
 import com.example.naviable.NaviableApplication;
 import com.example.naviable.R;
@@ -70,99 +71,99 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	private RecyclerView recyclerViewInstructions;
 	private Marker srcMarker;
 	private Marker destMarker;
-    private Polyline pathPolyline;
+	private Polyline pathPolyline;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
-	setContentView(R.layout.activity_main);
-	ImageButton settingsButton = findViewById(R.id.settings_button);
-	settingsButton.setOnClickListener(view -> {
-	  Intent intent = new Intent(this, SettingsActivity.class);
-	  startActivity(intent);
-	});
-	Drawable searchBackground = ContextCompat.getDrawable(this,
-			R.drawable.rounded_rectangle_view_search_background);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		ImageButton settingsButton = findViewById(R.id.settings_button);
+		settingsButton.setOnClickListener(view -> {
+			Intent intent = new Intent(this, SettingsActivity.class);
+			startActivity(intent);
+		});
+		Drawable searchBackground = ContextCompat.getDrawable(this,
+				R.drawable.rounded_rectangle_view_search_background);
 
-	// Obtain the SupportMapFragment and get notified when the map is ready to be used.
-	SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-			.findFragmentById(R.id.map);
+		// Obtain the SupportMapFragment and get notified when the map is ready to be used.
+		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.map);
 
 		assert mapFragment != null;
 		mapFragment.getMapAsync(this);
 		initVars();
 
-	Button goButton = findViewById(R.id.go_button);
-	goButton.setEnabled(false);
-	doneNavigationButton = findViewById(R.id.done_navigation_botton);
-	recyclerViewInstructions.setVisibility(View.GONE);
-	doneNavigationButton.setVisibility(View.GONE);
-	doneNavigationButton.setOnClickListener(view -> {
-	  showHomeUI();
-	  // todo: make the correct views visible/invisible
-	});
+		Button goButton = findViewById(R.id.go_button);
+		goButton.setEnabled(false);
+		doneNavigationButton = findViewById(R.id.done_navigation_botton);
+		recyclerViewInstructions.setVisibility(View.GONE);
+		doneNavigationButton.setVisibility(View.GONE);
+		doneNavigationButton.setOnClickListener(view -> {
+			showHomeUI();
+			// todo: make the correct views visible/invisible
+		});
 
 
-	navigator = app.getDB().getNavigator();
-	goButton.setOnClickListener(view -> {
-	  String src = searchBarSourceTextView.getText().toString();
-	  String dest = searchBarDestTextView.getText().toString();
-	  if (src.equals(dest)) {
-		Toasty.info(this, "Start and destination are the same.",
-				Toast.LENGTH_SHORT, true).show();
-	  } else {
-		List<Direction> directions = navigator.getDirections(src, dest);
-		if (directions.isEmpty()) {
-		  Toasty.info(this, "No accessible route found.",
-				  Toast.LENGTH_SHORT, true).show();
-		} else {
+		navigator = app.getDB().getNavigator();
+		goButton.setOnClickListener(view -> {
+			String src = searchBarSourceTextView.getText().toString();
+			String dest = searchBarDestTextView.getText().toString();
+			if (src.equals(dest)) {
+				Toasty.info(this, "Start and destination are the same.",
+						Toast.LENGTH_SHORT, true).show();
+			} else {
+				List<Direction> directions = navigator.getDirections(src, dest);
+				if (directions.isEmpty()) {
+					Toasty.info(this, "No accessible route found.",
+							Toast.LENGTH_SHORT, true).show();
+				} else {
 
-		  InstructionsAdapter instructionsAdapter = new InstructionsAdapter(this, directions);
-		  // todo : causes memory allocation problems ( clicking go multiple times)
-		  recyclerViewInstructions.setAdapter(instructionsAdapter);
-		  recyclerViewInstructions.setLayoutManager(new LinearLayoutManager(this));
-		  hideSearch();
-		  searchBarDestTextView.setVisibility(View.GONE);
+//					InstructionsAdapter instructionsAdapter = new InstructionsAdapter(this, directions);
+//					recyclerViewInstructions.setAdapter(instructionsAdapter);
+//					recyclerViewInstructions.setLayoutManager(new LinearLayoutManager(this));
+					showBottomSheetFragment(directions);
+					hideSearch();
+//					searchBarDestTextView.setVisibility(View.GONE);
+//
+//					recyclerViewInstructions.setVisibility(View.VISIBLE);
+//					doneNavigationButton.setVisibility(View.VISIBLE);
 
-		  recyclerViewInstructions.setVisibility(View.VISIBLE);
-		  doneNavigationButton.setVisibility(View.VISIBLE);
+					ArrayList<LatLng> path = navigator.getPathLatLng(src, dest);
+					pathPolyline = drawPathOnMap(path);
+				}
+			}
 
-		  ArrayList<LatLng> path = navigator.getPathLatLng(src, dest);
-		  pathPolyline = drawPathOnMap(path);
-		}
-	  }
+		});
 
-	});
+		searchBarDestTextView.setOnClickListener(view ->
+				moveToSearchActivity(NaviableApplication.SEARCH_TYPE.DESTINATION));
 
-	searchBarDestTextView.setOnClickListener(view ->
-			moveToSearchActivity(NaviableApplication.SEARCH_TYPE.DESTINATION));
+		app.getChosenDestinationLiveDataPublic().observe(this, observedDestination -> {
+			if (!observedDestination.isEmpty()) {
+				onDestChangedAction(observedDestination);
+			}
+		});
 
-	app.getChosenDestinationLiveDataPublic().observe(this, observedDestination -> {
-	  if (!observedDestination.isEmpty()) {
-		  onDestChangedAction(observedDestination);
+		searchBarSourceTextView.setOnClickListener(view ->
+				moveToSearchActivity(NaviableApplication.SEARCH_TYPE.SOURCE));
+
+		app.getChosenSourceLiveDataPublic().observe(this, observedSource -> {
+			if (!observedSource.isEmpty()) {
+				onSrcChangedAction(observedSource);
+			}
+		});
+
+		app.getCampusChosenLiveDataPublic().observe(this, s -> updateMapLocation());
 	}
-	});
 
-	searchBarSourceTextView.setOnClickListener(view ->
-			moveToSearchActivity(NaviableApplication.SEARCH_TYPE.SOURCE));
+	private void deletePathFromMap() {
+		pathPolyline.remove();
+	}
 
-	app.getChosenSourceLiveDataPublic().observe(this, observedSource -> {
-	  if (!observedSource.isEmpty()) {
-		  onSrcChangedAction(observedSource);
-	  }
-	});
-
-	app.getCampusChosenLiveDataPublic().observe(this, s -> updateMapLocation());
-  }
-
-    private void deletePathFromMap(){
-        pathPolyline.remove();
-    }
-
-    private Polyline drawPathOnMap(ArrayList<LatLng> path){
-        PolylineOptions opts = new PolylineOptions().addAll(path).color(Color.BLUE).width(10);
-        return mMap.addPolyline(opts);
-    }
+	private Polyline drawPathOnMap(ArrayList<LatLng> path) {
+		PolylineOptions opts = new PolylineOptions().addAll(path).color(Color.BLUE).width(10);
+		return mMap.addPolyline(opts);
+	}
 
 	private void initVars() {
 		searchBackground = ContextCompat.getDrawable(this,
@@ -180,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	private void onSrcChangedAction(String observedSource) {
 		searchBarSourceTextView.setText(observedSource);
 		LatLng sourceCoordinate = navigator.getCoordinate(observedSource);
-		if(srcMarker != null){
+		if (srcMarker != null) {
 			srcMarker.remove();
 		}
 		srcMarker = mMap.addMarker(new MarkerOptions().position(sourceCoordinate)
@@ -200,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		constraintLayout.setBackground(searchBackground);
 		LatLng destCoordinate = navigator.getCoordinate(observedDestination);
 		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(destCoordinate, 17.5f));
-		if(destMarker != null){
+		if (destMarker != null) {
 			destMarker.remove();
 		}
 		destMarker = mMap.addMarker(new MarkerOptions().position(destCoordinate).title(observedDestination));
@@ -211,56 +212,63 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	/**
 	 * try enable go button if source and dest are set, keep disabled otherwise.
 	 */
-  private void tryEnableButton() {
-	if (searchBarDestTextView.getText().toString().isEmpty() ||
-			searchBarSourceTextView.getText().toString().isEmpty()) {
-	  goButton.setEnabled(false);
+	private void tryEnableButton() {
+		if (searchBarDestTextView.getText().toString().isEmpty() ||
+				searchBarSourceTextView.getText().toString().isEmpty()) {
+			goButton.setEnabled(false);
 
-	} else {
-	  goButton.setEnabled(true);
+		} else {
+			goButton.setEnabled(true);
+		}
 	}
-  }
 
-  private void hideSearch() {
-	searchBarSourceTextView.setVisibility(View.GONE);
-	goButton.setVisibility(View.GONE);
-	constraintLayout.setBackgroundColor(0x00ffffff);
-  }
+	private void hideSearch() {
+		searchBarSourceTextView.setVisibility(View.GONE);
+		goButton.setVisibility(View.GONE);
+		constraintLayout.setBackgroundColor(0x00ffffff);
+	}
 
-    private void showHomeUI() {
+	private void showHomeUI() {
 		srcMarker.remove();
 		destMarker.remove();
 
-        searchBarDestTextView.setVisibility(View.VISIBLE);
-        recyclerViewInstructions.setVisibility(View.GONE);
-        doneNavigationButton.setVisibility(View.GONE);
-        searchBarDestTextView.setText("");
-        searchBarSourceTextView.setText("");
-        deletePathFromMap();
-    }
+		searchBarDestTextView.setVisibility(View.VISIBLE);
+		recyclerViewInstructions.setVisibility(View.GONE);
+		doneNavigationButton.setVisibility(View.GONE);
+		searchBarDestTextView.setText("");
+		searchBarSourceTextView.setText("");
+		deletePathFromMap();
+	}
 
-  /**
-   * Manipulates the map once available.
-   * This callback is triggered when the map is ready to be used.
-   * This is where we can add markers or lines, add listeners or move the camera. In this case,
-   * we just add a marker near Sydney, Australia.
-   * <p>
-   * If Google Play services is not installed on the device, the user will be prompted to install
-   * it inside the SupportMapFragment. This method will only be triggered once the user has
-   * installed Google Play services and returned to the app.
-   */
-  @Override
-  public void onMapReady(@NonNull GoogleMap googleMap) {
-	mMap = googleMap;
-	updateMapLocation();
-  }
+	private void showBottomSheetFragment(List<Direction> dirs){
+		BottomSheetFragment bottomSheetFragment = new BottomSheetFragment(dirs);
+		bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
 
-  private void moveToSearchActivity(NaviableApplication.SEARCH_TYPE type) {
-	Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-	boolean searchTypeIsDestinationSearch = type.equals(NaviableApplication.SEARCH_TYPE.DESTINATION);
-	intent.putExtra("searchTypeIsDestinationSearch", searchTypeIsDestinationSearch);
-	startActivity(intent);
-  }
+
+	}
+
+	/**
+	 * Manipulates the map once available.
+	 * This callback is triggered when the map is ready to be used.
+	 * This is where we can add markers or lines, add listeners or move the camera. In this case,
+	 * we just add a marker near Sydney, Australia.
+	 * <p>
+	 * If Google Play services is not installed on the device, the user will be prompted to install
+	 * it inside the SupportMapFragment. This method will only be triggered once the user has
+	 * installed Google Play services and returned to the app.
+	 */
+	@Override
+	public void onMapReady(@NonNull GoogleMap googleMap) {
+		mMap = googleMap;
+		updateMapLocation();
+	}
+
+	private void moveToSearchActivity(NaviableApplication.SEARCH_TYPE type) {
+		Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+		boolean searchTypeIsDestinationSearch = type.equals(NaviableApplication.SEARCH_TYPE.DESTINATION);
+		intent.putExtra("searchTypeIsDestinationSearch", searchTypeIsDestinationSearch);
+		startActivity(intent);
+	}
 
 	// changes which campus we focus on in the map
 	public void updateMapLocation() {
@@ -268,5 +276,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		// note: zoom level is between 2.0 and 21.0
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(campus, 17.25f));
 	}
+
 
 }
