@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.SearchActivity"
-    android:background="@color/white">
+    android:background="?colorOnPrimary">
 
     <!--    todo: move appbar and his content to a new view and import it inside each sceren (or fragment)-->
     <View
         android:id="@+id/app_bar"
-        android:background="@color/white"
+        android:background="?colorOnPrimary"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -21,7 +21,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Naviable"
-        android:textColor="@color/black"
         android:textSize="39sp"
         app:layout_constraintLeft_toLeftOf="@id/app_bar"
         app:layout_constraintTop_toTopOf="@id/app_bar"
@@ -31,7 +30,6 @@
 
     <TextView
         android:id="@+id/recents_text_view"
-        android:textColor="@color/black"
         android:text="@string/recents_text"
         android:layout_width="0dp"
         android:layout_height="20dp"

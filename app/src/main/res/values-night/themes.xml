@@ -11,6 +11,7 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+<!--        <item name="@style/primaryText">@color/black</item>-->
     </style>
 
     <style name="SplashTheme" parent="Theme.SplashScreen">

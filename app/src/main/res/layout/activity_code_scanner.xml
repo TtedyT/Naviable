@@ -46,7 +46,6 @@ tools:context=".activities.CodeScannerActivity">
         android:text="Scan QR Code"
         android:background="@color/app_primary_color"
         android:gravity="center"
-        android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold" />
 
