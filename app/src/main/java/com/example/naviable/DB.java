@@ -151,5 +151,4 @@ public class DB {
             this.recentLocations = gson.fromJson(recentLocationsStringRepre, type);
         }
     }
-
 }

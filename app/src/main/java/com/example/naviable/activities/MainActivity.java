@@ -48,6 +48,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,9 +88,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	Drawable searchBackground = ContextCompat.getDrawable(this,
 			R.drawable.rounded_rectangle_view_search_background);
 
-	// Obtain the SupportMapFragment and get notified when the map is ready to be used.
-	SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-			.findFragmentById(R.id.map);
+        FloatingActionButton qrButton = findViewById(R.id.qr_scan_button);
+        qrButton.setOnClickListener(view -> {
+            Intent intent = new Intent(this, CodeScannerActivity.class);
+            startActivity(intent);
+        });
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
 
 		assert mapFragment != null;
 		mapFragment.getMapAsync(this);
