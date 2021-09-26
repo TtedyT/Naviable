@@ -113,7 +113,7 @@
             app:layout_constraintStart_toStartOf="@+id/search_bar_dest_text_view"
             app:layout_constraintTop_toBottomOf="@id/search_bar_dest_text_view"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:backgroundTint="@color/app_secondary_color" />
+            android:backgroundTint="@color/app_primary_color" />
 
         <View
             android:layout_width="match_parent"
@@ -178,7 +178,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/ic_baseline_qr_code_scanner_24"
-        android:backgroundTint="@color/app_secondary_color"
+        android:backgroundTint="@color/app_primary_color"
         android:src="@drawable/ic_baseline_qr_code_scanner_24"
         app:fabCustomSize="64dp"
         app:layout_constraintBottom_toBottomOf="@+id/map"

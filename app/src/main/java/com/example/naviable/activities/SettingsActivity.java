@@ -2,6 +2,7 @@ package com.example.naviable.activities;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -31,6 +32,19 @@ public class SettingsActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
 
         spinner.setSelection(db.getSpinnerChosenOption());
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                db.setCampus(spinner.getSelectedItem().toString());
+                db.saveSpinnerChosenOption(spinner.getSelectedItemPosition());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+
+        });
 
         ImageButton backButton = findViewById(R.id.back_button_settings);
         backButton.setOnClickListener(view -> {
