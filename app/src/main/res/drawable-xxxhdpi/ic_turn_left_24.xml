@@ -4,12 +4,18 @@
     android:viewportWidth="24"
     android:viewportHeight="24"
     android:tint="?attr/colorControlNormal">
-  <group android:scaleX="1" android:pivotX="12" android:pivotY="12">
-    <group android:rotation="180" android:pivotX="12" android:pivotY="12">
-      <path
-          android:fillColor="@android:color/black"
-          android:pathData="M11,9l1.42,1.42L8.83,14H18V4h2v12H8.83l3.59,3.58L11,21l-6,-6 6,-6z"/>
+    <group
+        android:scaleX="1"
+        android:pivotX="12"
+        android:pivotY="12">
+        <group
+            android:rotation="180"
+            android:pivotX="12"
+            android:pivotY="12">
+            <path
+                android:fillColor="@android:color/black"
+                android:pathData="M11,9l1.42,1.42L8.83,14H18V4h2v12H8.83l3.59,3.58L11,21l-6,-6 6,-6z" />
 
+        </group>
     </group>
-  </group>
 </vector>

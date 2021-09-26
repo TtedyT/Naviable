@@ -44,7 +44,7 @@ public class NavigatorUnitTest {
         String expectedDir = "Go Straight";
 
         // Run test
-        List<Direction> dirs = navigator.getDirections(n1,n2);
+        List<Direction> dirs = navigator.getDirections(n1, n2);
 
         // Check results
         assertEquals(1, dirs.size());
@@ -52,7 +52,7 @@ public class NavigatorUnitTest {
     }
 
     @Test
-    public void triangleTest(){
+    public void triangleTest() {
         // Prepare test
         String filename = "triangleTest.json";
         Graph g = makeGraphFromJson(filename);
@@ -62,7 +62,7 @@ public class NavigatorUnitTest {
         String expectedDir = "Go the correct path!";
 
         // Run test
-        List<Direction> dirs = navigator.getDirections(n1,n2);
+        List<Direction> dirs = navigator.getDirections(n1, n2);
 
         // Check results
         assertEquals(1, dirs.size());
@@ -70,7 +70,7 @@ public class NavigatorUnitTest {
     }
 
     @Test
-    public void sinkTest1(){
+    public void sinkTest1() {
         // Prepare test
         String filename = "sinkTest1.json";
         Graph g = makeGraphFromJson(filename);
@@ -79,7 +79,7 @@ public class NavigatorUnitTest {
         String n2 = "dest";
 
         // Run test
-        List<Direction> dirs = navigator.getDirections(n1,n2);
+        List<Direction> dirs = navigator.getDirections(n1, n2);
 
         // Check results
         assertEquals(4, dirs.size());
@@ -90,7 +90,7 @@ public class NavigatorUnitTest {
     }
 
     @Test
-    public void sinkTest2(){
+    public void sinkTest2() {
         // Prepare test
         String filename = "sinkTest2.json";
         Graph g = makeGraphFromJson(filename);
@@ -99,7 +99,7 @@ public class NavigatorUnitTest {
         String n2 = "e";
 
         // Run test
-        List<Direction> dirs = navigator.getDirections(n1,n2);
+        List<Direction> dirs = navigator.getDirections(n1, n2);
 
         // Check results
         assertEquals(3, dirs.size());
