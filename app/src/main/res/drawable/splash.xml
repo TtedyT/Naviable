@@ -3,9 +3,9 @@
     <item
         android:drawable="@drawable/splash_text"
         android:gravity="center"
-        android:bottom="80dp"/>
+        android:bottom="100dp"/>
     <item
         android:drawable="@drawable/splash_foreground"
         android:gravity="center"
-        android:top="80dp" />
+        android:top="100dp" />
 </layer-list>
