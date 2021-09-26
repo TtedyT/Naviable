@@ -76,7 +76,6 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:src="@drawable/ic_mic"
-        android:scaleType="fitCenter"
         android:background="@null"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
