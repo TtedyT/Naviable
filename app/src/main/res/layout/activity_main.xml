@@ -107,10 +107,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_rectangle_view"
+            android:backgroundTint="@color/app_primary_color"
             app:layout_constraintStart_toStartOf="@+id/search_bar_dest_text_view"
             app:layout_constraintTop_toBottomOf="@id/search_bar_dest_text_view"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:backgroundTint="@color/app_primary_color" />
+            />
 
         <View
             android:layout_width="match_parent"
@@ -150,7 +151,8 @@
     <Button
         android:id="@+id/done_navigation_botton"
         android:text="Exit Navigation"
-        android:background="#34abeb"
+        android:background="@drawable/rounded_rectangle_view"
+        android:backgroundTint="@color/app_primary_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_bar"
