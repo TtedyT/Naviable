@@ -38,10 +38,6 @@
                     {
                         "description": "Turn left on path",
                         "type": "left"
-                    },
-                    {
-                        "description": "Take ramp to Sderot Magnes",
-                        "type": "ramp"
                     }
                 ],
                 "distance": 0.0009731959470819712
