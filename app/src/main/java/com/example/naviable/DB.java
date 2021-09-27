@@ -33,6 +33,9 @@ public class DB {
     private static HashMap<String, LatLng> campuses;
     private Navigator navigator;
     private ArrayList<String> locations;
+    private ArrayList<String> toiletLocations;
+    private ArrayList<String> restaurantLocations;
+    private ArrayList<String> cafeLocations;
     private ArrayList<String> libraryLocations;
 
     private LinkedBlockingQueue<String> recentLocations;
@@ -83,6 +86,9 @@ public class DB {
 
         // Set up location lists
         locations = navigator.getLocations();
+        toiletLocations = navigator.getToiletLocations();
+        restaurantLocations = navigator.getRestaurantLocations();
+        cafeLocations = navigator.getCafeLocations();
         libraryLocations = navigator.getLibraryLocations();
 
         recentLocations = new LinkedBlockingQueue<>();
@@ -113,6 +119,18 @@ public class DB {
 
     public ArrayList<String> getLocations() {
         return locations;
+    }
+
+    public ArrayList<String> getToiletLocations() {
+        return toiletLocations;
+    }
+
+    public ArrayList<String> getRestaurantLocations() {
+        return restaurantLocations;
+    }
+
+    public ArrayList<String> getCafeLocations() {
+        return cafeLocations;
     }
 
     public ArrayList<String> getLibraryLocations() {

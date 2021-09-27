@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +29,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -39,7 +37,6 @@ import com.example.naviable.InstructionsAdapter;
 import com.example.naviable.NaviableApplication;
 import com.example.naviable.R;
 import com.example.naviable.navigation.Direction;
-import com.example.naviable.navigation.MapNode;
 import com.example.naviable.navigation.Navigator;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -51,12 +48,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Polyline pathPolyline;
     private FloatingActionButton qrButton;
     private TextView showNavigationSrcDest;
+    private ArrayList<Marker> categoryMarkers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -268,27 +263,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             ArrayList<String> locations = new ArrayList<>();
-            ArrayList<Marker> markers = new ArrayList<>();
+            if (categoryMarkers == null)
+                categoryMarkers = new ArrayList<>();
 
             switch (item.getItemId()) {
                 case R.id.toilets:
-//                    locations = new ArrayList<String>(app.getDB().getLocations());
+                    locations = new ArrayList<String>(app.getDB().getToiletLocations());
                     break;
                 case R.id.restaurants:
-//                    locations = new ArrayList<String>(app.getDB().getLocations());
+                    locations = new ArrayList<String>(app.getDB().getRestaurantLocations());
                     break;
                 case R.id.cafes:
-//                    locations = new ArrayList<String>(app.getDB().getLocations());
+                    locations = new ArrayList<String>(app.getDB().getCafeLocations());
                     break;
                 case R.id.libraries:
                     locations = new ArrayList<String>(app.getDB().getLibraryLocations());
                     break;
             }
 
-            clearLocationMarkers(markers);
+            clearCategoryMarkers();
             for (String locationName : locations){
                 LatLng locationCoordinate = navigator.getCoordinate(locationName);
-                markers.add(mMap.addMarker(new MarkerOptions().position(locationCoordinate)
+                categoryMarkers.add(mMap.addMarker(new MarkerOptions().position(locationCoordinate)
                         .title(locationName).icon(BitmapDescriptorFactory.defaultMarker(183))));
             }
 
@@ -296,10 +292,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     };
 
-    private void clearLocationMarkers(ArrayList<Marker> markers) {
-        for (int i = 0; i < markers.size(); i++) {
-            markers.get(i).remove();
+    private void clearCategoryMarkers() {
+        for (int i = 0; i < categoryMarkers.size(); i++) {
+            categoryMarkers.get(i).remove();
         }
+        categoryMarkers.removeAll(categoryMarkers);
     }
 
     /**

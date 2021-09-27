@@ -87,6 +87,18 @@ public class Navigator {
         return graph.getMappableLocations();
     }
 
+    public ArrayList<String> getToiletLocations() {
+        return graph.getToiletLocations();
+    }
+
+    public ArrayList<String> getRestaurantLocations() {
+        return graph.getRestaurantLocations();
+    }
+
+    public ArrayList<String> getCafeLocations() {
+        return graph.getCafeLocations();
+    }
+
     public ArrayList<String> getLibraryLocations() {
         return graph.getLibraryLocations();
     }
@@ -95,4 +107,6 @@ public class Navigator {
         MapNode n = graph.getNode(locName);
         return new LatLng(n.getX(), n.getY());
     }
+
+
 }
