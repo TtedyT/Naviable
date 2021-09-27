@@ -34,6 +34,7 @@ NODE_ID = 'name'
 X_COORD = 'x'
 Y_COORD = 'y'
 MAPPABLE = 'mappable'
+CATEGORY = 'category'
 ADJACENCY_LIST = 'adjacency'
 # ---- EdgeInfo Fields ----
 DEST_ID = 'destId'
@@ -286,6 +287,20 @@ class GraphJsonShell():
                 'message': 'Is it mappable? ',
                 'when': lambda answers: answers[NODE_ID] not in self.current_nodes
             },
+            {
+                'type': 'list',
+                'name': CATEGORY,
+                'message': 'SPECIAL CATEGORY: ',
+                'choices': [
+                    'NONE',
+                    'TOILET',
+                    'RESTAURANT',
+                    'CAFE',
+                    'LIBRARY'
+                ],
+                'filter': lambda val: val.lower(),
+                'when': lambda answers: answers[NODE_ID] not in self.current_nodes
+            },
             ]
 
         while True:
@@ -303,7 +318,8 @@ class GraphJsonShell():
 
         x_coord, y_coord = node_answers['coords'].split(',')
         node = {NODE_ID: node_answers[NODE_ID],
-                X_COORD: float(x_coord), Y_COORD: float(y_coord), MAPPABLE: node_answers[MAPPABLE], ADJACENCY_LIST: []}
+                X_COORD: float(x_coord), Y_COORD: float(y_coord), MAPPABLE: node_answers[MAPPABLE],
+                CATEGORY: node_answers[CATEGORY], ADJACENCY_LIST: []}
         self.last_nodes_changed += 1
         return node
 

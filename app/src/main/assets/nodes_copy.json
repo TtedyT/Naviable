@@ -1,23 +1,4 @@
 {
-    "Atlas, Sprinzak Building": {
-        "adjacency": [
-            {
-                "destId": "Sprinzak Building entrance",
-                "directions": [
-                    {
-                        "description": "Exit the Sprinzak Building",
-                        "type": "straight"
-                    }
-                ],
-                "distance": 0.0001672278484433677
-            }
-        ],
-        "category": "cafe",
-        "mappable": true,
-        "name": "Atlas, Sprinzak Building",
-        "x": 31.777745414622625,
-        "y": 35.19616787101711
-    },
     "Canada Hall entrance": {
         "adjacency": [
             {
@@ -38,6 +19,10 @@
                     {
                         "description": "Turn left on path",
                         "type": "left"
+                    },
+                    {
+                        "description": "Take ramp to Sderot Magnes",
+                        "type": "ramp"
                     }
                 ],
                 "distance": 0.0009731959470819712
@@ -57,7 +42,6 @@
                 "distance": 0.0004197113581984822
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "Canada Hall entrance",
         "x": 31.778160289236446,
@@ -102,7 +86,6 @@
                 "distance": 0.0015059540710459585
             }
         ],
-        "category": "none",
         "mappable": false,
         "name": "Canada Hall ramp",
         "x": 31.77825626284331,
@@ -131,7 +114,6 @@
                 "distance": 0.0003806950070451271
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "Engineering Building A Floor 1",
         "x": 31.77625754786799,
@@ -170,7 +152,6 @@
                 "distance": 0.0003806950070451271
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "Engineering Building A Floor 3",
         "x": 31.77625754786799,
@@ -203,7 +184,6 @@
                 "distance": 0.0003449356398799522
             }
         ],
-        "category": "none",
         "mappable": false,
         "name": "Engineering Building A Floor 3 south entrance",
         "x": 31.77625754786799,
@@ -280,7 +260,6 @@
                 "distance": 0.0012839837241816095
             }
         ],
-        "category": "none",
         "mappable": false,
         "name": "Engineering Building A ramp",
         "x": 31.77598115038909,
@@ -319,7 +298,6 @@
                 "distance": 0.00033143946676791197
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "Engineering Building B Floor 1",
         "x": 31.77663425819237,
@@ -356,19 +334,8 @@
                     }
                 ],
                 "distance": 0.00033143946676791197
-            },
-            {
-                "destId": "Fabiola, Engineering Building",
-                "directions": [
-                    {
-                        "description": "Head west in the building",
-                        "type": "straight"
-                    }
-                ],
-                "distance": 0.00012353481292594914
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "Engineering Building B Floor 3",
         "x": 31.77663425819237,
@@ -407,7 +374,6 @@
                 "distance": 0.00017111629729388904
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "Engineering Building C Floor 1",
         "x": 31.776965678062954,
@@ -448,7 +414,6 @@
                 "distance": 0.0015059540710459585
             }
         ],
-        "category": "none",
         "mappable": false,
         "name": "Engineering Building C Floor 1 east entrance",
         "x": 31.776812264004256,
@@ -477,7 +442,6 @@
                 "distance": 0.00033143946676791197
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "Engineering Building C Floor 3",
         "x": 31.776965678062954,
@@ -552,30 +516,10 @@
                 "distance": 0.0009731959470819712
             }
         ],
-        "category": "none",
         "mappable": false,
         "name": "Engineering Building C ramp",
         "x": 31.777259059812426,
         "y": 35.197491199636595
-    },
-    "Fabiola, Engineering Building": {
-        "adjacency": [
-            {
-                "destId": "Engineering Building B Floor 3",
-                "directions": [
-                    {
-                        "description": "Head east in the building",
-                        "type": "straight"
-                    }
-                ],
-                "distance": 0.00012353481292594914
-            }
-        ],
-        "category": "restaurant",
-        "mappable": true,
-        "name": "Fabiola, Engineering Building",
-        "x": 31.776620144048824,
-        "y": 35.19764464523805
     },
     "Feldman ramp": {
         "adjacency": [
@@ -630,7 +574,6 @@
                 "distance": 0.0006678899563281919
             }
         ],
-        "category": "none",
         "mappable": false,
         "name": "Feldman ramp",
         "x": 31.77820363309712,
@@ -665,62 +608,12 @@
                     }
                 ],
                 "distance": 0.00016409742771357027
-            },
-            {
-                "destId": "Karnaf, Harman Science Library",
-                "directions": [
-                    {
-                        "description": "Enter the Harman Science Library",
-                        "type": "straight"
-                    },
-                    {
-                        "description": "Take the elevator to floor -1",
-                        "type": "elevator"
-                    },
-                    {
-                        "description": "Exit the elevator and turn right",
-                        "type": "right"
-                    },
-                    {
-                        "description": "Head straight",
-                        "type": "straight"
-                    }
-                ],
-                "distance": 0.0005097709185955586
             }
         ],
-        "category": "library",
         "mappable": true,
         "name": "Harman Science Library entrance",
         "x": 31.776599572824175,
         "y": 35.19633175472752
-    },
-    "Karnaf, Harman Science Library": {
-        "adjacency": [
-            {
-                "destId": "Harman Science Library entrance",
-                "directions": [
-                    {
-                        "description": "Head straight towards the elevator",
-                        "type": "straight"
-                    },
-                    {
-                        "description": "Take the elevator to floor 0",
-                        "type": "elevator"
-                    },
-                    {
-                        "description": "Exit the Harman Science Library",
-                        "type": "straight"
-                    }
-                ],
-                "distance": 0.0005097709185955586
-            }
-        ],
-        "category": "cafe",
-        "mappable": true,
-        "name": "Karnaf, Harman Science Library",
-        "x": 31.776476031452905,
-        "y": 35.19583718024472
     },
     "Levi 6": {
         "adjacency": [
@@ -735,7 +628,6 @@
                 "distance": 0.0
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "Levi 6",
         "x": 31.776805528924662,
@@ -754,30 +646,10 @@
                 "distance": 0.0
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "Levi 7",
         "x": 31.776805528924662,
         "y": 35.195729464520525
-    },
-    "Levi Building Toilet Floor 1": {
-        "adjacency": [
-            {
-                "destId": "Levi Building entrance",
-                "directions": [
-                    {
-                        "description": "Exit the Levi Building",
-                        "type": "straight"
-                    }
-                ],
-                "distance": 0.0002068707930308718
-            }
-        ],
-        "category": "toilet",
-        "mappable": true,
-        "name": "Levi Building Toilet Floor 1",
-        "x": 31.776846700159705,
-        "y": 35.19612733710009
     },
     "Levi Building elevator": {
         "adjacency": [
@@ -820,7 +692,6 @@
                 "distance": 0.0
             }
         ],
-        "category": "none",
         "mappable": false,
         "name": "Levi Building elevator",
         "x": 31.776805528924662,
@@ -861,19 +732,8 @@
                     }
                 ],
                 "distance": 0.0009010482817712606
-            },
-            {
-                "destId": "Levi Building Toilet Floor 1",
-                "directions": [
-                    {
-                        "description": "Enter the Levi Building",
-                        "type": "straight"
-                    }
-                ],
-                "distance": 0.0002068707930308718
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "Levi Building entrance",
         "x": 31.776894509112903,
@@ -954,7 +814,6 @@
                 "distance": 0.0015442817227036393
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "Main Gate",
         "x": 31.77874159586241,
@@ -1003,7 +862,6 @@
                 "distance": 0.0005791108484777304
             }
         ],
-        "category": "library",
         "mappable": true,
         "name": "National Library entrance",
         "x": 31.776147746227046,
@@ -1052,7 +910,6 @@
                 "distance": 0.0007002692046330503
             }
         ],
-        "category": "none",
         "mappable": false,
         "name": "National Library ramp",
         "x": 31.77570601418387,
@@ -1089,7 +946,6 @@
                 "distance": 0.0002783098061002523
             }
         ],
-        "category": "none",
         "mappable": false,
         "name": "Popick ramp",
         "x": 31.777997038201846,
@@ -1130,7 +986,6 @@
                 "distance": 0.000397780600507557
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "Sherman Building entrance",
         "x": 31.778717050103122,
@@ -1149,7 +1004,6 @@
                 "distance": 0.0
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "Sprinzak Building Floor 1",
         "x": 31.777798624844245,
@@ -1168,7 +1022,6 @@
                 "distance": 0.0
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "Sprinzak Building Floor 2",
         "x": 31.777798624844245,
@@ -1231,7 +1084,6 @@
                 "distance": 0.0
             }
         ],
-        "category": "none",
         "mappable": false,
         "name": "Sprinzak Building elevator",
         "x": 31.777798624844245,
@@ -1280,19 +1132,8 @@
                     }
                 ],
                 "distance": 0.000250700576342799
-            },
-            {
-                "destId": "Atlas, Sprinzak Building",
-                "directions": [
-                    {
-                        "description": "Enter the Sprinzak Building",
-                        "type": "straight"
-                    }
-                ],
-                "distance": 0.0001672278484433677
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "Sprinzak Building entrance",
         "x": 31.77779555659144,
@@ -1321,7 +1162,6 @@
                 "distance": 0.00013086584728240892
             }
         ],
-        "category": "none",
         "mappable": true,
         "name": "The Submarine entrance",
         "x": 31.776763643386477,

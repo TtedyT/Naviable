@@ -54,12 +54,38 @@ public class Graph {
         ArrayList<String> locations = new ArrayList<>();
         for (Map.Entry<String, MapNode> entry : nodeMap.entrySet()){
             if (entry.getValue().isMappable()) {
-                // Remove the word entrance for display
-//                String nameForList = entry.getKey().replace("entrance", "");
                 String nameForList = entry.getKey();
                 locations.add(nameForList);
             }
         }
         return locations;
     }
+
+    private ArrayList<String> getCategoryLocations(String category){
+        ArrayList<String> locations = new ArrayList<>();
+        for (Map.Entry<String, MapNode> entry : nodeMap.entrySet()){
+            if (entry.getValue().getCategory().equals(category)) {
+                String nameForList = entry.getKey();
+                locations.add(nameForList);
+            }
+        }
+        return locations;
+    }
+
+    public ArrayList<String> getToiletLocations() {
+        return getCategoryLocations("toilet");
+    }
+
+    public ArrayList<String> getRestaurantLocations() {
+        return getCategoryLocations("restaurant");
+    }
+
+    public ArrayList<String> getCafeLocations() {
+        return getCategoryLocations("cafe");
+    }
+
+    public ArrayList<String> getLibraryLocations(){
+        return getCategoryLocations("library");
+    }
+
 }

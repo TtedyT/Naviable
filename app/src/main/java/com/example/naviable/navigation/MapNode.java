@@ -9,6 +9,7 @@ public class MapNode implements Comparable<MapNode> {
     private boolean mappable;
     private double minDistance = Double.POSITIVE_INFINITY;
     private MapNode prev;
+    private String category;
 
     private List<EdgeInfo> adjacency;
 
@@ -20,11 +21,12 @@ public class MapNode implements Comparable<MapNode> {
         return prev;
     }
 
-    public MapNode(String name, double x, double y, boolean mappable, List<EdgeInfo> adjacency) {
+    public MapNode(String name, double x, double y, boolean mappable, String category, List<EdgeInfo> adjacency) {
         this.name = name;
         this.x = x;
         this.y = y;
         this.mappable = mappable;
+        this.category = category;
         this.adjacency = adjacency;
     }
 
@@ -55,6 +57,10 @@ public class MapNode implements Comparable<MapNode> {
 
     public boolean isMappable() {
         return mappable;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public void setMinDistance(double newDistance) {

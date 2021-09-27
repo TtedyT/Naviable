@@ -26,9 +26,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -48,10 +49,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +77,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Polyline pathPolyline;
     private FloatingActionButton qrButton;
     private TextView showNavigationSrcDest;
+    private ArrayList<Marker> categoryMarkers;
+    private BottomNavigationView bottomNav;
+    private MenuItem currentNavMenuItem;
+    private boolean navBarFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +152,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
         });
+
+        bottomNav = findViewById(R.id.bottom_navigation_bar);
+        bottomNav.setOnItemSelectedListener(navListener);
+        uncheckAllMenuItems();
 
         searchBarDestTextView.setOnClickListener(view ->
                 moveToSearchActivity(NaviableApplication.SEARCH_TYPE.DESTINATION));
@@ -254,6 +262,69 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchBarDestTextView.setText("");
         searchBarSourceTextView.setText("");
         deletePathFromMap();
+    }
+
+    private NavigationBarView.OnItemSelectedListener navListener = new NavigationBarView.OnItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            if (categoryMarkers == null) {
+                categoryMarkers = new ArrayList<>();
+            }
+            clearCategoryMarkers();
+
+            if (item == currentNavMenuItem & navBarFlag) {
+                // Deselect item
+                uncheckAllMenuItems();
+                currentNavMenuItem = item;
+                navBarFlag = false;
+
+                return false;
+            }
+            else {
+                ArrayList<String> locations = new ArrayList<>();
+                switch (item.getItemId()) {
+                    case R.id.toilets:
+                        locations = new ArrayList<String>(app.getDB().getToiletLocations());
+                        break;
+                    case R.id.restaurants:
+                        locations = new ArrayList<String>(app.getDB().getRestaurantLocations());
+                        break;
+                    case R.id.cafes:
+                        locations = new ArrayList<String>(app.getDB().getCafeLocations());
+                        break;
+                    case R.id.libraries:
+                        locations = new ArrayList<String>(app.getDB().getLibraryLocations());
+                        break;
+                }
+
+                for (String locationName : locations){
+                    LatLng locationCoordinate = navigator.getCoordinate(locationName);
+                    categoryMarkers.add(mMap.addMarker(new MarkerOptions().position(locationCoordinate)
+                            .title(locationName).icon(BitmapDescriptorFactory.defaultMarker(183))));
+                }
+
+                currentNavMenuItem = item;
+                navBarFlag = true;
+
+                return true;
+            }
+        }
+    };
+
+    private void uncheckAllMenuItems() {
+        Menu menu = bottomNav.getMenu();
+        menu.setGroupCheckable(0, true, false);
+        for (int i = 0; i < menu.size(); i++){
+            menu.getItem(i).setChecked(false);
+        }
+        menu.setGroupCheckable(0, true, true);
+    }
+
+    private void clearCategoryMarkers() {
+        for (int i = 0; i < categoryMarkers.size(); i++) {
+            categoryMarkers.get(i).remove();
+        }
+        categoryMarkers.removeAll(categoryMarkers);
     }
 
     /**
