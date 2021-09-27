@@ -54,8 +54,6 @@ public class Graph {
         ArrayList<String> locations = new ArrayList<>();
         for (Map.Entry<String, MapNode> entry : nodeMap.entrySet()){
             if (entry.getValue().isMappable()) {
-                // Remove the word entrance for display
-//                String nameForList = entry.getKey().replace("entrance", "");
                 String nameForList = entry.getKey();
                 locations.add(nameForList);
             }

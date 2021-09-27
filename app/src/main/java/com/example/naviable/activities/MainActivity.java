@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,6 +27,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -37,6 +39,7 @@ import com.example.naviable.InstructionsAdapter;
 import com.example.naviable.NaviableApplication;
 import com.example.naviable.R;
 import com.example.naviable.navigation.Direction;
+import com.example.naviable.navigation.MapNode;
 import com.example.naviable.navigation.Navigator;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -49,7 +52,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -148,6 +153,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
         });
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_bar);
+        bottomNav.setOnItemSelectedListener(navListener);
 
         searchBarDestTextView.setOnClickListener(view ->
                 moveToSearchActivity(NaviableApplication.SEARCH_TYPE.DESTINATION));
@@ -255,6 +263,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchBarSourceTextView.setText("");
         deletePathFromMap();
     }
+
+    private NavigationBarView.OnItemSelectedListener navListener = new NavigationBarView.OnItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            ArrayList<String> locations = new ArrayList<>();
+            switch (item.getItemId()) {
+                case R.id.toilets:
+                    locations = new ArrayList<String>(app.getDB().getLocations());
+                    break;
+                case R.id.restaurants:
+//                    locations = new ArrayList<String>(app.getDB().getLocations());
+                    break;
+                case R.id.cafes:
+//                    locations = new ArrayList<String>(app.getDB().getLocations());
+                    break;
+                case R.id.libraries:
+//                    locations = new ArrayList<String>(app.getDB().getLocations());
+                    break;
+            }
+
+            for (String locationName : locations){
+                LatLng locationCoordinate = navigator.getCoordinate(locationName);
+                srcMarker = mMap.addMarker(new MarkerOptions().position(locationCoordinate)
+                        .title(locationName).icon(BitmapDescriptorFactory.defaultMarker(183)));
+            }
+
+            return true;
+        }
+    };
 
     /**
      * Manipulates the map once available.

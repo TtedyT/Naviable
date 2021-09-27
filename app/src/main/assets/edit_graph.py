@@ -302,6 +302,7 @@ class GraphJsonShell():
                 break
 
         x_coord, y_coord = node_answers['coords'].split(',')
+        # TODO: add searchable category
         node = {NODE_ID: node_answers[NODE_ID],
                 X_COORD: float(x_coord), Y_COORD: float(y_coord), MAPPABLE: node_answers[MAPPABLE], ADJACENCY_LIST: []}
         self.last_nodes_changed += 1

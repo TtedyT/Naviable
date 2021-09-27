@@ -9,6 +9,7 @@ public class MapNode implements Comparable<MapNode> {
     private boolean mappable;
     private double minDistance = Double.POSITIVE_INFINITY;
     private MapNode prev;
+    // TODO: add searchable category
 
     private List<EdgeInfo> adjacency;
 
