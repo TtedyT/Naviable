@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     InstructionsAdapter instructionsAdapter = new InstructionsAdapter(this, directions);
                     // todo : causes memory allocation problems ( clicking go multiple times)
-                    showNavigationSrcDest.setText(src+" -> "+dest);
+                    showNavigationSrcDest.setText(src + " -> " + dest);
                     recyclerViewInstructions.setAdapter(instructionsAdapter);
                     recyclerViewInstructions.setLayoutManager(new LinearLayoutManager(this));
                     hideSearch();
