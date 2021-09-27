@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button doneNavigationButton;
     private Navigator navigator;
     private NaviableApplication app;
-    private ConstraintLayout constraintLayout;
+    private ConstraintLayout constraintLayoutSearch;
     private final int ZOOM_OUT_FACTOR = 5;
     private RecyclerView recyclerViewInstructions;
     private Marker srcMarker;
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchBarDestTextView = findViewById(R.id.search_bar_dest_text_view);
         searchBarSourceTextView = findViewById(R.id.search_bar_source_text_view);
         recyclerViewInstructions = findViewById(R.id.directions_recycler_view);
-        constraintLayout = findViewById(R.id.search_constraint_layout);
+        constraintLayoutSearch = findViewById(R.id.search_constraint_layout);
         goButton = findViewById(R.id.go_button);
         doneNavigationButton = findViewById(R.id.done_navigation_botton);
         hideSearch();
@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchBarSourceTextView.setVisibility(View.VISIBLE);
         qrButton.setVisibility(View.VISIBLE);
         goButton.setVisibility(View.VISIBLE);
-        constraintLayout.setBackground(searchBackground);
+        constraintLayoutSearch.setBackground(searchBackground);
         LatLng destCoordinate = navigator.getCoordinate(observedDestination);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(destCoordinate, 17.5f));
         if (destMarker != null) {
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchBarSourceTextView.setVisibility(View.GONE);
         qrButton.setVisibility(View.GONE);
         goButton.setVisibility(View.GONE);
-        constraintLayout.setBackgroundColor(0x00ffffff);
+        constraintLayoutSearch.setBackgroundColor(0x00ffffff);
     }
 
     private void showHomeUI() {
