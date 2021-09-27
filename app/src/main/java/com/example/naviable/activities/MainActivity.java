@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,12 +29,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.example.naviable.BottomSheetFragment;
 import com.example.naviable.InstructionsAdapter;
 import com.example.naviable.NaviableApplication;
 import com.example.naviable.R;
@@ -49,11 +49,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import es.dmoral.toasty.Toasty;
+
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -72,6 +73,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	private Marker srcMarker;
 	private Marker destMarker;
 	private Polyline pathPolyline;
+	private View layoutBottomSheet;
+	private BottomSheetBehavior<View> sheetBehavior;
+
+
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		assert mapFragment != null;
 		mapFragment.getMapAsync(this);
 		initVars();
+
+
 
 		Button goButton = findViewById(R.id.go_button);
 		goButton.setEnabled(false);
@@ -118,15 +126,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 							Toast.LENGTH_SHORT, true).show();
 				} else {
 
-//					InstructionsAdapter instructionsAdapter = new InstructionsAdapter(this, directions);
-//					recyclerViewInstructions.setAdapter(instructionsAdapter);
-//					recyclerViewInstructions.setLayoutManager(new LinearLayoutManager(this));
-					showBottomSheetFragment(directions);
+					RecyclerView recyclerView = findViewById(R.id.rcv_data);
+
+					LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+					InstructionsAdapter adapter = new InstructionsAdapter(this, directions);
+					RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+
+					recyclerView.setLayoutManager(linearLayoutManager);
+					recyclerView.setAdapter(adapter);
+					recyclerView.addItemDecoration(itemDecoration);
+
 					hideSearch();
-//					searchBarDestTextView.setVisibility(View.GONE);
-//
-//					recyclerViewInstructions.setVisibility(View.VISIBLE);
-//					doneNavigationButton.setVisibility(View.VISIBLE);
+
 
 					ArrayList<LatLng> path = navigator.getPathLatLng(src, dest);
 					pathPolyline = drawPathOnMap(path);
@@ -175,6 +186,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		constraintLayout = findViewById(R.id.search_constraint_layout);
 		goButton = findViewById(R.id.go_button);
 		doneNavigationButton = findViewById(R.id.done_navigation_botton);
+
+		// Bottom Sheet Definitions
+		layoutBottomSheet = findViewById(R.id.bottom_sheet);
+		sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+		sheetBehavior.setPeekHeight(240);
+		sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
 		hideSearch();
 	}
 
@@ -238,13 +256,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		searchBarDestTextView.setText("");
 		searchBarSourceTextView.setText("");
 		deletePathFromMap();
-	}
-
-	private void showBottomSheetFragment(List<Direction> dirs){
-		BottomSheetFragment bottomSheetFragment = new BottomSheetFragment(dirs);
-		bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
-
-
 	}
 
 	/**
