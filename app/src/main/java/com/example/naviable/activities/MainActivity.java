@@ -58,6 +58,7 @@ import es.dmoral.toasty.Toasty;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
 
+	private static final int DEF_PEEK_HEIGHT = 240;
 	private Drawable searchBackground;
 	private GoogleMap mMap;
 	private TextView searchBarDestTextView;
@@ -67,8 +68,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	private Navigator navigator;
 	private NaviableApplication app;
 	private ConstraintLayout constraintLayout;
-	private final int ZOOM_OUT_FACTOR = 5;
-	private RecyclerView recyclerViewInstructions;
 	private Marker srcMarker;
 	private Marker destMarker;
 	private Polyline pathPolyline;
@@ -103,8 +102,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		Button goButton = findViewById(R.id.go_button);
 		goButton.setEnabled(false);
 		doneNavigationButton = findViewById(R.id.done_navigation_btn);
-		recyclerViewInstructions.setVisibility(View.GONE);
-		doneNavigationButton.setVisibility(View.GONE);
 		doneNavigationButton.setOnClickListener(view -> {
 			showHomeUI();
 			// todo: make the correct views visible/invisible
@@ -134,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 					recyclerView.setLayoutManager(linearLayoutManager);
 					recyclerView.setAdapter(adapter);
 					recyclerView.addItemDecoration(itemDecoration);
-
+					sheetBehavior.setPeekHeight(DEF_PEEK_HEIGHT);
 					hideSearch();
 
 
@@ -181,7 +178,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		app = NaviableApplication.getInstance();
 		searchBarDestTextView = findViewById(R.id.search_bar_dest_text_view);
 		searchBarSourceTextView = findViewById(R.id.search_bar_source_text_view);
-		recyclerViewInstructions = findViewById(R.id.directions_recycler_view);
 		constraintLayout = findViewById(R.id.search_constraint_layout);
 		goButton = findViewById(R.id.go_button);
 		doneNavigationButton = findViewById(R.id.done_navigation_btn);
@@ -189,9 +185,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		// Bottom Sheet Definitions
 		layoutBottomSheet = findViewById(R.id.bottom_sheet);
 		sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
-		sheetBehavior.setPeekHeight(240);
-		sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
+		sheetBehavior.setPeekHeight(0);
+		sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 		hideSearch();
 	}
 
@@ -250,10 +246,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		destMarker.remove();
 
 		searchBarDestTextView.setVisibility(View.VISIBLE);
-		recyclerViewInstructions.setVisibility(View.GONE);
-		doneNavigationButton.setVisibility(View.GONE);
 		searchBarDestTextView.setText("");
 		searchBarSourceTextView.setText("");
+		sheetBehavior.setPeekHeight(0);
+		sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 		deletePathFromMap();
 	}
 
