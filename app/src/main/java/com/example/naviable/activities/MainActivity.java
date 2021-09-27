@@ -29,7 +29,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -103,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 		Button goButton = findViewById(R.id.go_button);
 		goButton.setEnabled(false);
-		doneNavigationButton = findViewById(R.id.done_navigation_botton);
+		doneNavigationButton = findViewById(R.id.done_navigation_btn);
 		recyclerViewInstructions.setVisibility(View.GONE);
 		doneNavigationButton.setVisibility(View.GONE);
 		doneNavigationButton.setOnClickListener(view -> {
@@ -185,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		recyclerViewInstructions = findViewById(R.id.directions_recycler_view);
 		constraintLayout = findViewById(R.id.search_constraint_layout);
 		goButton = findViewById(R.id.go_button);
-		doneNavigationButton = findViewById(R.id.done_navigation_botton);
+		doneNavigationButton = findViewById(R.id.done_navigation_btn);
 
 		// Bottom Sheet Definitions
 		layoutBottomSheet = findViewById(R.id.bottom_sheet);
