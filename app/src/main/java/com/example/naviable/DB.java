@@ -33,6 +33,7 @@ public class DB {
     private static HashMap<String, LatLng> campuses;
     private Navigator navigator;
     private ArrayList<String> locations;
+    private ArrayList<String> libraryLocations;
 
     private LinkedBlockingQueue<String> recentLocations;
 
@@ -79,7 +80,11 @@ public class DB {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // Set up location lists
         locations = navigator.getLocations();
+        libraryLocations = navigator.getLibraryLocations();
+
         recentLocations = new LinkedBlockingQueue<>();
         fetchRecentSearches();
     }
@@ -108,6 +113,10 @@ public class DB {
 
     public ArrayList<String> getLocations() {
         return locations;
+    }
+
+    public ArrayList<String> getLibraryLocations() {
+        return libraryLocations;
     }
 
     public void saveSpinnerChosenOption(int optionIdx) {

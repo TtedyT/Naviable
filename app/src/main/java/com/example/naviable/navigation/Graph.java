@@ -60,4 +60,15 @@ public class Graph {
         }
         return locations;
     }
+
+    public ArrayList<String> getLibraryLocations(){
+        ArrayList<String> locations = new ArrayList<>();
+        for (Map.Entry<String, MapNode> entry : nodeMap.entrySet()){
+            if (entry.getValue().getCategory().equals("library")) {
+                String nameForList = entry.getKey();
+                locations.add(nameForList);
+            }
+        }
+        return locations;
+    }
 }

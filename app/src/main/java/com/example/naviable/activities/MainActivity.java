@@ -268,9 +268,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             ArrayList<String> locations = new ArrayList<>();
+            ArrayList<Marker> markers = new ArrayList<>();
+
             switch (item.getItemId()) {
                 case R.id.toilets:
-                    locations = new ArrayList<String>(app.getDB().getLocations());
+//                    locations = new ArrayList<String>(app.getDB().getLocations());
                     break;
                 case R.id.restaurants:
 //                    locations = new ArrayList<String>(app.getDB().getLocations());
@@ -279,19 +281,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                    locations = new ArrayList<String>(app.getDB().getLocations());
                     break;
                 case R.id.libraries:
-//                    locations = new ArrayList<String>(app.getDB().getLocations());
+                    locations = new ArrayList<String>(app.getDB().getLibraryLocations());
                     break;
             }
 
+            clearLocationMarkers(markers);
             for (String locationName : locations){
                 LatLng locationCoordinate = navigator.getCoordinate(locationName);
-                srcMarker = mMap.addMarker(new MarkerOptions().position(locationCoordinate)
-                        .title(locationName).icon(BitmapDescriptorFactory.defaultMarker(183)));
+                markers.add(mMap.addMarker(new MarkerOptions().position(locationCoordinate)
+                        .title(locationName).icon(BitmapDescriptorFactory.defaultMarker(183))));
             }
 
             return true;
         }
     };
+
+    private void clearLocationMarkers(ArrayList<Marker> markers) {
+        for (int i = 0; i < markers.size(); i++) {
+            markers.get(i).remove();
+        }
+    }
 
     /**
      * Manipulates the map once available.

@@ -59,6 +59,10 @@ public class MapNode implements Comparable<MapNode> {
         return mappable;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
     public void setMinDistance(double newDistance) {
         this.minDistance = newDistance;
     }
