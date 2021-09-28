@@ -15,6 +15,16 @@ package com.example.naviable.activities;
 //
 //}
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -22,16 +32,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.example.naviable.InstructionsAdapter;
 import com.example.naviable.NaviableApplication;
@@ -52,6 +52,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import es.dmoral.toasty.Toasty;
 
 
@@ -75,8 +76,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	private BottomSheetBehavior<View> sheetBehavior;
 
 
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		initVars();
 
 
-
 		Button goButton = findViewById(R.id.go_button);
 		goButton.setEnabled(false);
 		doneNavigationButton = findViewById(R.id.done_navigation_btn);
@@ -110,36 +108,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 		navigator = app.getDB().getNavigator();
 		goButton.setOnClickListener(view -> {
-			String src = searchBarSourceTextView.getText().toString();
-			String dest = searchBarDestTextView.getText().toString();
-			if (src.equals(dest)) {
-				Toasty.info(this, "Start and destination are the same.",
-						Toast.LENGTH_SHORT, true).show();
-			} else {
-				List<Direction> directions = navigator.getDirections(src, dest);
-				if (directions.isEmpty()) {
-					Toasty.info(this, "No accessible route found.",
-							Toast.LENGTH_SHORT, true).show();
-				} else {
-
-					RecyclerView recyclerView = findViewById(R.id.rcv_data);
-
-					LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-					InstructionsAdapter adapter = new InstructionsAdapter(this, directions);
-					RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-
-					recyclerView.setLayoutManager(linearLayoutManager);
-					recyclerView.setAdapter(adapter);
-					recyclerView.addItemDecoration(itemDecoration);
-					sheetBehavior.setPeekHeight(DEF_PEEK_HEIGHT);
-					hideSearch();
-
-
-					ArrayList<LatLng> path = navigator.getPathLatLng(src, dest);
-					pathPolyline = drawPathOnMap(path);
-				}
-			}
-
+			goButtonAction();
 		});
 
 		searchBarDestTextView.setOnClickListener(view ->
@@ -161,6 +130,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		});
 
 		app.getCampusChosenLiveDataPublic().observe(this, s -> updateMapLocation());
+	}
+
+	private void goButtonAction() {
+		String src = searchBarSourceTextView.getText().toString();
+		String dest = searchBarDestTextView.getText().toString();
+		if (src.equals(dest)) {
+			Toasty.info(this, "Start and destination are the same.",
+					Toast.LENGTH_SHORT, true).show();
+		} else {
+			List<Direction> directions = navigator.getDirections(src, dest);
+			if (directions.isEmpty()) {
+				Toasty.info(this, "No accessible route found.",
+						Toast.LENGTH_SHORT, true).show();
+			} else {
+
+				RecyclerView recyclerView = findViewById(R.id.rcv_data);
+
+				LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+				InstructionsAdapter adapter = new InstructionsAdapter(this, directions);
+				RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+
+				recyclerView.setLayoutManager(linearLayoutManager);
+				recyclerView.setAdapter(adapter);
+				recyclerView.addItemDecoration(itemDecoration);
+				sheetBehavior.setPeekHeight(DEF_PEEK_HEIGHT);
+				hideSearch();
+
+
+				ArrayList<LatLng> path = navigator.getPathLatLng(src, dest);
+				pathPolyline = drawPathOnMap(path);
+			}
+		}
 	}
 
 	private void deletePathFromMap() {

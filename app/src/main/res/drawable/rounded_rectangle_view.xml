@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="@color/white" />
-    <stroke
-        android:width="0.4dp"
-        android:color="@color/black" />
+	android:shape="rectangle">
+	<solid android:color="@color/white" />
+	<stroke
+		android:width="0.4dp"
+		android:color="@color/black" />
 
-    <corners
-        android:bottomRightRadius="@dimen/rectangle_view_roundness"
-        android:bottomLeftRadius="@dimen/rectangle_view_roundness"
-        android:topRightRadius="@dimen/rectangle_view_roundness"
-        android:topLeftRadius="@dimen/rectangle_view_roundness" />
+	<corners
+		android:bottomLeftRadius="@dimen/rectangle_view_roundness"
+		android:bottomRightRadius="@dimen/rectangle_view_roundness"
+		android:topLeftRadius="@dimen/rectangle_view_roundness"
+		android:topRightRadius="@dimen/rectangle_view_roundness" />
 </shape>
