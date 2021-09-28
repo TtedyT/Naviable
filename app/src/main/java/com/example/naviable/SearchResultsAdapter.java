@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> implements Filterable {
+public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.MyViewHolder> implements Filterable {
 
 	private final RecyclerViewClickListener clickListener;
 	private Context context;
@@ -50,7 +50,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
 	};
 	private ArrayList<String> searchSuggestionsRecents;
 
-	public MyAdapter(Context context, ArrayList<String> searchSuggestionsNotRecents, ArrayList<String> recentSearchedLocations, RecyclerViewClickListener clickListener) {
+	public SearchResultsAdapter(Context context, ArrayList<String> searchSuggestionsNotRecents, ArrayList<String> recentSearchedLocations, RecyclerViewClickListener clickListener) {
 		this.context = context;
 		this.searchSuggestionsRecents = new ArrayList<>(recentSearchedLocations);
 		this.searchSuggestions = new ArrayList<>(recentSearchedLocations);

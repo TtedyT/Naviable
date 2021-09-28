@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.naviable.MyAdapter;
+import com.example.naviable.SearchResultsAdapter;
 import com.example.naviable.NaviableApplication;
 import com.example.naviable.R;
 
@@ -28,7 +28,7 @@ public class SearchActivity extends AppCompatActivity {
 	private static final int SPEECH_INPUT = 1;
 
 	RecyclerView recyclerViewSearchSuggestions;
-	private MyAdapter.RecyclerViewClickListener clickListener;
+	private SearchResultsAdapter.RecyclerViewClickListener clickListener;
 	private EditText searchBarEditText;
 	private ImageButton micVoiceBtn;
 	private NaviableApplication app;
@@ -94,8 +94,8 @@ public class SearchActivity extends AppCompatActivity {
 			finish();
 		};
 
-		MyAdapter myAdapter = new MyAdapter(this, searchSuggestionsNotRecents, recentSearchedLocations, this.clickListener);
-		recyclerViewSearchSuggestions.setAdapter(myAdapter);
+		SearchResultsAdapter searchResultsAdapter = new SearchResultsAdapter(this, searchSuggestionsNotRecents, recentSearchedLocations, this.clickListener);
+		recyclerViewSearchSuggestions.setAdapter(searchResultsAdapter);
 		recyclerViewSearchSuggestions.setLayoutManager(new LinearLayoutManager(this));
 
 		searchBarEditText.addTextChangedListener(new TextWatcher() {
@@ -105,7 +105,7 @@ public class SearchActivity extends AppCompatActivity {
 
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-				myAdapter.getFilter().filter(charSequence);
+				searchResultsAdapter.getFilter().filter(charSequence);
 			}
 
 			@Override
