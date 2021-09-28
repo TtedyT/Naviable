@@ -2,6 +2,7 @@ package com.example.naviable.activities;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -14,38 +15,41 @@ import com.example.naviable.DB;
 import com.example.naviable.NaviableApplication;
 import com.example.naviable.R;
 
+import java.util.ArrayList;
+
 public class SettingsActivity extends AppCompatActivity {
 
-	@Override
-	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		DB db = NaviableApplication.getInstance().getDB();
-		setContentView(R.layout.activity_settings);
-		Spinner spinner = findViewById(R.id.campus_spinner);
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        DB db = NaviableApplication.getInstance().getDB();
+        setContentView(R.layout.activity_settings);
+        Spinner spinner = findViewById(R.id.campus_spinner);
 
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-				R.array.campuses_array, android.R.layout.simple_spinner_item);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(adapter);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.campuses_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
 
-		spinner.setSelection(db.getSpinnerChosenOption());
+        spinner.setSelection(db.getSpinnerChosenOption());
 
-		ImageButton backButton = findViewById(R.id.back_button_settings);
-		backButton.setOnClickListener(view -> {
-			finish();
-		});
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                db.setCampus(spinner.getSelectedItem().toString());
+                db.saveSpinnerChosenOption(spinner.getSelectedItemPosition());
+            }
 
-		Button saveSettingsButton = findViewById(R.id.save_setting_btn);
-		saveSettingsButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				String selectedCampus = spinner.getSelectedItem().toString();
-				System.out.println("selectedCampus: " + selectedCampus);
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
 
-				db.setCampus(selectedCampus);
-				db.saveSpinnerChosenOption(spinner.getSelectedItemPosition());
-			}
-		});
-	}
+        });
+
+        ImageButton backButton = findViewById(R.id.back_button_settings);
+        backButton.setOnClickListener(view -> {
+            finish();
+        });
+    }
 
 }

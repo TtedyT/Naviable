@@ -1,24 +1,11 @@
 package com.example.naviable.activities;
 
-//import androidx.appcompat.app.AppCompatActivity;
-//
-//import android.os.Bundle;
-//
-//public class MainActivity extends AppCompatActivity {
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//    }
-//
-//
-//}
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -49,6 +36,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,18 +50,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 	private static final int DEF_PEEK_HEIGHT = 240;
-	private Drawable searchBackground;
-	private GoogleMap mMap;
-	private TextView searchBarDestTextView;
-	private TextView searchBarSourceTextView;
-	private Button goButton;
-	private Button doneNavigationButton;
-	private Navigator navigator;
-	private NaviableApplication app;
-	private ConstraintLayout constraintLayout;
+    private Drawable searchBackground;
+    private GoogleMap mMap;
+    private TextView searchBarDestTextView;
+    private TextView searchBarSourceTextView;
+    private Button goButton;
+    private Button doneNavigationButton;
+    private Navigator navigator;
+    private NaviableApplication app;
+    private ConstraintLayout constraintLayoutSearch;
+    private final int ZOOM_OUT_FACTOR = 5;
 	private Marker srcMarker;
 	private Marker destMarker;
 	private Polyline pathPolyline;
+    private FloatingActionButton qrButton;
+    private TextView showNavigationSrcDest;
+    private ArrayList<Marker> categoryMarkers;
+    private BottomNavigationView bottomNav;
+    private MenuItem currentNavMenuItem;
+    private boolean navBarFlag = false;
 	private View layoutBottomSheet;
 	private BottomSheetBehavior<View> sheetBehavior;
 
@@ -88,28 +85,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		Drawable searchBackground = ContextCompat.getDrawable(this,
 				R.drawable.rounded_rectangle_view_search_background);
 
+        qrButton = findViewById(R.id.qr_scan_button);
+        qrButton.setOnClickListener(view -> {
+            Intent intent = new Intent(this, CodeScannerActivity.class);
+            startActivity(intent);
+        });
+        qrButton.setVisibility(View.GONE);
+
 		// Obtain the SupportMapFragment and get notified when the map is ready to be used.
 		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map);
 
-		assert mapFragment != null;
-		mapFragment.getMapAsync(this);
-		initVars();
+        assert mapFragment != null;
+        mapFragment.getMapAsync(this);
+        initVars();
 
 
 		Button goButton = findViewById(R.id.go_button);
 		goButton.setEnabled(false);
-		doneNavigationButton = findViewById(R.id.done_navigation_btn);
-		doneNavigationButton.setOnClickListener(view -> {
-			showHomeUI();
-			// todo: make the correct views visible/invisible
-		});
+        doneNavigationButton = findViewById(R.id.done_navigation_btn);
+		doneNavigationButton.setOnClickListener(view -> showHomeUI());
 
 
 		navigator = app.getDB().getNavigator();
-		goButton.setOnClickListener(view -> {
-			goButtonAction();
-		});
+		goButton.setOnClickListener(view -> goButtonAction());
 
 		searchBarDestTextView.setOnClickListener(view ->
 				moveToSearchActivity(NaviableApplication.SEARCH_TYPE.DESTINATION));
@@ -130,6 +129,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		});
 
 		app.getCampusChosenLiveDataPublic().observe(this, s -> updateMapLocation());
+
+        bottomNav = findViewById(R.id.bottom_navigation_bar);
+        bottomNav.setOnItemSelectedListener(navListener);
+        uncheckAllMenuItems();
+
+        searchBarDestTextView.setOnClickListener(view ->
+                moveToSearchActivity(NaviableApplication.SEARCH_TYPE.DESTINATION));
+
+        app.getChosenDestinationLiveDataPublic().observe(this, observedDestination -> {
+            if (!observedDestination.isEmpty()) {
+                onDestChangedAction(observedDestination);
+            }
+        });
+
+        searchBarSourceTextView.setOnClickListener(view ->
+                moveToSearchActivity(NaviableApplication.SEARCH_TYPE.SOURCE));
+
+        app.getChosenSourceLiveDataPublic().observe(this, observedSource -> {
+            if (!observedSource.isEmpty()) {
+                onSrcChangedAction(observedSource);
+            }
+        });
+
+        app.getCampusChosenLiveDataPublic().observe(this, s -> updateMapLocation());
 	}
 
 	private void goButtonAction() {
@@ -173,14 +196,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		return mMap.addPolyline(opts);
 	}
 
-	private void initVars() {
-		searchBackground = ContextCompat.getDrawable(this,
-				R.drawable.rounded_rectangle_view_search_background);
-		app = NaviableApplication.getInstance();
-		searchBarDestTextView = findViewById(R.id.search_bar_dest_text_view);
-		searchBarSourceTextView = findViewById(R.id.search_bar_source_text_view);
-		constraintLayout = findViewById(R.id.search_constraint_layout);
-		goButton = findViewById(R.id.go_button);
+    private void initVars() {
+        searchBackground = ContextCompat.getDrawable(this,
+                R.drawable.rounded_rectangle_view_search_background);
+        app = NaviableApplication.getInstance();
+        searchBarDestTextView = findViewById(R.id.search_bar_dest_text_view);
+        searchBarSourceTextView = findViewById(R.id.search_bar_source_text_view);
+        constraintLayoutSearch = findViewById(R.id.search_constraint_layout);
+        goButton = findViewById(R.id.go_button);
 		doneNavigationButton = findViewById(R.id.done_navigation_btn);
 
 		// Bottom Sheet Definitions
@@ -189,8 +212,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 		sheetBehavior.setPeekHeight(0);
 		sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-		hideSearch();
-	}
+        hideSearch();
+    }
 
 	private void onSrcChangedAction(String observedSource) {
 		searchBarSourceTextView.setText(observedSource);
@@ -203,16 +226,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		tryEnableButton();
 	}
 
-	/**
-	 * Run this function every time a change is detected to dest search view
-	 *
-	 * @param observedDestination new destination entered
-	 */
-	private void onDestChangedAction(String observedDestination) {
-		searchBarDestTextView.setText(observedDestination);
-		searchBarSourceTextView.setVisibility(View.VISIBLE);
-		goButton.setVisibility(View.VISIBLE);
-		constraintLayout.setBackground(searchBackground);
+    /**
+     * Run this function every time a change is detected to dest search view
+     *
+     * @param observedDestination new destination entered
+     */
+    private void onDestChangedAction(String observedDestination) {
+        searchBarDestTextView.setText(observedDestination);
+        searchBarSourceTextView.setVisibility(View.VISIBLE);
+        qrButton.setVisibility(View.VISIBLE);
+        goButton.setVisibility(View.VISIBLE);
+        constraintLayoutSearch.setBackground(searchBackground);
 		LatLng destCoordinate = navigator.getCoordinate(observedDestination);
 		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(destCoordinate, 17.5f));
 		if (destMarker != null) {
@@ -220,8 +244,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		}
 		destMarker = mMap.addMarker(new MarkerOptions().position(destCoordinate).title(observedDestination));
 
-		tryEnableButton();
-	}
+        tryEnableButton();
+    }
 
 	/**
 	 * try enable go button if source and dest are set, keep disabled otherwise.
@@ -238,8 +262,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 	private void hideSearch() {
 		searchBarSourceTextView.setVisibility(View.GONE);
+        qrButton.setVisibility(View.GONE);
 		goButton.setVisibility(View.GONE);
-		constraintLayout.setBackgroundColor(0x00ffffff);
+        constraintLayoutSearch.setBackgroundColor(0x00ffffff);
 	}
 
 	private void showHomeUI() {
@@ -253,6 +278,69 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 		deletePathFromMap();
 	}
+
+    private NavigationBarView.OnItemSelectedListener navListener = new NavigationBarView.OnItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            if (categoryMarkers == null) {
+                categoryMarkers = new ArrayList<>();
+            }
+            clearCategoryMarkers();
+
+            if (item == currentNavMenuItem & navBarFlag) {
+                // Deselect item
+                uncheckAllMenuItems();
+                currentNavMenuItem = item;
+                navBarFlag = false;
+
+                return false;
+            }
+            else {
+                ArrayList<String> locations = new ArrayList<>();
+                switch (item.getItemId()) {
+                    case R.id.toilets:
+                        locations = new ArrayList<String>(app.getDB().getToiletLocations());
+                        break;
+                    case R.id.restaurants:
+                        locations = new ArrayList<String>(app.getDB().getRestaurantLocations());
+                        break;
+                    case R.id.cafes:
+                        locations = new ArrayList<String>(app.getDB().getCafeLocations());
+                        break;
+                    case R.id.libraries:
+                        locations = new ArrayList<String>(app.getDB().getLibraryLocations());
+                        break;
+                }
+
+                for (String locationName : locations){
+                    LatLng locationCoordinate = navigator.getCoordinate(locationName);
+                    categoryMarkers.add(mMap.addMarker(new MarkerOptions().position(locationCoordinate)
+                            .title(locationName).icon(BitmapDescriptorFactory.defaultMarker(183))));
+                }
+
+                currentNavMenuItem = item;
+                navBarFlag = true;
+
+                return true;
+            }
+        }
+    };
+
+    private void uncheckAllMenuItems() {
+        Menu menu = bottomNav.getMenu();
+        menu.setGroupCheckable(0, true, false);
+        for (int i = 0; i < menu.size(); i++){
+            menu.getItem(i).setChecked(false);
+        }
+        menu.setGroupCheckable(0, true, true);
+    }
+
+    private void clearCategoryMarkers() {
+        for (int i = 0; i < categoryMarkers.size(); i++) {
+            categoryMarkers.get(i).remove();
+        }
+        categoryMarkers.removeAll(categoryMarkers);
+    }
 
 	/**
 	 * Manipulates the map once available.
@@ -270,19 +358,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		updateMapLocation();
 	}
 
-	private void moveToSearchActivity(NaviableApplication.SEARCH_TYPE type) {
-		Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-		boolean searchTypeIsDestinationSearch = type.equals(NaviableApplication.SEARCH_TYPE.DESTINATION);
-		intent.putExtra("searchTypeIsDestinationSearch", searchTypeIsDestinationSearch);
-		startActivity(intent);
-	}
+    private void moveToSearchActivity(NaviableApplication.SEARCH_TYPE type) {
+        Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+        boolean searchTypeIsDestinationSearch = type.equals(NaviableApplication.SEARCH_TYPE.DESTINATION);
+        intent.putExtra("searchTypeIsDestinationSearch", searchTypeIsDestinationSearch);
+        startActivity(intent);
+    }
 
-	// changes which campus we focus on in the map
-	public void updateMapLocation() {
-		LatLng campus = app.getDB().getCampus();
-		// note: zoom level is between 2.0 and 21.0
-		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(campus, 17.25f));
-	}
+    // changes which campus we focus on in the map
+    public void updateMapLocation() {
+        LatLng campus = app.getDB().getCampus();
+        // note: zoom level is between 2.0 and 21.0
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(campus, 17.25f));
+    }
 
 
 }

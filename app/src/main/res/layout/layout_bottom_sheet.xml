@@ -11,7 +11,7 @@
 		android:id="@+id/bottom_sheet"
 		android:layout_width="match_parent"
 		android:layout_height="350dp"
-		android:background="?colorPrimary"
+		android:background="?colorOnPrimary"
 		app:behavior_hideable="false"
 		app:layout_behavior="@string/bottom_sheet_behavior">
 
@@ -53,13 +53,12 @@
 
 				<Button
 					android:id="@+id/done_navigation_btn"
-					android:layout_width="60dp"
-					android:layout_height="30dp"
+					android:layout_width="wrap_content"
+					android:layout_height="40dp"
 					android:layout_gravity="end"
 					android:layout_marginEnd="10dp"
 					android:layout_marginBottom="5dp"
 					android:background="@drawable/rounded_rectangle_view"
-					android:backgroundTint="@color/teal_200"
 					android:text="Done ✓"
 					app:layout_constraintBottom_toBottomOf="parent"
 					app:layout_constraintEnd_toEndOf="parent"

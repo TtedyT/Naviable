@@ -8,85 +8,105 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 public class Navigator {
-	private Graph graph;
+    private Graph graph;
 
-	public Navigator(Graph graph) {
-		this.graph = graph;
-	}
+    static int i = 0; // todo: test variable, delete later
 
-	private void resetAllNodeData() {
+    public Navigator(Graph graph) {
+        this.graph = graph;
+    }
 
-		for (String id : graph.getNodeMap().keySet()) {
-			graph.getNode(id).resetNodeData();
-		}
-	}
+    private void resetAllNodeData() {
 
-	private void findPath(String srcId) {
-		MapNode src = graph.getNode(srcId);
-		resetAllNodeData();
-		src.setMinDistance(0);
-		PriorityQueue<MapNode> queue = new PriorityQueue<>();
-		queue.add(src);
+        for (String id : graph.getNodeMap().keySet()) {
+            graph.getNode(id).resetNodeData();
+        }
+    }
 
-		while (!queue.isEmpty()) {
-			MapNode u = queue.poll();
+    private void findPath(String srcId) {
+        MapNode src = graph.getNode(srcId);
+        resetAllNodeData();
+        src.setMinDistance(0);
+        PriorityQueue<MapNode> queue = new PriorityQueue<>();
+        queue.add(src);
 
-			assert u != null;
-			for (EdgeInfo e : u.getAdjacencies()) {
-				MapNode v = graph.getNode(e.getDestId());
-				double weight = e.getDistance();
-				double distanceThroughU = u.getMinDistance() + weight;
-				if (distanceThroughU < v.getMinDistance()) {
-					queue.remove(v);
-					v.setMinDistance(distanceThroughU);
-					v.setPrev(u);
-					queue.add(v);
-				}
-			}
-		}
-	}
+        while (!queue.isEmpty()) {
+            MapNode u = queue.poll();
 
-	private List<MapNode> getShortestPathTo(String destId) {
-		List<MapNode> path = new ArrayList<>();
-		MapNode dest = graph.getNode(destId);
-		for (MapNode node = dest; node != null; node = node.getPrev()) {
-			path.add(node);
-		}
-		Collections.reverse(path);
-		return path;
-	}
+            assert u != null;
+            for (EdgeInfo e : u.getAdjacencies()) {
+                MapNode v = graph.getNode(e.getDestId());
+                double weight = e.getDistance();
+                double distanceThroughU = u.getMinDistance() + weight;
+                if (distanceThroughU < v.getMinDistance()) {
+                    queue.remove(v);
+                    v.setMinDistance(distanceThroughU);
+                    v.setPrev(u);
+                    queue.add(v);
+                }
+            }
+        }
+    }
 
-	public List<Direction> getDirections(String srcId, String destId) {
-		findPath(srcId);
-		List<MapNode> path = getShortestPathTo(destId);
-		List<Direction> directions = new ArrayList<>();
-		for (int i = 0; i < path.size() - 1; i++) {
-			List<EdgeInfo> adjacencies = path.get(i).getAdjacencies();
-			for (EdgeInfo currEdge : adjacencies) {
-				if (currEdge.getDestId().equals(path.get(i + 1).getName())) {
-					directions.addAll(currEdge.getDirections());
-				}
-			}
-		}
-		return directions;
-	}
+    private List<MapNode> getShortestPathTo(String destId) {
+        List<MapNode> path = new ArrayList<>();
+        MapNode dest = graph.getNode(destId);
+        for (MapNode node = dest; node != null; node = node.getPrev()) {
+            path.add(node);
+        }
+        Collections.reverse(path);
+        return path;
+    }
 
-	public ArrayList<LatLng> getPathLatLng(String srcId, String destId) {
-		findPath(srcId);
-		List<MapNode> shortestPath = getShortestPathTo(destId);
-		ArrayList<LatLng> pathLatLng = new ArrayList<>();
-		for (MapNode mapNode : shortestPath) {
-			pathLatLng.add(new LatLng(mapNode.getX(), mapNode.getY()));
-		}
-		return pathLatLng;
-	}
+    public List<Direction> getDirections(String srcId, String destId) {
+        findPath(srcId);
+        List<MapNode> path = getShortestPathTo(destId);
+        List<Direction> directions = new ArrayList<>();
+        for (int i = 0; i < path.size() - 1; i++) {
+            List<EdgeInfo> adjacencies = path.get(i).getAdjacencies();
+            for (EdgeInfo currEdge : adjacencies) {
+                if (currEdge.getDestId().equals(path.get(i + 1).getName())) {
+                    directions.addAll(currEdge.getDirections());
+                }
+            }
+        }
+        return directions;
+    }
 
-	public ArrayList<String> getLocations() {
-		return graph.getMappableLocations();
-	}
+    public ArrayList<LatLng> getPathLatLng(String srcId, String destId) {
+        findPath(srcId);
+        List<MapNode> shortestPath = getShortestPathTo(destId);
+        ArrayList<LatLng> pathLatLng = new ArrayList<>();
+        for (MapNode mapNode : shortestPath) {
+            pathLatLng.add(new LatLng(mapNode.getX(), mapNode.getY()));
+        }
+        return pathLatLng;
+    }
 
-	public LatLng getCoordinate(String locName) {
-		MapNode n = graph.getNode(locName);
-		return new LatLng(n.getX(), n.getY());
-	}
+    public ArrayList<String> getLocations() {
+        return graph.getMappableLocations();
+    }
+
+    public ArrayList<String> getToiletLocations() {
+        return graph.getToiletLocations();
+    }
+
+    public ArrayList<String> getRestaurantLocations() {
+        return graph.getRestaurantLocations();
+    }
+
+    public ArrayList<String> getCafeLocations() {
+        return graph.getCafeLocations();
+    }
+
+    public ArrayList<String> getLibraryLocations() {
+        return graph.getLibraryLocations();
+    }
+
+    public LatLng getCoordinate(String locName) {
+        MapNode n = graph.getNode(locName);
+        return new LatLng(n.getX(), n.getY());
+    }
+
+
 }
