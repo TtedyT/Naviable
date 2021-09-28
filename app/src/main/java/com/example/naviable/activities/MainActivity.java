@@ -175,7 +175,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 				InstructionsAdapter adapter = new InstructionsAdapter(this, directions);
 				RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
 
-				showSrcDestTextView.setText(src+" -> "+dest);
+				searchBarDestTextView.setClickable(false);
+				showSrcDestTextView.setText(src+" ➝ "+dest);
 				recyclerView.setLayoutManager(linearLayoutManager);
 				recyclerView.setAdapter(adapter);
 				recyclerView.addItemDecoration(itemDecoration);
@@ -273,6 +274,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		srcMarker.remove();
 		destMarker.remove();
 
+		searchBarDestTextView.setClickable(true);
 		searchBarDestTextView.setVisibility(View.VISIBLE);
 		searchBarDestTextView.setText("");
 		searchBarSourceTextView.setText("");
