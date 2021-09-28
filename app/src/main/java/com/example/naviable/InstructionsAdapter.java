@@ -63,11 +63,13 @@ public class InstructionsAdapter extends RecyclerView.Adapter<InstructionsAdapte
 
 		TextView instructionTextView;
 		ImageView instructionImageView;
+		ImageView instructionTextToSpeech;
 
 		public MyViewHolder(@NonNull View itemView) {
 			super(itemView);
 			instructionTextView = itemView.findViewById(R.id.myInstructionTextView);
 			instructionImageView = itemView.findViewById(R.id.instructionImage);
+			instructionTextToSpeech = itemView.findViewById(R.id.instruction_text_to_speech);
 		}
 	}
 }
