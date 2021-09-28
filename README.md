@@ -1,2 +1,2 @@
 # Naviable
-Application that helps navigation for disabled people
+Application that helps navigation for the disabled
