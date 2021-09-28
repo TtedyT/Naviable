@@ -12,110 +12,105 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> implements Filterable {
 
-    private Context context;
-    private ArrayList<String> searchSuggestions;
-    private ArrayList<String> searchSuggestionsAll;
-    private ArrayList<String> searchSuggestionsRecents;
+	private final RecyclerViewClickListener clickListener;
+	private Context context;
+	private ArrayList<String> searchSuggestions;
+	private ArrayList<String> searchSuggestionsAll;
+	Filter filter = new Filter() {
+		@Override
+		protected FilterResults performFiltering(CharSequence charSequence) {
+			String charSequenceStringLowerCased = charSequence.toString().toLowerCase();
+			ArrayList<String> filteredSearchSuggestions = new ArrayList<>();
+			if (charSequence.toString().isEmpty()) {
+				filteredSearchSuggestions.addAll(searchSuggestionsAll);
+			} else {
+				for (String resultSuggestion : searchSuggestions) {
+					if (resultSuggestion.toLowerCase().contains(charSequenceStringLowerCased))
+						filteredSearchSuggestions.add(resultSuggestion);
+				}
+			}
 
-    private final RecyclerViewClickListener clickListener;
+			FilterResults filterResults = new FilterResults();
+			filterResults.values = filteredSearchSuggestions;
 
-    public MyAdapter(Context context, ArrayList<String> searchSuggestionsNotRecents, ArrayList<String> recentSearchedLocations, RecyclerViewClickListener clickListener) {
-        this.context = context;
-        this.searchSuggestionsRecents = new ArrayList<>(recentSearchedLocations);
-        this.searchSuggestions = new ArrayList<>(recentSearchedLocations);
-        ArrayList<String> notRecentCopy = new ArrayList<>(searchSuggestionsNotRecents);
-        this.searchSuggestions.addAll(notRecentCopy);
-        this.searchSuggestionsAll = new ArrayList<>(this.searchSuggestions);
-        // makeRecentSearchesFirst(searchSuggestions);
-        this.clickListener = clickListener;
-    }
+			return filterResults;
+		}
 
-    @NonNull
-    @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.item_one_result, parent, false);
+		@Override
+		protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+			searchSuggestions.clear();
+			searchSuggestions.addAll((Collection<? extends String>) filterResults.values);
+			notifyDataSetChanged();
+		}
+	};
+	private ArrayList<String> searchSuggestionsRecents;
 
-        return new MyViewHolder(view);
-    }
+	public MyAdapter(Context context, ArrayList<String> searchSuggestionsNotRecents, ArrayList<String> recentSearchedLocations, RecyclerViewClickListener clickListener) {
+		this.context = context;
+		this.searchSuggestionsRecents = new ArrayList<>(recentSearchedLocations);
+		this.searchSuggestions = new ArrayList<>(recentSearchedLocations);
+		ArrayList<String> notRecentCopy = new ArrayList<>(searchSuggestionsNotRecents);
+		this.searchSuggestions.addAll(notRecentCopy);
+		this.searchSuggestionsAll = new ArrayList<>(this.searchSuggestions);
+		// makeRecentSearchesFirst(searchSuggestions);
+		this.clickListener = clickListener;
+	}
 
-    @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        String location = this.searchSuggestions.get(position);
-        if (this.searchSuggestionsRecents.contains(location)) {
-            holder.searchSuggestionImageView.setImageResource(R.drawable.recent_searched);
-        } else {
-            holder.searchSuggestionImageView.setImageResource(R.drawable.not_recent_search);
-        }
-        holder.searchSuggestionTextView.setText(location);
-    }
+	@NonNull
+	@Override
+	public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+		LayoutInflater inflater = LayoutInflater.from(context);
+		View view = inflater.inflate(R.layout.item_one_result, parent, false);
 
-    @Override
-    public int getItemCount() {
-        return this.searchSuggestions.size();
-    }
+		return new MyViewHolder(view);
+	}
 
-    @Override
-    public Filter getFilter() {
-        return filter;
-    }
+	@Override
+	public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+		String location = this.searchSuggestions.get(position);
+		if (this.searchSuggestionsRecents.contains(location)) {
+			holder.searchSuggestionImageView.setImageResource(R.drawable.recent_searched);
+		} else {
+			holder.searchSuggestionImageView.setImageResource(R.drawable.not_recent_search);
+		}
+		holder.searchSuggestionTextView.setText(location);
+	}
 
-    Filter filter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence charSequence) {
-            String charSequenceStringLowerCased = charSequence.toString().toLowerCase();
-            ArrayList<String> filteredSearchSuggestions = new ArrayList<>();
-            if (charSequence.toString().isEmpty()) {
-                filteredSearchSuggestions.addAll(searchSuggestionsAll);
-            } else {
-                for (String resultSuggestion : searchSuggestions) {
-                    if (resultSuggestion.toLowerCase().contains(charSequenceStringLowerCased))
-                        filteredSearchSuggestions.add(resultSuggestion);
-                }
-            }
+	@Override
+	public int getItemCount() {
+		return this.searchSuggestions.size();
+	}
 
-            FilterResults filterResults = new FilterResults();
-            filterResults.values = filteredSearchSuggestions;
+	@Override
+	public Filter getFilter() {
+		return filter;
+	}
 
-            return filterResults;
-        }
+	public interface RecyclerViewClickListener {
+		void onClick(View v, int position);
+	}
 
-        @Override
-        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            searchSuggestions.clear();
-            searchSuggestions.addAll((Collection<? extends String>) filterResults.values);
-            notifyDataSetChanged();
-        }
-    };
+	public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+		TextView searchSuggestionTextView;
+		ImageView searchSuggestionImageView;
 
-        TextView searchSuggestionTextView;
-        ImageView searchSuggestionImageView;
+		public MyViewHolder(@NonNull View itemView) {
+			super(itemView);
+			itemView.setOnClickListener(this);
+			searchSuggestionTextView = itemView.findViewById(R.id.mySearchSuggestionTextView);
+			searchSuggestionImageView = itemView.findViewById(R.id.mySearchSuggestionImageView);
+		}
 
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(this);
-            searchSuggestionTextView = itemView.findViewById(R.id.mySearchSuggestionTextView);
-            searchSuggestionImageView = itemView.findViewById(R.id.mySearchSuggestionImageView);
-        }
-
-        @Override
-        public void onClick(View v) {
-            clickListener.onClick(v, getAdapterPosition());
-        }
-    }
-
-    public interface RecyclerViewClickListener {
-        void onClick(View v, int position);
-    }
+		@Override
+		public void onClick(View v) {
+			clickListener.onClick(v, getAdapterPosition());
+		}
+	}
 
 }
