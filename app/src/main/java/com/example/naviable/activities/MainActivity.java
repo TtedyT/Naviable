@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,11 +43,12 @@ import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, TextToSpeech.OnInitListener{
 
 
 	private static final int DEF_PEEK_HEIGHT = 240;
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	private View layoutBottomSheet;
 	private BottomSheetBehavior<View> sheetBehavior;
 	private TextView showSrcDestTextView;
+	private TextToSpeech textToSpeech;
 
 
 	@Override
@@ -156,6 +159,52 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         app.getCampusChosenLiveDataPublic().observe(this, s -> updateMapLocation());
 	}
 
+	// text to speech code start
+
+	@Override
+	public void onDestroy() {
+		// Don't forget to shutdown!
+		if (textToSpeech != null) {
+			textToSpeech.stop();
+			textToSpeech.shutdown();
+		}
+		super.onDestroy();
+	}
+
+	@Override
+	public void onInit(int status) {
+		// TODO Auto-generated method stub
+
+		if (status == TextToSpeech.SUCCESS) {
+
+			int result = textToSpeech.setLanguage(Locale.US);
+
+			// tts.setPitch(5); // set pitch level
+
+			// tts.setSpeechRate(2); // set speech speed rate
+
+			if (result == TextToSpeech.LANG_MISSING_DATA
+					|| result == TextToSpeech.LANG_NOT_SUPPORTED) {
+				Toasty.info(this, "Language is not supported",
+						Toast.LENGTH_SHORT, true).show();
+			} else {
+//				btnSpeak.setEnabled(true);
+				// speakOut(); // what do i need it for ?
+			}
+
+		} else {
+			Toasty.info(this, "Text to speech Initilization Failed",
+					Toast.LENGTH_SHORT, true).show();
+		}
+	}
+
+	// we have text to speech object inside the instructions adapter
+//	private void speakOut(String textToReadOutLoud) {
+//		textToSpeech.speak(textToReadOutLoud, TextToSpeech.QUEUE_FLUSH, null, null);
+//	}
+
+	// text to speech code end
+
 	private void goButtonAction() {
 		String src = searchBarSourceTextView.getText().toString();
 		String dest = searchBarDestTextView.getText().toString();
@@ -172,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 				RecyclerView recyclerView = findViewById(R.id.rcv_data);
 
 				LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-				InstructionsAdapter adapter = new InstructionsAdapter(this, directions);
+				InstructionsAdapter adapter = new InstructionsAdapter(this, directions, textToSpeech);
 				RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
 
 				searchBarDestTextView.setClickable(false);
@@ -200,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	}
 
     private void initVars() {
+		textToSpeech = new TextToSpeech(this, this);
         searchBackground = ContextCompat.getDrawable(this,
                 R.drawable.rounded_rectangle_view_search_background);
         app = NaviableApplication.getInstance();
@@ -262,6 +312,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 			goButton.setEnabled(true);
 		}
 	}
+
+
 
 	private void hideSearch() {
 		searchBarSourceTextView.setVisibility(View.GONE);
