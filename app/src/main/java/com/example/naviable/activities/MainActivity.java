@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean navBarFlag = false;
 	private View layoutBottomSheet;
 	private BottomSheetBehavior<View> sheetBehavior;
+	private TextView showSrcDestTextView;
 
 
 	@Override
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		goButton.setEnabled(false);
         doneNavigationButton = findViewById(R.id.done_navigation_btn);
 		doneNavigationButton.setOnClickListener(view -> showHomeUI());
-
+		showSrcDestTextView = findViewById(R.id.show_src_dest_text_view);
 
 		navigator = app.getDB().getNavigator();
 		goButton.setOnClickListener(view -> goButtonAction());
@@ -174,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 				InstructionsAdapter adapter = new InstructionsAdapter(this, directions);
 				RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
 
+				showSrcDestTextView.setText(src+" -> "+dest);
 				recyclerView.setLayoutManager(linearLayoutManager);
 				recyclerView.setAdapter(adapter);
 				recyclerView.addItemDecoration(itemDecoration);
