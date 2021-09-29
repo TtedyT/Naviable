@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	private Marker srcMarker;
 	private Marker destMarker;
 	private Polyline pathPolyline;
-	private FloatingActionButton qrButton;
+	private ImageButton qrButton;
 	private TextView showNavigationSrcDest;
 	private ArrayList<Marker> categoryMarkers;
 	private BottomNavigationView bottomNav;
@@ -74,7 +74,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	private View layoutBottomSheet;
 	private BottomSheetBehavior<View> sheetBehavior;
 	private TextView showSrcDestTextView;
+	private TextView orScanLocationTextView;
 	private TextToSpeech textToSpeech;
+
 
 
 	@Override
@@ -254,6 +256,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		constraintLayoutSearch = findViewById(R.id.search_constraint_layout);
 		goButton = findViewById(R.id.go_button);
 		doneNavigationButton = findViewById(R.id.done_navigation_btn);
+		orScanLocationTextView = findViewById(R.id.or_scan_text_view);
 
 		// Bottom Sheet Definitions
 		layoutBottomSheet = findViewById(R.id.bottom_sheet);
@@ -283,6 +286,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	private void onDestChangedAction(String observedDestination) {
 		searchBarDestTextView.setText(observedDestination);
 		searchBarSourceTextView.setVisibility(View.VISIBLE);
+		orScanLocationTextView.setVisibility(View.VISIBLE);
 		qrButton.setVisibility(View.VISIBLE);
 		goButton.setVisibility(View.VISIBLE);
 		constraintLayoutSearch.setBackground(searchBackground);
@@ -314,6 +318,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		searchBarSourceTextView.setVisibility(View.GONE);
 		qrButton.setVisibility(View.GONE);
 		goButton.setVisibility(View.GONE);
+		orScanLocationTextView.setVisibility(View.GONE);
 		constraintLayoutSearch.setBackgroundColor(0x00ffffff);
 	}
 
