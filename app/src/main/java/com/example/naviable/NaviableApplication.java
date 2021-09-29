@@ -37,7 +37,6 @@ public class NaviableApplication extends Application {
 		return db;
 	}
 
-	// todo: continue from here
 	public LiveData<String> getChosenDestinationLiveDataPublic() {
 		return chosenDestinationLiveDataPublic;
 	}

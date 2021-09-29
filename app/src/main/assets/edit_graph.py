@@ -518,7 +518,7 @@ class GraphJsonShell():
                     self.last_nodes_changed = BOTH_NODES_CHANGED
 
         elif self.last_change_type == DEL_CHANGE:
-            # TODO: undo delete
+            # TODO feature for adding multiple nodes: undo delete once we implement this feature
             pass
             # # last deleted was a single node
             # if self.last_change_dest is None and self.last_nodes_changed == SRC_NODE_CHANGED:

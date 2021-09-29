@@ -38,7 +38,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
@@ -175,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 			int result = textToSpeech.setLanguage(Locale.US);
 
 			// tts.setPitch(5); // set pitch level
-
 			// tts.setSpeechRate(2); // set speech speed rate
 
 			if (result == TextToSpeech.LANG_MISSING_DATA
@@ -188,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 			}
 
 		} else {
-			Toasty.info(this, "Text to speech Initilization Failed",
+			Toasty.info(this, "Text to speech Initialization Failed",
 					Toast.LENGTH_SHORT, true).show();
 		}
 	}

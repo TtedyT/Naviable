@@ -67,7 +67,6 @@ public class DB {
         sp = context.getSharedPreferences("db", Context.MODE_PRIVATE);
         spRecentSearchedLocations = context.getSharedPreferences("recentSearchedLocations", Context.MODE_PRIVATE);
 
-        // todo: remove once we have firebase
         campuses = new HashMap<>();
         // todo: note that copied from strings.xml if changes there change here too
         campuses.put("Givat Ram Campus", givatRamCampus);

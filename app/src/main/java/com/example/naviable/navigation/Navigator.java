@@ -10,8 +10,6 @@ import java.util.PriorityQueue;
 public class Navigator {
     private Graph graph;
 
-    static int i = 0; // todo: test variable, delete later
-
     public Navigator(Graph graph) {
         this.graph = graph;
     }
