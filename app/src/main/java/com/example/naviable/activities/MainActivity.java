@@ -1,6 +1,7 @@
 package com.example.naviable.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -76,8 +77,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 	private TextView orScanLocationTextView;
 	private TextToSpeech textToSpeech;
 
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -151,10 +150,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 		});
 
 		app.getCampusChosenLiveDataPublic().observe(this, s -> updateMapLocation());
+
+
+		if (savedInstanceState != null) {
+			updateOnScreenRotation(savedInstanceState);
+		}
 	}
 
 	// text to speech code start
-
 	@Override
 	public void onDestroy() {
 		// Don't forget to shutdown!
@@ -189,6 +192,62 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 			Toasty.info(this, "Text to speech Initialization Failed",
 					Toast.LENGTH_SHORT, true).show();
 		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean("dest_selected", searchBarDestTextView.getText().toString().isEmpty());
+		outState.putString("dest_name", searchBarDestTextView.getText().toString());
+
+		outState.putBoolean("src_selected", searchBarSourceTextView.getText().toString().isEmpty());
+		outState.putString("src_name", searchBarSourceTextView.getText().toString());
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig)
+	{
+		if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+		{
+			bottomNav.setVisibility(View.GONE);
+		}
+		else {
+			bottomNav.setVisibility(View.VISIBLE);
+		}
+		super.onConfigurationChanged(newConfig);
+	}
+
+	private void updateOnScreenRotation(Bundle savedInstanceState) {
+		if (savedInstanceState.getBoolean("dest_selected")) {
+			String dest = savedInstanceState.getString("dest_name");
+
+			searchBarDestTextView.setText(dest);
+			searchBarSourceTextView.setVisibility(View.VISIBLE);
+			orScanLocationTextView.setVisibility(View.VISIBLE);
+			qrButton.setVisibility(View.VISIBLE);
+			goButton.setVisibility(View.VISIBLE);
+			constraintLayoutSearch.setBackground(searchBackground);
+			LatLng destCoordinate = navigator.getCoordinate(dest);
+			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(destCoordinate, 17.5f));
+
+			if (destMarker != null) {
+				destMarker.remove();
+			}
+			destMarker = mMap.addMarker(new MarkerOptions().position(destCoordinate).title(dest));
+		}
+
+		if (savedInstanceState.getBoolean("src_selected")) {
+			String src = savedInstanceState.getString("src_name");
+			searchBarSourceTextView.setText(src);
+
+			LatLng sourceCoordinate = navigator.getCoordinate(src);
+			if (srcMarker != null) {
+				srcMarker.remove();
+			}
+			srcMarker = mMap.addMarker(new MarkerOptions().position(sourceCoordinate)
+					.title("Your Location").icon(BitmapDescriptorFactory.defaultMarker(183)));
+		}
+		tryEnableButton();
 	}
 
 	// we have text to speech object inside the instructions adapter
